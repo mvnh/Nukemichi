@@ -40,6 +40,7 @@ internal class WizardSetupCoordinator @Inject constructor(
             sshHost = draft.serverAddress,
             sshPort = draft.sshPort,
             sshUsername = draft.sshUsername,
+            sshExpectedFingerprint = draft.sshExpectedFingerprint,
             serverAddress = draft.serverAddress,
             serverPort = XrayServerConfigFactory.DEFAULT_SERVER_PORT,
             uuid = draft.uuid,

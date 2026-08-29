@@ -1,16 +1,20 @@
 package app.nukemichi.android.core.vpn.internal
 
-//noinspection SuspiciousImport
-import android.R
+import android.app.AlarmManager
+import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.net.VpnService
 import android.os.Build
 import android.os.ParcelFileDescriptor
 import android.os.Process
+import android.os.SystemClock
 import androidx.core.app.NotificationCompat
+import app.nukemichi.android.MainActivity
+import app.nukemichi.android.R
 import app.nukemichi.android.core.di.IoDispatcher
 import app.nukemichi.android.core.vpn.XrayJson
 import app.nukemichi.android.core.vpn.XrayRuntimeConfig
@@ -51,6 +55,8 @@ internal class NukemichiVpnService : VpnService() {
     private lateinit var scope: CoroutineScope
 
     private val isStarting = AtomicBoolean(false)
+    @Volatile
+    private var lastConfig: XrayRuntimeConfig? = null
 
     override fun onCreate() {
         super.onCreate()
@@ -90,6 +96,7 @@ internal class NukemichiVpnService : VpnService() {
 
     private fun startVpn(config: XrayRuntimeConfig) {
         Timber.i("startVpn: begin")
+        lastConfig = config
         startForeground(NOTIFICATION_ID, createNotification())
         scope.launch {
             try {
@@ -139,7 +146,25 @@ internal class NukemichiVpnService : VpnService() {
     private suspend fun onHealthDegraded() {
         Timber.w("onHealthDegraded: tunnel silently stuck, forcing a full reconnect")
         telemetry.degraded()
+        // This process is about to die (see stopVpn's killProcess) and can't restart itself —
+        // schedule the restart through AlarmManager, which survives that, instead of leaving it
+        // to whichever app process happens to be alive to notice the degraded signal and reconnect.
+        lastConfig?.let(::scheduleRestart)
         stopVpn()
+    }
+
+    private fun scheduleRestart(config: XrayRuntimeConfig) {
+        val pendingIntent = PendingIntent.getService(
+            this,
+            RESTART_REQUEST_CODE,
+            startIntent(this, config),
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+        )
+        getSystemService(AlarmManager::class.java).setAndAllowWhileIdle(
+            AlarmManager.ELAPSED_REALTIME_WAKEUP,
+            SystemClock.elapsedRealtime() + RESTART_DELAY_MS,
+            pendingIntent,
+        )
     }
 
     private fun stopVpn() {
@@ -165,8 +190,9 @@ internal class NukemichiVpnService : VpnService() {
         Builder()
             .addAddress(VpnTunnelDefaults.VPN_ADDRESS, VpnTunnelDefaults.VPN_PREFIX_LENGTH)
             .addRoute("0.0.0.0", 0)
-            .addAddress(VpnTunnelDefaults.VPN_ADDRESS_V6, VpnTunnelDefaults.VPN_PREFIX_LENGTH_V6)
-            .addRoute(VpnTunnelDefaults.VPN_ROUTE_V6, 0)
+            // No IPv6 address/route on the interface — apps see no IPv6 path at all and go
+            // straight to IPv4 instead of dialing out, timing out, then falling back. xray's own
+            // routing still blackholes ::/0 from the socks inbound as defense in depth regardless.
             .addDnsServer("1.1.1.1")
             .addDisallowedApplication(packageName)
             .setMtu(VpnTunnelDefaults.VPN_MTU)
@@ -181,18 +207,34 @@ internal class NukemichiVpnService : VpnService() {
         tunInterface = null
     }
 
-    private fun createNotification() = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
-        .setSmallIcon(R.drawable.stat_sys_warning)
-        .setContentTitle("Nukemichi VPN")
-        .setContentText("Xray is running")
-        .setOngoing(true)
-        .build()
+    private fun createNotification(): Notification {
+        val contentIntent = PendingIntent.getActivity(
+            this,
+            CONTENT_REQUEST_CODE,
+            Intent(this, MainActivity::class.java),
+            PendingIntent.FLAG_IMMUTABLE,
+        )
+        val disconnectIntent = PendingIntent.getService(
+            this,
+            DISCONNECT_REQUEST_CODE,
+            stopIntent(this),
+            PendingIntent.FLAG_IMMUTABLE,
+        )
+        return NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_launcher_monochrome)
+            .setContentTitle(getString(R.string.notification_vpn_title))
+            .setContentText(getString(R.string.notification_vpn_content))
+            .setContentIntent(contentIntent)
+            .addAction(R.drawable.ic_launcher_monochrome, getString(R.string.notification_vpn_disconnect), disconnectIntent)
+            .setOngoing(true)
+            .build()
+    }
 
     private fun ensureNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 NOTIFICATION_CHANNEL_ID,
-                "Nukemichi VPN",
+                getString(R.string.notification_vpn_title),
                 NotificationManager.IMPORTANCE_LOW,
             )
             getSystemService(NotificationManager::class.java).createNotificationChannel(channel)
@@ -206,6 +248,10 @@ internal class NukemichiVpnService : VpnService() {
         private const val NOTIFICATION_ID = 1001
         private const val NOTIFICATION_CHANNEL_ID = "nukemichi_vpn"
         private const val EXTRA_RUNTIME_CONFIG = "runtime_config"
+        private const val RESTART_REQUEST_CODE = 2001
+        private const val RESTART_DELAY_MS = 3_000L
+        private const val CONTENT_REQUEST_CODE = 2002
+        private const val DISCONNECT_REQUEST_CODE = 2003
 
         fun startIntent(context: Context, config: XrayRuntimeConfig): Intent =
             configIntent(context, ACTION_START, config)

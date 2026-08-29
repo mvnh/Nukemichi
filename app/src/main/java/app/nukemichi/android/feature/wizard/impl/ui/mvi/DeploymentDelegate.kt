@@ -16,6 +16,9 @@ internal class DeploymentDelegate @Inject constructor(
 
     fun start() {
         val architecture = currentState.serverArchitecture ?: return
+        check(currentState.setupStrategy == WizardContract.SetupStrategy.FAST_START) {
+            "${currentState.setupStrategy} has no deployment implementation yet."
+        }
         job?.cancel()
         reduce { copy(deployment = DeploymentUiState()) }
         job = scope.launch {

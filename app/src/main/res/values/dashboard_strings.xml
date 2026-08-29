@@ -1,7 +1,8 @@
 <resources>
     <string name="dashboard_no_server_configured">No server configured</string>
     <string name="dashboard_logs">Logs</string>
-    <string name="dashboard_export_link_cd">Export server link</string>
+    <string name="dashboard_export_link_cd">Share VLESS connection link</string>
+    <string name="dashboard_export_link_label">Share VLESS link</string>
     <string name="dashboard_connected_for">Connected for %1$s</string>
 
     <string name="dashboard_state_not_connected">Not connected</string>
@@ -9,6 +10,7 @@
     <string name="dashboard_state_connected">Connected</string>
     <string name="dashboard_state_disconnecting">Disconnecting…</string>
     <string name="dashboard_state_error">Connection error</string>
+    <string name="dashboard_state_taking_a_while">Still working on it — a fresh connection can take a little longer.</string>
 
     <string name="dashboard_server_info_server">Server</string>
     <string name="dashboard_server_info_masking_as">Masking as</string>

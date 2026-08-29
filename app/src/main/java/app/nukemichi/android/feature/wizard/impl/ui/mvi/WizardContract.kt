@@ -26,7 +26,6 @@ object WizardContract {
         val realityServerName: String = "",
         val serverArchitecture: String? = null,
         val connectionCheck: ConnectionCheckState = ConnectionCheckState.Idle,
-        val hasAcknowledgedRisks: Boolean = false,
         val deployment: DeploymentUiState = DeploymentUiState(),
         val isLoading: Boolean = false,
         val errorMessage: UiText? = null,
@@ -47,7 +46,6 @@ object WizardContract {
         data object CancelConnectionCheck : Intent
         data object DismissConnectionErrorDialog : Intent
         data class TrustHostAndRetry(val fingerprint: String) : Intent
-        data class AcknowledgeRisksToggled(val checked: Boolean) : Intent
         data object RetryDeployment : Intent
         data object CancelDeployment : Intent
         data object ToggleTerminalVisibility : Intent

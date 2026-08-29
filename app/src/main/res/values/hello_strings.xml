@@ -1,16 +1,16 @@
 <resources>
     <string name="hello_header_title">Your very own VPN, %1$s</string>
     <string name="hello_header_title_highlight">chaos omitted</string>
-    <string name="hello_header_subtitle">Connect, deploy, and manage from one place.</string>
+    <string name="hello_header_subtitle">No third-party server. No logs you don\'t control.</string>
 
     <string name="hello_setup_title">Set up my own server</string>
-    <string name="hello_setup_description">Deploy your own server and keep the setup, access, and connection details in one place.</string>
+    <string name="hello_setup_description">Point it at a fresh VPS with root SSH access — it installs, generates keys, and finds a masking domain on its own.</string>
 
     <string name="hello_connect_title">Connect or import</string>
-    <string name="hello_connect_description">Join an existing private network or import a configuration to get online quickly.</string>
+    <string name="hello_connect_description">Already have a VLESS link or access to someone else\'s server? Skip the wizard and jump straight in.</string>
 
     <string name="hello_learn_title">Learn first</string>
-    <string name="hello_learn_description">Read the basics, understand the setup flow, and decide what kind of private network you need.</string>
+    <string name="hello_learn_description">New to REALITY, XHTTP, or what any of this actually protects you from? Start here.</string>
 
     <string name="hello_badge_soon">Soon</string>
     <string name="hello_view_source_code">View source code</string>

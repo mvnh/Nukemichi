@@ -1,13 +1,11 @@
 package app.nukemichi.android.feature.wizard.impl.domain.ssh
 
 import app.nukemichi.android.core.ssh.command.BashScriptCommand
-import app.nukemichi.android.core.ssh.internal.isSafeHostname
+import app.nukemichi.android.core.ssh.internal.ShellSafe
 import app.nukemichi.android.core.ssh.model.CommandResult
 
 internal class VerifySniCandidateCommand(domain: String) : BashScriptCommand<Boolean> {
-    init {
-        require(isSafeHostname(domain)) { "Refusing to build a script around an unsafe hostname: $domain" }
-    }
+    private val domain = ShellSafe.of(domain)
 
     override val script: String = $$"""
         set -eu

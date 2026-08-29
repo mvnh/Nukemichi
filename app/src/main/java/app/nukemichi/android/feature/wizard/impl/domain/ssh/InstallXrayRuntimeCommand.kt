@@ -1,6 +1,7 @@
 package app.nukemichi.android.feature.wizard.impl.domain.ssh
 
 import app.nukemichi.android.core.ssh.command.BashScriptCommand
+import app.nukemichi.android.core.ssh.internal.ShellSafe
 import app.nukemichi.android.core.ssh.model.CommandResult
 import app.nukemichi.android.feature.wizard.impl.domain.model.PackageManager
 
@@ -8,6 +9,10 @@ internal class InstallXrayRuntimeCommand(
     packageManager: PackageManager,
     releaseAsset: String,
 ) : BashScriptCommand<Unit> {
+    private val releaseAsset = ShellSafe.of(releaseAsset)
+
+    // Not ShellSafe: this is assembled shell syntax (`;`/`&&`), not a single token — its safety
+    // comes from every argument to installCommand(...) above being a compile-time literal.
     private val installDependencies: String = packageManager.installCommand("ca-certificates", "curl", "unzip", "openssl")
 
     override val script: String = $$"""

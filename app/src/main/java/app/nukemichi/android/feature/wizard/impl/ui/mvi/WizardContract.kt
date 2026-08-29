@@ -2,6 +2,7 @@ package app.nukemichi.android.feature.wizard.impl.ui.mvi
 
 import androidx.compose.runtime.Immutable
 import app.nukemichi.android.core.mode.AppMode
+import app.nukemichi.android.core.security.Secret
 import app.nukemichi.android.core.ui.util.UiText
 
 object WizardContract {
@@ -14,8 +15,8 @@ object WizardContract {
         val setupStrategy: SetupStrategy = SetupStrategy.FAST_START,
         val serverAuthMethod: ServerAuthMethod = ServerAuthMethod.PASSWORD,
         val serverAddress: String = "",
-        val password: String = "",
-        val sshKey: String = "",
+        val password: Secret = Secret(""),
+        val sshKey: Secret = Secret(""),
         val sshPort: String = "22",
         val username: String = "root",
         val sshFingerprint: String = "",
@@ -68,8 +69,8 @@ internal val WizardContract.State.isSshValid: Boolean
     get() = serverAddress.isNotBlank() && username.isNotBlank() &&
         sshPort.toIntOrNull() in 1..65_535 &&
         when (serverAuthMethod) {
-            WizardContract.ServerAuthMethod.PASSWORD -> password.isNotBlank()
-            WizardContract.ServerAuthMethod.SSH_KEY -> sshKey.isNotBlank()
+            WizardContract.ServerAuthMethod.PASSWORD -> password.value.isNotBlank()
+            WizardContract.ServerAuthMethod.SSH_KEY -> sshKey.value.isNotBlank()
         }
 
 internal val WizardContract.State.isConnectionProfileValid: Boolean

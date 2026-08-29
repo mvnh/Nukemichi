@@ -127,9 +127,9 @@ internal class SshjManager(
             client.connection.timeoutMs = SOCKET_TIMEOUT_MS
 
             when (auth) {
-                is SshAuth.Password -> client.authPassword(config.username, auth.password)
+                is SshAuth.Password -> client.authPassword(config.username, auth.password.value)
                 is SshAuth.PrivateKey -> {
-                    val keyProvider = client.loadKeys(auth.content, auth.passphrase?.toCharArray())
+                    val keyProvider = client.loadKeys(auth.content.value, auth.passphrase?.value?.toCharArray())
                     client.authPublickey(config.username, keyProvider)
                 }
             }

@@ -1,5 +1,6 @@
 package app.nukemichi.android.feature.wizard
 
+import app.nukemichi.android.core.security.Secret
 import app.nukemichi.android.feature.wizard.impl.ui.mvi.WizardContract
 import app.nukemichi.android.feature.wizard.impl.ui.mvi.isConnectionProfileValid
 import app.nukemichi.android.feature.wizard.impl.ui.mvi.isSshValid
@@ -12,14 +13,14 @@ class WizardContractTest {
     fun `SSH validation requires a valid port and credentials`() {
         val state = WizardContract.State(
             serverAddress = "server.example",
-            password = "secret",
+            password = Secret("secret"),
             sshPort = "22",
             username = "root",
         )
 
         assertTrue(state.isSshValid)
         assertFalse(state.copy(sshPort = "70000").isSshValid)
-        assertFalse(state.copy(password = "").isSshValid)
+        assertFalse(state.copy(password = Secret("")).isSshValid)
     }
 
     @Test

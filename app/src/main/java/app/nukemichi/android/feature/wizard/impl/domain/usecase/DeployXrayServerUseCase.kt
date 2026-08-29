@@ -49,8 +49,12 @@ internal class DeployXrayServerUseCase @Inject constructor() {
             } ?: return@flow
 
             val secrets = runStep(DeploymentStep.GENERATE_SECRETS) {
-                emit(DeploymentEvent.LogLine(DeploymentStep.GENERATE_SECRETS, "Generating uuid and x25519 keypair..."))
-                connection.execute(GenerateXrayServerSecretsCommand())
+                connection.execute(
+                    GenerateXrayServerSecretsCommand(),
+                    // Redacted downstream in the UI reducer regardless — this just stops
+                    // suppressing the step's own output the way every other step's isn't.
+                    onOutputLine = { line -> emit(DeploymentEvent.LogLine(DeploymentStep.GENERATE_SECRETS, line)) },
+                )
             } ?: return@flow
 
             val credentials = runStep(DeploymentStep.WRITE_CONFIGURATION) {

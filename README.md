@@ -64,7 +64,7 @@ state to clean up.
 ## Building it
 
 ```sh
-git clone --recurse-submodules <this repo>
+git clone --recurse-submodules github.com/mvnh/Nukemichi.git
 ```
 
 `hev-socks5-tunnel` is a git submodule (native tun2socks) — the `--recurse-submodules` flag matters,

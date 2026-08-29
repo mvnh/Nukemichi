@@ -10,6 +10,7 @@ import app.nukemichi.android.core.vpn.configfactory.XrayServerConfigFactory
 import app.nukemichi.android.core.vpn.spec.XraySecurity
 import app.nukemichi.android.feature.wizard.impl.domain.model.DeploymentEvent
 import app.nukemichi.android.feature.wizard.impl.domain.model.WizardProfileDraft
+import app.nukemichi.android.feature.wizard.impl.domain.model.generateServerNickname
 import app.nukemichi.android.feature.wizard.impl.domain.ssh.DetectServerArchCommand
 import app.nukemichi.android.feature.wizard.impl.domain.usecase.DeployXrayServerUseCase
 import kotlinx.coroutines.flow.Flow
@@ -36,7 +37,7 @@ internal class WizardSetupCoordinator @Inject constructor(
     fun saveProfile(draft: WizardProfileDraft): Result<XrayVpnProfile> = runCatching {
         require(draft.isDeployable) { "Server-side Xray credentials are missing." }
         XrayVpnProfile(
-            name = draft.serverAddress,
+            name = generateServerNickname(draft.serverAddress),
             sshHost = draft.serverAddress,
             sshPort = draft.sshPort,
             sshUsername = draft.sshUsername,

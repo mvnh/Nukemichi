@@ -92,7 +92,7 @@ internal class DashboardViewModel @Inject constructor(
 
         when (state.value.engineState) {
             XrayEngineState.RUNNING -> {
-                reduce { copy(engineState = XrayEngineState.STOPPING) }
+                reduce { copy(engineState = XrayEngineState.STOPPING, errorMessage = null) }
                 serviceProvider.control.stop().onFailure { error ->
                     // Dispatch failed synchronously — nothing arrives over IPC to undo the
                     // optimistic state above, so this does it instead.
@@ -119,7 +119,7 @@ internal class DashboardViewModel @Inject constructor(
 
     private suspend fun beginStartingVpn() {
         if (state.value.isBusy) return
-        reduce { copy(engineState = XrayEngineState.STARTING) }
+        reduce { copy(engineState = XrayEngineState.STARTING, errorMessage = null) }
         startVpn()
     }
 

@@ -58,7 +58,6 @@ internal class WizardViewModel @Inject constructor(
                 reduce { copy(sshFingerprint = intent.fingerprint) }
                 connectionCheckDelegate.validate()
             }
-            is Intent.AcknowledgeRisksToggled -> reduce { copy(hasAcknowledgedRisks = intent.checked) }
             Intent.RetryDeployment -> deploymentDelegate.start()
             Intent.CancelDeployment -> deploymentDelegate.cancel()
             Intent.ToggleTerminalVisibility -> reduce {

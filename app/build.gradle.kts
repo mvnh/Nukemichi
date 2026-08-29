@@ -57,13 +57,17 @@ abstract class DownloadLibV2rayTask : DefaultTask() {
     }
 }
 
-val downloadedLibv2rayAarFile = layout.buildDirectory.file("generated/libv2ray/libv2ray.aar")
+val libv2rayVersion = "v26.8.20"
+
+// Filename carries the version so bumping libv2rayVersion is itself a cache miss — otherwise the
+// task's own "if (target.exists()) return" would keep serving a stale local build/ artifact.
+val downloadedLibv2rayAarFile = layout.buildDirectory.file("generated/libv2ray/libv2ray-$libv2rayVersion.aar")
 
 val downloadLibV2ray = tasks.register<DownloadLibV2rayTask>("downloadLibV2ray") {
     group = "build setup"
     description = "Downloads and verifies the libv2ray.aar xray-core Android library"
 
-    version.set("v26.8.20")
+    version.set(libv2rayVersion)
     // Must be updated together with version above — taken from the release asset's own digest.
     sha256.set("670cf11d9d10a6bb6548ac4f593acfa4339155732f6f8de4d45923f30a74deed")
     outputFile.set(downloadedLibv2rayAarFile)
@@ -178,7 +182,9 @@ android {
             isEnable = true
             reset()
             include("arm64-v8a", "x86_64")
-            isUniversalApk = false
+            // A device that isn't arm64/x86_64 gets no split it can install — this is the
+            // fallback for that case, not the recommended everyday download.
+            isUniversalApk = true
         }
     }
 }

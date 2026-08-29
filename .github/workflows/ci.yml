@@ -5,10 +5,8 @@ on:
     branches: [master]
   pull_request:
     branches: [master]
-  # Manual "Run workflow" button in the Actions UI, for kicking off a run without a push/PR.
   workflow_dispatch:
 
-# A new push to the same branch/PR supersedes whatever's already running for it.
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -17,16 +15,13 @@ permissions:
   contents: read
 
 jobs:
-  # Unit tests, Android Lint, and a debug assemble (Hilt/KSP codegen + the hev-socks5-tunnel
-  # NDK build + libv2ray.aar download/checksum) — the fast checks every PR must pass.
   verify:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with:
-          # hev-socks5-tunnel is a submodule the native build reads Android.mk from directly —
-          # without this the NDK build fails on a missing makefile, not a missing symbol.
           submodules: recursive
+          fetch-depth: 0
 
       - uses: actions/setup-java@v4
         with:
@@ -35,11 +30,9 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v4
 
-      # Keyed on build.gradle.kts, which is where downloadLibV2ray's version/sha256 live — any
-      # version bump changes the key instead of silently reusing a stale cached artifact.
       - uses: actions/cache@v4
         with:
-          path: app/build/generated/libv2ray/libv2ray.aar
+          path: app/build/generated/libv2ray
           key: libv2ray-aar-${{ hashFiles('app/build.gradle.kts') }}
 
       - name: Unit tests, lint, debug build
@@ -61,19 +54,13 @@ jobs:
           path: app/build/reports/lint-results-debug.html
           retention-days: 7
 
-  # R8/minification path (release build type, no signing config in CI — see build.gradle.kts,
-  # an unconfigured signingConfig is deliberately left null so this just produces an unsigned
-  # APK). Kept separate and non-blocking for now: it's the one most likely to break on a keep-rule
-  # regression (see "Add R8 keep rules for release minification" and JNI's PKGNAME lookup in
-  # NukemichiVpnService/TProxyService), but it's also the slowest job here, and failing loud on a
-  # widening exposure while it settles isn't worth blocking every PR before there's a signing story.
   release-build:
     runs-on: ubuntu-latest
-    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
         with:
           submodules: recursive
+          fetch-depth: 0
 
       - uses: actions/setup-java@v4
         with:
@@ -84,7 +71,7 @@ jobs:
 
       - uses: actions/cache@v4
         with:
-          path: app/build/generated/libv2ray/libv2ray.aar
+          path: app/build/generated/libv2ray
           key: libv2ray-aar-${{ hashFiles('app/build.gradle.kts') }}
 
       - name: Assemble release (unsigned)

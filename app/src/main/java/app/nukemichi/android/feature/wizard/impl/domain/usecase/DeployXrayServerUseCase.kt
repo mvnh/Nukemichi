@@ -147,7 +147,7 @@ internal class DeployXrayServerUseCase @Inject constructor() {
         const val CONFIG_PATH = "/usr/local/etc/xray/config.json"
         const val SYSTEMD_UNIT_PATH = "/etc/systemd/system/nukemichi-xray.service"
         const val OPENRC_SERVICE_PATH = "/etc/init.d/nukemichi-xray"
-        const val OPENRC_SERVICE_PERMISSIONS = 0b111_101_101
+        const val OPENRC_SERVICE_PERMISSIONS = 0b111_101_101 // rwxr-xr-x (0755)
         const val CONFIG_PERMISSIONS = 0b110_000_000 // rw------- (0600)
         const val MAX_SNI_VERIFICATION_ATTEMPTS = 5
     }

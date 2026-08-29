@@ -60,7 +60,7 @@ internal class SshjManager(
         auth: SshAuth,
     ): Result<SharedConnection> = sessionsMutex.withLock {
         sessions[key]?.let { shared ->
-            if (shared.connection.isConnected.value) {
+            if (shared.connection.refreshConnectionState()) {
                 shared.idleCloseJob?.cancel()
                 shared.idleCloseJob = null
                 shared.lease()

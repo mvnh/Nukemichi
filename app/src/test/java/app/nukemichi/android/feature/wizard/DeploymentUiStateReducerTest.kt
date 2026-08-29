@@ -34,6 +34,18 @@ class DeploymentUiStateReducerTest {
     }
 
     @Test
+    fun `the log buffer is capped, dropping the oldest lines first`() {
+        var state = DeploymentUiState()
+        repeat(510) { index ->
+            state = state.reduce(DeploymentEvent.LogLine(DeploymentStep.INSTALL_RUNTIME, "line-$index"))
+        }
+
+        assertEquals(500, state.logLines.size)
+        assertEquals("line-10", state.logLines.first())
+        assertEquals("line-509", state.logLines.last())
+    }
+
+    @Test
     fun `step succeeded marks only that step as success`() {
         val state = DeploymentUiState().reduce(DeploymentEvent.StepSucceeded(DeploymentStep.GENERATE_SECRETS))
 

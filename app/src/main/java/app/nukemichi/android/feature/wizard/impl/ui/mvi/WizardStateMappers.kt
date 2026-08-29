@@ -22,6 +22,7 @@ internal fun WizardContract.State.toProfileDraft(): WizardProfileDraft = WizardP
     serverAddress = serverAddress.trim(),
     sshPort = sshPort.toInt(),
     sshUsername = username.trim(),
+    sshExpectedFingerprint = sshFingerprint.trim().ifBlank { null },
     uuid = uuid.trim(),
     realityServerName = realityServerName.trim(),
     realityPublicKey = realityPublicKey.trim(),

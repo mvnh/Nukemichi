@@ -10,6 +10,7 @@ import app.nukemichi.android.core.storage.StorageDomain
 import app.nukemichi.android.core.ui.mvi.PatternViewModel
 import app.nukemichi.android.core.ui.util.UiText
 import app.nukemichi.android.core.vpn.XrayControl
+import app.nukemichi.android.core.vpn.XrayVpnProfile
 import app.nukemichi.android.core.vpn.configfactory.XrayClientConfigFactory
 import app.nukemichi.android.feature.wizard.impl.domain.WizardSetupCoordinator
 import app.nukemichi.android.feature.wizard.impl.ui.mvi.WizardContract.Effect
@@ -83,16 +84,16 @@ internal class WizardViewModel @Inject constructor(
 
     private suspend fun finishSetup() {
         coordinator.saveProfile(state.value.toProfileDraft())
-            .onSuccess {
+            .onSuccess { profile ->
                 appStorage.putString(StorageDomain.EXPERIENCE, ExperienceKeys.WIZARD_COMPLETED, "true")
                 if (xrayControl.needsVpnPermission()) sendEffect(Effect.RequestVpnPermission)
-                else startVpn()
+                else startVpn(profile)
             }
             .onFailure { error -> reduce { copy(errorMessage = error.message?.let(UiText::Raw)) } }
     }
 
-    private suspend fun startVpn() {
-        val profile = coordinator.saveProfile(state.value.toProfileDraft()).getOrElse { error ->
+    private suspend fun startVpn(savedProfile: XrayVpnProfile? = null) {
+        val profile = savedProfile ?: coordinator.saveProfile(state.value.toProfileDraft()).getOrElse { error ->
             reduce { copy(errorMessage = error.message?.let(UiText::Raw)) }
             return
         }

@@ -6,4 +6,8 @@
     <string name="back">Back</string>
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
+
+    <string name="notification_vpn_title">Nukemichi VPN</string>
+    <string name="notification_vpn_content">Connected</string>
+    <string name="notification_vpn_disconnect">Disconnect</string>
 </resources>

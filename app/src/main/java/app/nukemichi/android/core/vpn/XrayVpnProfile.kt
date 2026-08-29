@@ -17,7 +17,6 @@ data class XrayVpnProfile(
     // No default: every real profile needs real REALITY key material from a deployment.
     val security: XraySecurity,
     val transport: XrayTransport = XrayTransport.Xhttp(),
-    val binaryUrl: String = "latest",
     val deployedAtMillis: Long = System.currentTimeMillis(),
     val muxEnabled: Boolean = false,
     val muxConcurrency: Int = DEFAULT_MUX_CONCURRENCY,

@@ -44,7 +44,6 @@ import kotlinx.collections.immutable.persistentListOf
 
 private const val PAGE_STRATEGY = 0
 private const val PAGE_SERVER_DATA = 1
-private const val PAGE_CONFIRMATION = 2
 private const val PAGE_DEPLOYMENT = 3
 private const val PAGE_COUNT = 4
 
@@ -123,6 +122,7 @@ internal fun WizardScreen(
                 onSshFingerprintChange = { viewModel.processIntent(Intent.SshFingerprintChanged(it)) },
                 isAdvancedSheetOpen = isAdvancedSheetOpen,
                 onAdvancedSheetDismiss = { isAdvancedSheetOpen = false },
+                onAdvancedSettingsClick = { isAdvancedSheetOpen = true },
             )
         },
         WizardStep(title = UiText.Resource(R.string.wizard_step_confirmation)) {
@@ -132,8 +132,6 @@ internal fun WizardScreen(
                 username = uiState.username,
                 authMethod = uiState.serverAuthMethod,
                 setupStrategy = uiState.setupStrategy,
-                hasAcknowledgedRisks = uiState.hasAcknowledgedRisks,
-                onAcknowledgeChange = { viewModel.processIntent(Intent.AcknowledgeRisksToggled(it)) },
             )
         },
         WizardStep(title = UiText.Resource(R.string.wizard_step_deployment)) {
@@ -158,11 +156,9 @@ internal fun WizardScreen(
 
     WizardContainer(
         state = wizardState,
-        title = title,
         steps = wizardSteps,
         isNextEnabled = when (wizardState.currentPage) {
             PAGE_SERVER_DATA -> uiState.isSshValid
-            PAGE_CONFIRMATION -> uiState.hasAcknowledgedRisks
             else -> true
         },
         isLoading = uiState.isLoading || uiState.deployment.phase == DeploymentPhase.InProgress,
@@ -172,14 +168,10 @@ internal fun WizardScreen(
         onNextClick = { viewModel.processIntent(Intent.OnNextClicked(wizardState.currentPage)) },
         topBar = {
             WizardTopBar(
-                title = title,
+                steps = wizardSteps,
                 state = wizardState,
                 onNavIconClick = { viewModel.processIntent(Intent.OnCloseWizardClicked) },
-                onOverflowClick = if (wizardState.currentPage == PAGE_SERVER_DATA) {
-                    { isAdvancedSheetOpen = true }
-                } else {
-                    null
-                },
+                navIconDescription = title,
             )
         },
     )

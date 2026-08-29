@@ -25,15 +25,6 @@
     kotlinx.serialization.KSerializer serializer(...);
 }
 
-# gRPC + Protobuf-lite: xray-core's generated API stubs (StatsService/HandlerService/
-# LoggerService, used by XrayGrpcApi) and the grpc-okhttp transport.
--keep class com.xray.** { *; }
--keep class * extends com.google.protobuf.GeneratedMessageLite { *; }
--keep class io.grpc.** { *; }
--dontwarn io.grpc.**
--dontwarn com.google.protobuf.**
--dontwarn javax.annotation.**
-
 # sshj + Bouncy Castle: reflection-based provider/algorithm lookup for SSH auth/crypto.
 -keep class net.schmizz.** { *; }
 -dontwarn net.schmizz.**

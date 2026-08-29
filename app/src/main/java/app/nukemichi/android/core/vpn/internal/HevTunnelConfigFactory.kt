@@ -20,12 +20,15 @@ internal object HevTunnelConfigFactory {
             add("  port: ${socksEndpoint.port}")
             add("  udp: 'udp'")
             if (socksEndpoint.username != null && socksEndpoint.password != null) {
-                add("  username: '${socksEndpoint.username}'")
-                add("  password: '${socksEndpoint.password}'")
+                add("  username: '${socksEndpoint.username.yamlSingleQuoted()}'")
+                add("  password: '${socksEndpoint.password.yamlSingleQuoted()}'")
             }
             add("misc:")
             add("  log-level: warn")
         }
         return lines.joinToString("\n")
     }
+
+    // YAML single-quoted scalars need an embedded quote doubled, not backslash-escaped.
+    private fun String.yamlSingleQuoted(): String = replace("'", "''")
 }

@@ -27,6 +27,16 @@ class HevTunnelConfigFactoryTest {
     }
 
     @Test
+    fun `an embedded single quote in a credential is doubled, not left to close the scalar early`() {
+        val endpoint = SocksEndpoint("127.0.0.1", 10_808, "nuke'michi", "sec'ret")
+
+        val lines = HevTunnelConfigFactory.build(endpoint).lines()
+
+        assertEquals("  username: 'nuke''michi'", lines.first { it.trimStart().startsWith("username:") })
+        assertEquals("  password: 'sec''ret'", lines.first { it.trimStart().startsWith("password:") })
+    }
+
+    @Test
     fun `no credentials means no auth lines at all`() {
         val endpoint = SocksEndpoint("127.0.0.1", 10_808)
 

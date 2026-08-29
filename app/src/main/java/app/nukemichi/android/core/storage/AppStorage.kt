@@ -12,6 +12,5 @@ enum class StorageDomain(
 ) {
     EXPERIENCE("experience", false),
     SSH_TRUST("ssh-trust", true),
-    AGENT_CREDENTIALS("agent-credentials", true),
     XRAY_PROFILES("xray-profiles", true),
 }

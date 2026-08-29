@@ -12,6 +12,7 @@ import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
@@ -35,8 +36,9 @@ internal class SshjConnection(
 ) : SshConnection {
 
     private val connected = MutableStateFlow(client.isConnected)
-    override val isConnected: StateFlow<Boolean>
-        get() = connected.apply { value = client.isConnected }
+    override val isConnected: StateFlow<Boolean> = connected.asStateFlow()
+
+    override fun refreshConnectionState(): Boolean = client.isConnected.also { connected.value = it }
 
     private val lpfsMutex = Mutex()
     private val activeLpfs = mutableListOf<LpfHandle>()

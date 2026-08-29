@@ -1,0 +1,29 @@
+<resources>
+    <string name="hello_header_title">Your very own VPN, %1$s</string>
+    <string name="hello_header_title_highlight">chaos omitted</string>
+    <string name="hello_header_subtitle">Connect, deploy, and manage from one place.</string>
+
+    <string name="hello_setup_title">Set up my own server</string>
+    <string name="hello_setup_description">Deploy your own server and keep the setup, access, and connection details in one place.</string>
+
+    <string name="hello_connect_title">Connect or import</string>
+    <string name="hello_connect_description">Join an existing private network or import a configuration to get online quickly.</string>
+
+    <string name="hello_learn_title">Learn first</string>
+    <string name="hello_learn_description">Read the basics, understand the setup flow, and decide what kind of private network you need.</string>
+
+    <string name="hello_badge_soon">Soon</string>
+    <string name="hello_view_source_code">View source code</string>
+    <string name="hello_view_advanced_mode">View advanced mode</string>
+
+    <string name="advanced_mode_intro_title">Advanced mode</string>
+    <string name="advanced_mode_intro_capabilities_title">What it unlocks</string>
+    <string name="advanced_mode_intro_capability_transport">Choose the transport protocol by hand instead of the automatic default</string>
+    <string name="advanced_mode_intro_capability_config">Edit the full Xray configuration, including a raw JSON editor</string>
+    <string name="advanced_mode_intro_capability_stats">See detailed, per-connection statistics</string>
+    <string name="advanced_mode_intro_capability_tty">Run commands on your server directly from the app</string>
+    <string name="advanced_mode_intro_warning_title">This is not what most people need</string>
+    <string name="advanced_mode_intro_warning_body">Advanced mode assumes you understand REALITY, XHTTP, and the Xray config schema. Misconfiguring any of it can make you easier to fingerprint, or break your connection outright — there is no built-in guardrail stopping you from doing either.</string>
+    <string name="advanced_mode_intro_acknowledge">I understand the risks and want full control</string>
+    <string name="advanced_mode_intro_enable">Enable advanced mode</string>
+</resources>

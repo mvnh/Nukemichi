@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+   Pre-API-31 counterpart of data_extraction_rules.xml — same exclusion, different mechanism
+   (Auto Backup's own full-backup-content format rather than the newer cloud-backup/device-transfer
+   split), so a device stuck on the old backup path doesn't ship secure_storage either. See
+   data_extraction_rules.xml for why: it's AES/GCM ciphertext under a non-exportable Keystore key,
+   worthless on any device other than the one that wrote it.
+-->
+<full-backup-content>
+    <exclude domain="sharedpref" path="secure_storage.xml"/>
+</full-backup-content>

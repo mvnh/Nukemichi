@@ -1,0 +1,17 @@
+<resources>
+    <string name="settings_title">Settings</string>
+    <string name="settings_mode_section_title">Mode</string>
+    <string name="settings_mode_normal_title">Normal</string>
+    <string name="settings_mode_normal_description">Connect with one tap. Everything else is automatic.</string>
+    <string name="settings_mode_advanced_title">Advanced</string>
+    <string name="settings_mode_advanced_description">Surgical control over transport, config, and stats.</string>
+
+    <string name="settings_advanced_section_title">Advanced</string>
+    <string name="settings_sni_override_title">Masking domain (SNI)</string>
+    <string name="settings_sni_override_warning">Must match the domain your server was deployed with, or the connection will fail.</string>
+    <string name="settings_utls_fingerprint_title">TLS fingerprint</string>
+    <string name="settings_mux_title">Multiplexing</string>
+    <string name="settings_mux_description">Share one connection across multiple streams.</string>
+    <string name="settings_mux_concurrency">Concurrency: %1$d</string>
+    <string name="settings_export_vless_link">Export as vless:// link</string>
+</resources>

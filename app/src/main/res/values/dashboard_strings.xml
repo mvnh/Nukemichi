@@ -1,0 +1,29 @@
+<resources>
+    <string name="dashboard_no_server_configured">No server configured</string>
+    <string name="dashboard_logs">Logs</string>
+    <string name="dashboard_export_link_cd">Export server link</string>
+    <string name="dashboard_connected_for">Connected for %1$s</string>
+
+    <string name="dashboard_state_not_connected">Not connected</string>
+    <string name="dashboard_state_connecting">Connecting…</string>
+    <string name="dashboard_state_connected">Connected</string>
+    <string name="dashboard_state_disconnecting">Disconnecting…</string>
+    <string name="dashboard_state_error">Connection error</string>
+
+    <string name="dashboard_server_info_server">Server</string>
+    <string name="dashboard_server_info_masking_as">Masking as</string>
+    <string name="dashboard_server_info_deployed">Deployed</string>
+
+    <string name="dashboard_stats_down">↓ Down</string>
+    <string name="dashboard_stats_up">↑ Up</string>
+    <string name="dashboard_stats_total">Total</string>
+
+    <string name="dashboard_error_vpn_permission_denied">VPN permission was denied.</string>
+    <string name="dashboard_error_failed_to_stop_vpn">Failed to stop VPN.</string>
+    <string name="dashboard_error_connection_stalled">Connection stalled — reconnecting…</string>
+    <string name="dashboard_error_no_server_configured">No server configured yet — run the setup wizard first.</string>
+    <string name="dashboard_error_failed_to_start_vpn">Failed to start VPN.</string>
+
+    <string name="xray_logs_title">Xray logs</string>
+    <string name="xray_logs_copy">Copy</string>
+</resources>

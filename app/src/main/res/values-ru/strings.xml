@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Nukemichi</string>
+
+    <string name="next">Продолжить</string>
+    <string name="finish">Завершить</string>
+    <string name="back">Назад</string>
+    <string name="cancel">Отмена</string>
+    <string name="ok">Понятно</string>
+</resources>

@@ -1,0 +1,29 @@
+<resources>
+    <string name="hello_header_title">Свой VPN, %1$s</string>
+    <string name="hello_header_title_highlight">без хаоса</string>
+    <string name="hello_header_subtitle">Подключайтесь, разворачивайте и управляйте из одного места.</string>
+
+    <string name="hello_setup_title">Развернуть свой сервер</string>
+    <string name="hello_setup_description">Разверните свой сервер и храните настройку, доступ и параметры подключения в одном месте.</string>
+
+    <string name="hello_connect_title">Подключить или импортировать</string>
+    <string name="hello_connect_description">Подключитесь к существующей приватной сети или импортируйте конфигурацию, чтобы быстро выйти в сеть.</string>
+
+    <string name="hello_learn_title">Сначала изучить</string>
+    <string name="hello_learn_description">Разберитесь в основах, поймите сценарий настройки и решите, какая приватная сеть вам нужна.</string>
+
+    <string name="hello_badge_soon">Скоро</string>
+    <string name="hello_view_source_code">Открыть исходный код</string>
+    <string name="hello_view_advanced_mode">Посмотреть расширенный режим</string>
+
+    <string name="advanced_mode_intro_title">Расширенный режим</string>
+    <string name="advanced_mode_intro_capabilities_title">Что открывается</string>
+    <string name="advanced_mode_intro_capability_transport">Выбор транспортного протокола вручную вместо автоматического</string>
+    <string name="advanced_mode_intro_capability_config">Редактирование всего конфига Xray, включая редактор сырого JSON</string>
+    <string name="advanced_mode_intro_capability_stats">Подробная статистика по каждому соединению</string>
+    <string name="advanced_mode_intro_capability_tty">Запуск команд на сервере прямо из приложения</string>
+    <string name="advanced_mode_intro_warning_title">Это нужно не большинству</string>
+    <string name="advanced_mode_intro_warning_body">Расширенный режим предполагает, что вы понимаете REALITY, XHTTP и схему конфига Xray. Ошибка в любом из этого может упростить вашу идентификацию или полностью разорвать соединение — встроенной защиты от этого нет.</string>
+    <string name="advanced_mode_intro_acknowledge">Я понимаю риски и хочу полный контроль</string>
+    <string name="advanced_mode_intro_enable">Включить расширенный режим</string>
+</resources>

@@ -1,0 +1,88 @@
+<resources>
+    <string name="wizard_title_deploy_server">Развёртывание сервера</string>
+    <string name="wizard_title_add_to_subscription">Добавление сервера в подписку</string>
+    <string name="wizard_title_import_uri">Импорт по ссылке</string>
+    <string name="wizard_strategy_choice">Выбор стратегии</string>
+    <string name="wizard_step_rule_generation">Генерация правил</string>
+    <string name="wizard_step_confirmation">Подтверждение</string>
+    <string name="wizard_step_deployment">Установка</string>
+
+    <!-- Strategy Choice Page -->
+    <string name="wizard_strategy_description">В зависимости от ваших потребностей в безопасности и наличии домена выберите стратегию настройки.</string>
+
+    <string name="wizard_strategy_fast_start_title">Быстрый старт</string>
+    <string name="wizard_strategy_fast_start_desc">Быстро, легко, требуется только сервер.</string>
+
+    <string name="wizard_strategy_resilience_title">Максимальная устойчивость</string>
+    <string name="wizard_strategy_resilience_desc">Продвинутая маскировка. Требуется сервер и доменное имя.</string>
+
+    <string name="wizard_badge_soon">Скоро</string>
+
+    <!-- Tags -->
+    <string name="wizard_tag_5_min">~5 мин</string>
+    <string name="wizard_tag_domain">домен</string>
+    <string name="wizard_tag_hard">Сложно</string>
+    <string name="wizard_tag_easy">Легко</string>
+    <string name="wizard_tag_15_min">~15 мин</string>
+    <string name="wizard_tag_soon">Скоро</string>
+    <string name="wizard_tag_recommended">Рекомендуется</string>
+
+    <!-- Placeholders (rule generation page is not built yet) -->
+    <string name="wizard_placeholder_rules_content">Здесь будет настройка генерации правил</string>
+
+    <!-- Server Data Entry Page -->
+    <string name="wizard_server_data_description">Введите данные для подключения к серверу.</string>
+    <string name="wizard_server_data_connection_title">Подключение</string>
+    <string name="wizard_server_data_address">Адрес сервера</string>
+    <string name="wizard_server_data_authentication">Аутентификация</string>
+    <string name="wizard_server_data_password">Пароль</string>
+    <string name="wizard_server_data_ssh_key">SSH-ключ</string>
+    <string name="wizard_server_data_advanced_settings">Дополнительные настройки</string>
+    <string name="wizard_server_data_port">Порт</string>
+    <string name="wizard_server_data_username">Имя пользователя</string>
+    <string name="wizard_server_data_entry">Данные сервера</string>
+    <string name="wizard_server_data_fingerprint">Отпечаток SSH-ключа хоста (необязательно — при первом подключении предложим подтвердить)</string>
+
+    <!-- Connection check dialog -->
+    <string name="wizard_connection_check_checking">Проверяем подключение к серверу…</string>
+    <string name="wizard_connection_check_still_checking">Это занимает больше времени, чем обычно…</string>
+    <string name="wizard_connection_check_failed_title">Не удалось подключиться</string>
+    <string name="wizard_connection_check_failed_message">Нам не удалось установить подключение к вашему серверу. Это могло произойти по разным причинам:\n\n• Неверный адрес или порт\n• Файрвол или группа безопасности блокирует порт\n• Неверный логин, пароль или SSH-ключ\n• Сервер выключен или недоступен\n• SSH-ключ хоста ещё не подтверждён как доверенный</string>
+    <string name="wizard_connection_check_failed_detail_prefix">Подробности: </string>
+
+    <string name="wizard_untrusted_host_title">Первое подключение к этому серверу</string>
+    <string name="wizard_untrusted_host_body">Вы подключаетесь к этому серверу впервые — нет способа проверить, что это действительно ваш сервер, а не что-то, перехватывающее соединение. Отпечаток SSH-ключа хоста:\n\n%1$s\n\nЕсли вы только что развернули этот сервер сами — это ожидаемо, доверьтесь ему, чтобы продолжить.</string>
+    <string name="wizard_untrusted_host_trust">Доверять и продолжить</string>
+
+    <!-- Confirmation Page -->
+    <string name="wizard_confirmation_summary_title">Сводка</string>
+    <string name="wizard_confirmation_server_label">Сервер</string>
+    <string name="wizard_confirmation_auth_label">Аутентификация</string>
+    <string name="wizard_confirmation_strategy_label">Стратегия</string>
+    <string name="wizard_confirmation_warning_title">Прежде чем продолжить</string>
+    <string name="wizard_confirmation_warning_body">Если закрыть приложение во время установки, на сервере может остаться незавершённая конфигурация. Это безопасно — повторный запуск мастера аккуратно всё перезапишет.</string>
+    <string name="wizard_confirmation_acknowledge">Я понимаю, что произойдёт, и подтверждаю установку</string>
+
+    <!-- Errors -->
+    <string name="wizard_error_vpn_permission_required">Для запуска туннеля нужен доступ к VPN.</string>
+    <string name="wizard_error_incomplete_ssh_details">Сначала заполните данные SSH-подключения.</string>
+    <string name="wizard_error_unknown">Неизвестная ошибка</string>
+
+    <!-- Deployment progress page -->
+    <string name="wizard_deployment_step_install_runtime">Устанавливаем xray-core</string>
+    <string name="wizard_deployment_step_find_sni">Подбираем маскирующий домен</string>
+    <string name="wizard_deployment_step_generate_secrets">Генерируем ключи</string>
+    <string name="wizard_deployment_step_write_configuration">Загружаем конфигурацию</string>
+    <string name="wizard_deployment_step_start_service">Запускаем сервис</string>
+
+    <string name="wizard_deployment_terminal_show">Показать терминал</string>
+    <string name="wizard_deployment_terminal_hide">Скрыть терминал</string>
+
+    <string name="wizard_deployment_error_title">Установка прервана</string>
+    <string name="wizard_deployment_retry">Повторить</string>
+    <string name="wizard_deployment_back">Назад</string>
+
+    <string name="wizard_deployment_success_title">Установка завершена</string>
+    <string name="wizard_deployment_success_body">Можно выходить в интернет защищённо.</string>
+    <string name="wizard_deployment_success_cta">Начать использовать VPN</string>
+</resources>

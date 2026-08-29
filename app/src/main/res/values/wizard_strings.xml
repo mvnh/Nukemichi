@@ -1,0 +1,88 @@
+<resources>
+    <string name="wizard_title_deploy_server">Deploy your server</string>
+    <string name="wizard_title_add_to_subscription">Add server to subscription</string>
+    <string name="wizard_title_import_uri">Import from link</string>
+    <string name="wizard_strategy_choice">Strategy Choice</string>
+    <string name="wizard_step_rule_generation">Rule Generation</string>
+    <string name="wizard_step_confirmation">Confirmation</string>
+    <string name="wizard_step_deployment">Deployment</string>
+
+    <!-- Strategy Choice Page -->
+    <string name="wizard_strategy_description">Select configuration strategy depending on your security needs and domain availability.</string>
+
+    <string name="wizard_strategy_fast_start_title">Fast Start</string>
+    <string name="wizard_strategy_fast_start_desc">Simple setup, easy, requires only a VPS.</string>
+
+    <string name="wizard_strategy_resilience_title">Maximum Resilience</string>
+    <string name="wizard_strategy_resilience_desc">Advanced obfuscation. Requires a server and a domain name.</string>
+
+    <string name="wizard_badge_soon">Soon</string>
+
+    <!-- Tags -->
+    <string name="wizard_tag_5_min">~5 min</string>
+    <string name="wizard_tag_domain">domain</string>
+    <string name="wizard_tag_hard">Hard</string>
+    <string name="wizard_tag_easy">Easy</string>
+    <string name="wizard_tag_15_min">~15 min</string>
+    <string name="wizard_tag_soon">Soon</string>
+    <string name="wizard_tag_recommended">Recommended</string>
+
+    <!-- Placeholders (rule generation page is not built yet) -->
+    <string name="wizard_placeholder_rules_content">Rule generation setup will be here</string>
+
+    <!-- Server Data Entry Page -->
+    <string name="wizard_server_data_description">Enter the connection details for your server.</string>
+    <string name="wizard_server_data_connection_title">Connection</string>
+    <string name="wizard_server_data_address">Server address</string>
+    <string name="wizard_server_data_authentication">Authentication</string>
+    <string name="wizard_server_data_password">Password</string>
+    <string name="wizard_server_data_ssh_key">SSH key</string>
+    <string name="wizard_server_data_advanced_settings">Advanced settings</string>
+    <string name="wizard_server_data_port">Port</string>
+    <string name="wizard_server_data_username">Username</string>
+    <string name="wizard_server_data_entry">Server Data Entry</string>
+    <string name="wizard_server_data_fingerprint">SSH host key fingerprint (optional — you\'ll be asked to trust it on first connect)</string>
+
+    <!-- Connection check dialog -->
+    <string name="wizard_connection_check_checking">Checking connection to your server…</string>
+    <string name="wizard_connection_check_still_checking">This is taking longer than usual…</string>
+    <string name="wizard_connection_check_failed_title">Couldn\'t connect</string>
+    <string name="wizard_connection_check_failed_message">We couldn\'t reach your server. This can happen for a few reasons:\n\n• Wrong address or port\n• A firewall or security group is blocking the port\n• Wrong username, password or SSH key\n• The server is offline\n• The server\'s SSH host key isn\'t trusted yet</string>
+    <string name="wizard_connection_check_failed_detail_prefix">Details: </string>
+
+    <string name="wizard_untrusted_host_title">First connection to this server</string>
+    <string name="wizard_untrusted_host_body">This is the first time connecting — there\'s no way to verify this is really your server and not something intercepting the connection. Its SSH host key fingerprint is:\n\n%1$s\n\nIf you just set this server up yourself, this is expected — trust it to continue.</string>
+    <string name="wizard_untrusted_host_trust">Trust and continue</string>
+
+    <!-- Confirmation Page -->
+    <string name="wizard_confirmation_summary_title">Summary</string>
+    <string name="wizard_confirmation_server_label">Server</string>
+    <string name="wizard_confirmation_auth_label">Authentication</string>
+    <string name="wizard_confirmation_strategy_label">Strategy</string>
+    <string name="wizard_confirmation_warning_title">Before you continue</string>
+    <string name="wizard_confirmation_warning_body">If you close the app while the install is running, the server may be left with a partial configuration. That\'s safe — running the wizard again will cleanly overwrite it.</string>
+    <string name="wizard_confirmation_acknowledge">I understand what will happen and confirm the installation</string>
+
+    <!-- Errors -->
+    <string name="wizard_error_vpn_permission_required">VPN permission is required to start the tunnel.</string>
+    <string name="wizard_error_incomplete_ssh_details">Complete the SSH connection details first.</string>
+    <string name="wizard_error_unknown">Unknown error</string>
+
+    <!-- Deployment progress page -->
+    <string name="wizard_deployment_step_install_runtime">Installing xray-core</string>
+    <string name="wizard_deployment_step_find_sni">Finding a masking domain</string>
+    <string name="wizard_deployment_step_generate_secrets">Generating keys</string>
+    <string name="wizard_deployment_step_write_configuration">Uploading configuration</string>
+    <string name="wizard_deployment_step_start_service">Starting the service</string>
+
+    <string name="wizard_deployment_terminal_show">Show terminal</string>
+    <string name="wizard_deployment_terminal_hide">Hide terminal</string>
+
+    <string name="wizard_deployment_error_title">Installation stopped</string>
+    <string name="wizard_deployment_retry">Retry</string>
+    <string name="wizard_deployment_back">Back</string>
+
+    <string name="wizard_deployment_success_title">Installation complete</string>
+    <string name="wizard_deployment_success_body">You can browse securely now.</string>
+    <string name="wizard_deployment_success_cta">Start using the VPN</string>
+</resources>

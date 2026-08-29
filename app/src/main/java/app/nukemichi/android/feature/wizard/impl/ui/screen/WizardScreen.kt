@@ -103,11 +103,11 @@ internal fun WizardScreen(
                 onAuthMethodChange = {
                     viewModel.processIntent(Intent.ServerAuthMethodChanged(it))
                 },
-                password = uiState.password,
+                password = uiState.password.value,
                 onPasswordChange = {
                     viewModel.processIntent(Intent.PasswordChanged(it))
                 },
-                sshKey = uiState.sshKey,
+                sshKey = uiState.sshKey.value,
                 onSshKeyChange = {
                     viewModel.processIntent(Intent.SshKeyChanged(it))
                 },

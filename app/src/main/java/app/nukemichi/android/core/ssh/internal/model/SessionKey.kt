@@ -23,8 +23,8 @@ internal data class SessionKey(
             val nul = 0.toChar()
             return SecurityUtils.getFingerprint(
                 when (this) {
-                    is SshAuth.Password -> "password$nul$password"
-                    is SshAuth.PrivateKey -> "key$nul$content$nul${passphrase.orEmpty()}"
+                    is SshAuth.Password -> "password$nul${password.value}"
+                    is SshAuth.PrivateKey -> "key$nul${content.value}$nul${passphrase?.value.orEmpty()}"
                 }
             )
         }

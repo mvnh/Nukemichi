@@ -146,11 +146,12 @@ internal class NukemichiVpnService : VpnService() {
     private suspend fun onHealthDegraded() {
         Timber.w("onHealthDegraded: tunnel silently stuck, forcing a full reconnect")
         telemetry.degraded()
-        // This process is about to die (see stopVpn's killProcess) and can't restart itself —
-        // schedule the restart through AlarmManager, which survives that, instead of leaving it
-        // to whichever app process happens to be alive to notice the degraded signal and reconnect.
+        // This process is about to die (see stopVpnAndRestartProcess's killProcess) and can't
+        // restart itself — schedule the restart through AlarmManager, which survives that,
+        // instead of leaving it to whichever app process happens to be alive to notice the
+        // degraded signal and reconnect.
         lastConfig?.let(::scheduleRestart)
-        stopVpn()
+        stopVpnAndRestartProcess()
     }
 
     private fun scheduleRestart(config: XrayRuntimeConfig) {
@@ -167,6 +168,12 @@ internal class NukemichiVpnService : VpnService() {
         )
     }
 
+    // Plain user-initiated disconnect: tear down and let this process live on. It must NOT kill
+    // the process — VpnIpcService is bound from the main process, and killing a process out from
+    // under an active bind reads to Android as a crash, which is throttled by an escalating
+    // restart backoff. That backoff is what made disconnects look like they took minutes: the
+    // native side was already stopped well before the UI ever found out, because it was waiting
+    // on the killed :vpn process to be let back up and rebound.
     private fun stopVpn() {
         Timber.i("stopVpn: begin")
         scope.launch {
@@ -175,7 +182,24 @@ internal class NukemichiVpnService : VpnService() {
                 teardown(waitForXrayStop = false)
                 telemetry.stopping()
                 stopForeground(STOP_FOREGROUND_REMOVE)
-                Timber.i("stopVpn: torn down, restarting :vpn process for a clean slate")
+                Timber.i("stopVpn: torn down")
+                stopSelf()
+            }
+        }
+    }
+
+    // Only for onHealthDegraded: xray-core's own state may be wedged beyond what tearing down and
+    // starting a new CoreController can fix in-process, so this path accepts the process-kill (and
+    // the restart-backoff delay that comes with it) to guarantee a genuinely fresh instance.
+    private fun stopVpnAndRestartProcess() {
+        Timber.i("stopVpnAndRestartProcess: begin")
+        scope.launch {
+            lifecycleMutex.withLock {
+                healthWatchdog.stop()
+                teardown(waitForXrayStop = false)
+                telemetry.stopping()
+                stopForeground(STOP_FOREGROUND_REMOVE)
+                Timber.i("stopVpnAndRestartProcess: torn down, restarting :vpn process for a clean slate")
                 Process.killProcess(Process.myPid())
             }
         }

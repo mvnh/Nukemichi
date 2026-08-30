@@ -5,7 +5,6 @@ import app.nukemichi.android.core.navigation.Destination
 import app.nukemichi.android.core.navigation.LocalAppNavigator
 import app.nukemichi.android.feature.hello.HelloKey
 import app.nukemichi.android.feature.hello.impl.ui.screen.HelloScreen
-import app.nukemichi.android.feature.wizard.WizardFlow
 import app.nukemichi.android.feature.wizard.WizardKey
 import javax.inject.Inject
 
@@ -16,7 +15,7 @@ class HelloDestination @Inject constructor() : Destination<HelloKey> {
         val navigator = LocalAppNavigator.current
 
         HelloScreen(
-            onSetUpServerClick = { navigator.navigate(WizardKey(WizardFlow.DEPLOY_SERVER)) },
+            onSetUpServerClick = { navigator.navigate(WizardKey) },
         )
     }
 }

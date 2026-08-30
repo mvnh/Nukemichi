@@ -1,7 +1,5 @@
 <resources>
-    <string name="wizard_title_deploy_server">Развёртывание сервера</string>
-    <string name="wizard_title_add_to_subscription">Добавление сервера в подписку</string>
-    <string name="wizard_title_import_uri">Импорт по ссылке</string>
+    <string name="wizard_nav_icon_description">Мастер настройки сервера</string>
     <string name="wizard_strategy_choice">Выбор стратегии</string>
     <string name="wizard_step_rule_generation">Генерация правил</string>
     <string name="wizard_step_confirmation">Подтверждение</string>

@@ -15,7 +15,6 @@ class WizardDestination @Inject constructor() : Destination<WizardKey> {
         val navigator = LocalAppNavigator.current
 
         WizardScreen(
-            flow = key.flow,
             onNavigateBack = navigator::back,
             onNavigateToDashboard = { navigator.replaceAll(DashboardKey) }
         )

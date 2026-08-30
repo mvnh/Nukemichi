@@ -1,4 +1,4 @@
-package app.nukemichi.android.core.ui.icons.internal
+package app.nukemichi.android.core.ui.icons.sources
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathFillType
@@ -10,14 +10,14 @@ import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
 @Suppress("CheckReturnValue")
-internal val _close: ImageVector
+internal val _check: ImageVector
     get() {
-        if (__close != null) {
-            return __close!!
+        if (__check != null) {
+            return __check!!
         }
-        __close =
+        __check =
             ImageVector.Builder(
-                name = "close",
+                name = "check",
                 defaultWidth = 24.dp,
                 defaultHeight = 24.dp,
                 viewportWidth = 24f,
@@ -35,24 +35,17 @@ internal val _close: ImageVector
                         strokeLineMiter = 1f,
                         pathFillType = PathFillType.NonZero,
                     ) {
-                        moveTo(6.4f, 19f)
-                        lineTo(5f, 17.6f)
-                        lineTo(10.6f, 12f)
-                        lineTo(5f, 6.4f)
-                        lineTo(6.4f, 5f)
-                        lineTo(12f, 10.6f)
-                        lineTo(17.6f, 5f)
-                        lineTo(19f, 6.4f)
-                        lineTo(13.4f, 12f)
-                        lineTo(19f, 17.6f)
-                        lineTo(17.6f, 19f)
-                        lineTo(12f, 13.4f)
-                        lineTo(6.4f, 19f)
+                        moveTo(9f, 16.17f)
+                        lineTo(4.83f, 12f)
+                        lineTo(3.41f, 13.41f)
+                        lineTo(9f, 19f)
+                        lineTo(21f, 7f)
+                        lineTo(19.59f, 5.59f)
                         close()
                     }
                 }
                 .build()
-        return __close!!
+        return __check!!
     }
 
-private var __close: ImageVector? = null
+private var __check: ImageVector? = null

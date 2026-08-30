@@ -1,4 +1,4 @@
-package app.nukemichi.android.core.ui.icons.internal
+package app.nukemichi.android.core.ui.icons.sources
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathFillType
@@ -10,14 +10,14 @@ import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
 @Suppress("CheckReturnValue")
-internal val _arrow_drop_down: ImageVector
+internal val _arrow_back: ImageVector
     get() {
-        if (__arrow_drop_down != null) {
-            return __arrow_drop_down!!
+        if (__arrow_back != null) {
+            return __arrow_back!!
         }
-        __arrow_drop_down =
+        __arrow_back =
             ImageVector.Builder(
-                name = "arrow_drop_down",
+                name = "arrow_back",
                 defaultWidth = 24.dp,
                 defaultHeight = 24.dp,
                 viewportWidth = 24f,
@@ -33,17 +33,23 @@ internal val _arrow_drop_down: ImageVector
                         strokeLineCap = StrokeCap.Butt,
                         strokeLineJoin = StrokeJoin.Bevel,
                         strokeLineMiter = 1f,
-                        pathFillType = PathFillType.Companion.NonZero,
+                        pathFillType = PathFillType.NonZero,
                     ) {
-                        moveTo(12f, 15f)
-                        lineTo(7f, 10f)
-                        horizontalLineTo(17f)
-                        lineToRelative(-5f, 5f)
+                        moveTo(7.83f, 13f)
+                        lineToRelative(5.6f, 5.6f)
+                        lineTo(12f, 20f)
+                        lineTo(4f, 12f)
+                        lineTo(12f, 4f)
+                        lineToRelative(1.43f, 1.4f)
+                        lineTo(7.83f, 11f)
+                        horizontalLineTo(20f)
+                        verticalLineToRelative(2f)
+                        horizontalLineTo(7.83f)
                         close()
                     }
                 }
                 .build()
-        return __arrow_drop_down!!
+        return __arrow_back!!
     }
 
-private var __arrow_drop_down: ImageVector? = null
+private var __arrow_back: ImageVector? = null

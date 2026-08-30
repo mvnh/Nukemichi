@@ -1,22 +1,22 @@
 package app.nukemichi.android.core.ui.icons
 
 import androidx.compose.ui.graphics.vector.ImageVector
-import app.nukemichi.android.core.ui.icons.internal._arrow_back
-import app.nukemichi.android.core.ui.icons.internal._arrow_drop_up
-import app.nukemichi.android.core.ui.icons.internal._auto_stories
-import app.nukemichi.android.core.ui.icons.internal._cable
-import app.nukemichi.android.core.ui.icons.internal._check
-import app.nukemichi.android.core.ui.icons.internal._close
-import app.nukemichi.android.core.ui.icons.internal._dns
-import app.nukemichi.android.core.ui.icons.internal._lock
-import app.nukemichi.android.core.ui.icons.internal._more_vert
-import app.nukemichi.android.core.ui.icons.internal._rocket_launch
-import app.nukemichi.android.core.ui.icons.internal._schedule
-import app.nukemichi.android.core.ui.icons.internal._share
-import app.nukemichi.android.core.ui.icons.internal._shield
-import app.nukemichi.android.core.ui.icons.internal._visibility
-import app.nukemichi.android.core.ui.icons.internal._visibility_off
-import app.nukemichi.android.core.ui.icons.internal._vpn_key
+import app.nukemichi.android.core.ui.icons.sources._arrow_back
+import app.nukemichi.android.core.ui.icons.sources._arrow_drop_up
+import app.nukemichi.android.core.ui.icons.sources._auto_stories
+import app.nukemichi.android.core.ui.icons.sources._cable
+import app.nukemichi.android.core.ui.icons.sources._check
+import app.nukemichi.android.core.ui.icons.sources._close
+import app.nukemichi.android.core.ui.icons.sources._dns
+import app.nukemichi.android.core.ui.icons.sources._lock
+import app.nukemichi.android.core.ui.icons.sources._more_vert
+import app.nukemichi.android.core.ui.icons.sources._rocket_launch
+import app.nukemichi.android.core.ui.icons.sources._schedule
+import app.nukemichi.android.core.ui.icons.sources._share
+import app.nukemichi.android.core.ui.icons.sources._shield
+import app.nukemichi.android.core.ui.icons.sources._visibility
+import app.nukemichi.android.core.ui.icons.sources._visibility_off
+import app.nukemichi.android.core.ui.icons.sources._vpn_key
 
 object NukemichiIcons {
 

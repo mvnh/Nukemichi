@@ -1,11 +1,12 @@
 package app.nukemichi.android.core.vpn.internal
 
 import android.content.Context
+import app.nukemichi.android.core.di.IoDispatcher
 import app.nukemichi.android.core.vpn.XrayRuntimeConfig
 import app.nukemichi.android.core.vpn.XrayStatsSource
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
@@ -19,9 +20,11 @@ import javax.inject.Singleton
 @Singleton
 internal class XrayRuntime @Inject constructor(
     @ApplicationContext context: Context,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) : XrayStatsSource {
     private val mutex = Mutex()
     private var controller: CoreController? = null
+    private val detachedScope = CoroutineScope(SupervisorJob() + ioDispatcher)
 
     init {
         Libv2ray.initCoreEnv(context.filesDir.absolutePath, "")
@@ -51,7 +54,7 @@ internal class XrayRuntime @Inject constructor(
     fun stopWithoutWaiting() {
         val running = controller ?: return
         controller = null
-        CoroutineScope(SupervisorJob() + Dispatchers.IO).launch {
+        detachedScope.launch {
             runCatching { running.stopLoop() }
         }
     }

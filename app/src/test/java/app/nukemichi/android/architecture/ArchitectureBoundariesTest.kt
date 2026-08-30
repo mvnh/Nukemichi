@@ -48,7 +48,8 @@ class ArchitectureBoundariesTest {
             val isExceptionType = clazz.name.endsWith("Exception") || clazz.name.endsWith("Error")
 
             !(clazz.hasAbstractModifier || clazz.hasDataModifier || clazz.hasEnumModifier ||
-                clazz.hasValueModifier || clazz.hasSealedModifier || isExceptionType)
+                clazz.hasValueModifier || clazz.hasSealedModifier || clazz.hasAnnotationModifier ||
+                isExceptionType)
         }
 
         if (violations.isNotEmpty()) {

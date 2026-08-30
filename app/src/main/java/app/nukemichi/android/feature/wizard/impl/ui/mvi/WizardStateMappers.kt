@@ -1,7 +1,9 @@
 package app.nukemichi.android.feature.wizard.impl.ui.mvi
 
+import app.nukemichi.android.core.security.Secret
 import app.nukemichi.android.core.ssh.model.SshAuth
 import app.nukemichi.android.core.ssh.model.SshConfig
+import app.nukemichi.android.core.ui.util.UiSecret
 import app.nukemichi.android.feature.wizard.impl.domain.model.WizardProfileDraft
 
 internal fun WizardContract.State.toSshConfigOrNull(): SshConfig? =
@@ -13,9 +15,14 @@ internal fun WizardContract.State.toSshConfigOrNull(): SshConfig? =
         }
     }
 
+// The one place a UI-layer secret becomes a data-layer one. Mapping state into core models is what
+// this file is for, so the conversion belongs here rather than leaking UiSecret deeper or Secret
+// shallower.
+private fun UiSecret.toSecret(): Secret = Secret(value)
+
 internal fun WizardContract.State.toSshAuth(): SshAuth = when (serverAuthMethod) {
-    WizardContract.ServerAuthMethod.PASSWORD -> SshAuth.Password(password)
-    WizardContract.ServerAuthMethod.SSH_KEY -> SshAuth.PrivateKey(sshKey)
+    WizardContract.ServerAuthMethod.PASSWORD -> SshAuth.Password(password.toSecret())
+    WizardContract.ServerAuthMethod.SSH_KEY -> SshAuth.PrivateKey(sshKey.toSecret())
 }
 
 internal fun WizardContract.State.toProfileDraft(): WizardProfileDraft = WizardProfileDraft(

@@ -2,7 +2,7 @@ package app.nukemichi.android.feature.wizard.impl.ui.mvi
 
 import androidx.compose.runtime.Immutable
 import app.nukemichi.android.core.mode.AppMode
-import app.nukemichi.android.core.security.Secret
+import app.nukemichi.android.core.ui.util.UiSecret
 import app.nukemichi.android.core.ui.util.UiText
 
 object WizardContract {
@@ -15,8 +15,8 @@ object WizardContract {
         val setupStrategy: SetupStrategy = SetupStrategy.FAST_START,
         val serverAuthMethod: ServerAuthMethod = ServerAuthMethod.PASSWORD,
         val serverAddress: String = "",
-        val password: Secret = Secret(""),
-        val sshKey: Secret = Secret(""),
+        val password: UiSecret = UiSecret.Empty,
+        val sshKey: UiSecret = UiSecret.Empty,
         val sshPort: String = "22",
         val username: String = "root",
         val sshFingerprint: String = "",
@@ -38,8 +38,8 @@ object WizardContract {
         data class SetupStrategyChanged(val strategy: SetupStrategy) : Intent
         data class ServerAuthMethodChanged(val method: ServerAuthMethod) : Intent
         data class ServerAddressChanged(val address: String) : Intent
-        data class PasswordChanged(val password: String) : Intent
-        data class SshKeyChanged(val sshKey: String) : Intent
+        data class PasswordChanged(val password: UiSecret) : Intent
+        data class SshKeyChanged(val sshKey: UiSecret) : Intent
         data class SshPortChanged(val port: String) : Intent
         data class UsernameChanged(val username: String) : Intent
         data class SshFingerprintChanged(val fingerprint: String) : Intent

@@ -16,7 +16,6 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.nukemichi.android.R
 import app.nukemichi.android.core.mode.AppMode
-import app.nukemichi.android.feature.wizard.WizardFlow
 import app.nukemichi.android.core.navigation.LocalAppNavigator
 import app.nukemichi.android.core.ui.components.ConfirmDialog
 import app.nukemichi.android.core.ui.components.LoadingDialog
@@ -44,18 +43,15 @@ import kotlinx.collections.immutable.persistentListOf
 
 private const val PAGE_STRATEGY = 0
 private const val PAGE_SERVER_DATA = 1
-private const val PAGE_CONFIRMATION = 2
 private const val PAGE_DEPLOYMENT = 3
 private const val PAGE_COUNT = 4
 
 @Composable
 internal fun WizardScreen(
-    flow: WizardFlow,
     onNavigateBack: () -> Unit,
     onNavigateToDashboard: () -> Unit,
     viewModel: WizardViewModel = hiltViewModel()
 ) {
-    val title = flow.title()
     val uiState by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val vpnPermissionLauncher = rememberLauncherForActivityResult(
@@ -123,6 +119,7 @@ internal fun WizardScreen(
                 onSshFingerprintChange = { viewModel.processIntent(Intent.SshFingerprintChanged(it)) },
                 isAdvancedSheetOpen = isAdvancedSheetOpen,
                 onAdvancedSheetDismiss = { isAdvancedSheetOpen = false },
+                onAdvancedSettingsClick = { isAdvancedSheetOpen = true },
             )
         },
         WizardStep(title = UiText.Resource(R.string.wizard_step_confirmation)) {
@@ -132,8 +129,6 @@ internal fun WizardScreen(
                 username = uiState.username,
                 authMethod = uiState.serverAuthMethod,
                 setupStrategy = uiState.setupStrategy,
-                hasAcknowledgedRisks = uiState.hasAcknowledgedRisks,
-                onAcknowledgeChange = { viewModel.processIntent(Intent.AcknowledgeRisksToggled(it)) },
             )
         },
         WizardStep(title = UiText.Resource(R.string.wizard_step_deployment)) {
@@ -158,11 +153,9 @@ internal fun WizardScreen(
 
     WizardContainer(
         state = wizardState,
-        title = title,
         steps = wizardSteps,
         isNextEnabled = when (wizardState.currentPage) {
             PAGE_SERVER_DATA -> uiState.isSshValid
-            PAGE_CONFIRMATION -> uiState.hasAcknowledgedRisks
             else -> true
         },
         isLoading = uiState.isLoading || uiState.deployment.phase == DeploymentPhase.InProgress,
@@ -172,14 +165,10 @@ internal fun WizardScreen(
         onNextClick = { viewModel.processIntent(Intent.OnNextClicked(wizardState.currentPage)) },
         topBar = {
             WizardTopBar(
-                title = title,
+                steps = wizardSteps,
                 state = wizardState,
                 onNavIconClick = { viewModel.processIntent(Intent.OnCloseWizardClicked) },
-                onOverflowClick = if (wizardState.currentPage == PAGE_SERVER_DATA) {
-                    { isAdvancedSheetOpen = true }
-                } else {
-                    null
-                },
+                navIconDescription = UiText.Resource(R.string.wizard_nav_icon_description),
             )
         },
     )
@@ -224,10 +213,4 @@ internal fun WizardScreen(
             onDismiss = { viewModel.processIntent(Intent.DismissConnectionErrorDialog) },
         )
     }
-}
-
-private fun WizardFlow.title(): UiText = when (this) {
-    WizardFlow.DEPLOY_SERVER -> UiText.Resource(R.string.wizard_title_deploy_server)
-    WizardFlow.ADD_TO_SUBSCRIPTION -> UiText.Resource(R.string.wizard_title_add_to_subscription)
-    WizardFlow.IMPORT_URI -> UiText.Resource(R.string.wizard_title_import_uri)
 }

@@ -1,20 +1,18 @@
 <resources>
-    <string name="wizard_title_deploy_server">Deploy your server</string>
-    <string name="wizard_title_add_to_subscription">Add server to subscription</string>
-    <string name="wizard_title_import_uri">Import from link</string>
+    <string name="wizard_nav_icon_description">Server setup wizard</string>
     <string name="wizard_strategy_choice">Strategy Choice</string>
     <string name="wizard_step_rule_generation">Rule Generation</string>
     <string name="wizard_step_confirmation">Confirmation</string>
     <string name="wizard_step_deployment">Deployment</string>
 
     <!-- Strategy Choice Page -->
-    <string name="wizard_strategy_description">Select configuration strategy depending on your security needs and domain availability.</string>
+    <string name="wizard_strategy_description">How much setup do you want to deal with? You can always redeploy with a different strategy later.</string>
 
     <string name="wizard_strategy_fast_start_title">Fast Start</string>
-    <string name="wizard_strategy_fast_start_desc">Simple setup, easy, requires only a VPS.</string>
+    <string name="wizard_strategy_fast_start_desc">Just a VPS. Nukemichi handles the keys, the masking domain, and the config.</string>
 
     <string name="wizard_strategy_resilience_title">Maximum Resilience</string>
-    <string name="wizard_strategy_resilience_desc">Advanced obfuscation. Requires a server and a domain name.</string>
+    <string name="wizard_strategy_resilience_desc">Heavier obfuscation for stricter networks — needs a domain name pointed at your server.</string>
 
     <string name="wizard_badge_soon">Soon</string>
 
@@ -31,7 +29,7 @@
     <string name="wizard_placeholder_rules_content">Rule generation setup will be here</string>
 
     <!-- Server Data Entry Page -->
-    <string name="wizard_server_data_description">Enter the connection details for your server.</string>
+    <string name="wizard_server_data_description">Where\'s the server, and how do we get in?</string>
     <string name="wizard_server_data_connection_title">Connection</string>
     <string name="wizard_server_data_address">Server address</string>
     <string name="wizard_server_data_authentication">Authentication</string>
@@ -59,9 +57,8 @@
     <string name="wizard_confirmation_server_label">Server</string>
     <string name="wizard_confirmation_auth_label">Authentication</string>
     <string name="wizard_confirmation_strategy_label">Strategy</string>
-    <string name="wizard_confirmation_warning_title">Before you continue</string>
-    <string name="wizard_confirmation_warning_body">If you close the app while the install is running, the server may be left with a partial configuration. That\'s safe — running the wizard again will cleanly overwrite it.</string>
-    <string name="wizard_confirmation_acknowledge">I understand what will happen and confirm the installation</string>
+    <string name="wizard_confirmation_note_title">Good to know</string>
+    <string name="wizard_confirmation_note_body">If you close the app mid-install, don\'t worry — the server stays usable, and running the wizard again cleanly starts over.</string>
 
     <!-- Errors -->
     <string name="wizard_error_vpn_permission_required">VPN permission is required to start the tunnel.</string>
@@ -77,6 +74,9 @@
 
     <string name="wizard_deployment_terminal_show">Show terminal</string>
     <string name="wizard_deployment_terminal_hide">Hide terminal</string>
+    <string name="wizard_deployment_terminal_copy">Copy log</string>
+    <string name="wizard_deployment_terminal_copied">Copied</string>
+    <string name="wizard_deployment_idle_message">Working on it…</string>
 
     <string name="wizard_deployment_error_title">Installation stopped</string>
     <string name="wizard_deployment_retry">Retry</string>

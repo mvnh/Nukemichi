@@ -1,20 +1,18 @@
 <resources>
-    <string name="wizard_title_deploy_server">Развёртывание сервера</string>
-    <string name="wizard_title_add_to_subscription">Добавление сервера в подписку</string>
-    <string name="wizard_title_import_uri">Импорт по ссылке</string>
+    <string name="wizard_nav_icon_description">Мастер настройки сервера</string>
     <string name="wizard_strategy_choice">Выбор стратегии</string>
     <string name="wizard_step_rule_generation">Генерация правил</string>
     <string name="wizard_step_confirmation">Подтверждение</string>
     <string name="wizard_step_deployment">Установка</string>
 
     <!-- Strategy Choice Page -->
-    <string name="wizard_strategy_description">В зависимости от ваших потребностей в безопасности и наличии домена выберите стратегию настройки.</string>
+    <string name="wizard_strategy_description">Сколько возни с настройкой вы готовы терпеть? Позже всегда можно развернуть заново с другой стратегией.</string>
 
     <string name="wizard_strategy_fast_start_title">Быстрый старт</string>
-    <string name="wizard_strategy_fast_start_desc">Быстро, легко, требуется только сервер.</string>
+    <string name="wizard_strategy_fast_start_desc">Нужен только сервер — ключи, маскирующий домен и конфиг Nukemichi сделает сам.</string>
 
     <string name="wizard_strategy_resilience_title">Максимальная устойчивость</string>
-    <string name="wizard_strategy_resilience_desc">Продвинутая маскировка. Требуется сервер и доменное имя.</string>
+    <string name="wizard_strategy_resilience_desc">Более плотная маскировка для жёстких сетей — понадобится доменное имя, указывающее на сервер.</string>
 
     <string name="wizard_badge_soon">Скоро</string>
 
@@ -31,7 +29,7 @@
     <string name="wizard_placeholder_rules_content">Здесь будет настройка генерации правил</string>
 
     <!-- Server Data Entry Page -->
-    <string name="wizard_server_data_description">Введите данные для подключения к серверу.</string>
+    <string name="wizard_server_data_description">Где сервер и как в него попасть?</string>
     <string name="wizard_server_data_connection_title">Подключение</string>
     <string name="wizard_server_data_address">Адрес сервера</string>
     <string name="wizard_server_data_authentication">Аутентификация</string>
@@ -59,9 +57,8 @@
     <string name="wizard_confirmation_server_label">Сервер</string>
     <string name="wizard_confirmation_auth_label">Аутентификация</string>
     <string name="wizard_confirmation_strategy_label">Стратегия</string>
-    <string name="wizard_confirmation_warning_title">Прежде чем продолжить</string>
-    <string name="wizard_confirmation_warning_body">Если закрыть приложение во время установки, на сервере может остаться незавершённая конфигурация. Это безопасно — повторный запуск мастера аккуратно всё перезапишет.</string>
-    <string name="wizard_confirmation_acknowledge">Я понимаю, что произойдёт, и подтверждаю установку</string>
+    <string name="wizard_confirmation_note_title">На всякий случай</string>
+    <string name="wizard_confirmation_note_body">Если закрыть приложение во время установки — не страшно, сервер останется рабочим, а повторный запуск мастера аккуратно начнёт всё заново.</string>
 
     <!-- Errors -->
     <string name="wizard_error_vpn_permission_required">Для запуска туннеля нужен доступ к VPN.</string>
@@ -77,6 +74,9 @@
 
     <string name="wizard_deployment_terminal_show">Показать терминал</string>
     <string name="wizard_deployment_terminal_hide">Скрыть терминал</string>
+    <string name="wizard_deployment_terminal_copy">Скопировать лог</string>
+    <string name="wizard_deployment_terminal_copied">Скопировано</string>
+    <string name="wizard_deployment_idle_message">Работаем над этим…</string>
 
     <string name="wizard_deployment_error_title">Установка прервана</string>
     <string name="wizard_deployment_retry">Повторить</string>

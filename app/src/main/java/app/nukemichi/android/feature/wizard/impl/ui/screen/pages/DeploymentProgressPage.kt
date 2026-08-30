@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -37,7 +38,6 @@ import app.nukemichi.android.core.ui.util.asString
 import app.nukemichi.android.feature.wizard.impl.ui.screen.components.DeploymentStepRow
 import app.nukemichi.android.feature.wizard.impl.ui.screen.components.DeploymentSuccessCelebration
 import app.nukemichi.android.feature.wizard.impl.ui.screen.components.LiveTerminalView
-import app.nukemichi.android.feature.wizard.impl.ui.screen.components.WizardPage
 import app.nukemichi.android.feature.wizard.impl.ui.mvi.DeploymentPhase
 import app.nukemichi.android.feature.wizard.impl.ui.mvi.DeploymentUiState
 
@@ -84,7 +84,15 @@ private fun DeploymentInProgressContent(
         (deployment.phase as? DeploymentPhase.Failed)?.let { lastFailure = it }
     }
 
-    WizardPage {
+    // Not WizardPage here — the terminal below needs a bounded-height parent to actually fill
+    // the remaining space with Modifier.weight(1f) instead of a fixed cap; WizardPage's own
+    // vertically-scrolling Column has unbounded height, which weight() can't work inside.
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .imePadding()
+            .padding(dimens.l),
+    ) {
         Column(verticalArrangement = Arrangement.spacedBy(dimens.l)) {
             deployment.steps.forEach { step -> DeploymentStepRow(step = step) }
         }
@@ -107,6 +115,7 @@ private fun DeploymentInProgressContent(
             logLines = deployment.logLines,
             isExpanded = deployment.isTerminalExpanded,
             onToggleExpanded = onToggleTerminal,
+            modifier = Modifier.weight(1f),
         )
     }
 }

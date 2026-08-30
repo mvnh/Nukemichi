@@ -3,26 +3,34 @@ package app.nukemichi.android.feature.dashboard.impl.ui.screen
 import android.content.Intent
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -43,6 +51,9 @@ import app.nukemichi.android.feature.dashboard.impl.ui.mvi.isConnected
 import app.nukemichi.android.feature.dashboard.impl.ui.screen.components.ConnectionToggle
 import app.nukemichi.android.feature.dashboard.impl.ui.screen.components.ServerInfoCard
 import app.nukemichi.android.feature.dashboard.impl.ui.screen.components.StatsRow
+import kotlinx.coroutines.delay
+
+private const val SLOW_TRANSITION_HINT_DELAY_MS = 5_000L
 
 @Composable
 internal fun DashboardScreen(
@@ -52,6 +63,14 @@ internal fun DashboardScreen(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(state.errorMessage) {
+        state.errorMessage?.let { message ->
+            snackbarHostState.showSnackbar(message.asString(context))
+            viewModel.processIntent(DashboardContract.Intent.ErrorDismissed)
+        }
+    }
 
     val permissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.StartActivityForResult(),
@@ -100,6 +119,7 @@ internal fun DashboardScreen(
                 Text(text = stringResource(R.string.dashboard_logs))
             }
         }
+        SnackbarHost(hostState = snackbarHostState, modifier = Modifier.align(Alignment.BottomCenter))
     }
 }
 
@@ -120,18 +140,27 @@ private fun DashboardContent(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(dimens.m),
+        ) {
             Text(
                 text = state.profileName ?: stringResource(R.string.dashboard_no_server_configured),
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             if (state.profileName != null) {
-                IconButton(onClick = onExportVlessLinkClick, modifier = Modifier.size(dimens.xl)) {
+                TextButton(onClick = onExportVlessLinkClick) {
                     Icon(
                         imageVector = NukemichiIcons.Navigation.Share,
-                        contentDescription = stringResource(R.string.dashboard_export_link_cd),
+                        contentDescription = null,
                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        modifier = Modifier.size(dimens.l),
+                    )
+                    Spacer(modifier = Modifier.width(dimens.s))
+                    Text(
+                        text = stringResource(R.string.dashboard_export_link_label),
+                        style = MaterialTheme.typography.labelMedium,
                     )
                 }
             }
@@ -146,6 +175,22 @@ private fun DashboardContent(
 
         StatusBadge(text = state.engineState.label())
 
+        if (state.engineState == XrayEngineState.STARTING || state.engineState == XrayEngineState.STOPPING) {
+            var showsSlowHint by remember(state.engineState) { mutableStateOf(false) }
+            LaunchedEffect(state.engineState) {
+                delay(SLOW_TRANSITION_HINT_DELAY_MS)
+                showsSlowHint = true
+            }
+            AnimatedVisibility(visible = showsSlowHint) {
+                Text(
+                    text = stringResource(R.string.dashboard_state_taking_a_while),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    modifier = Modifier.padding(top = dimens.s),
+                )
+            }
+        }
+
         state.connectedSinceMillis?.let { since ->
             Text(
                 text = stringResource(
@@ -155,15 +200,6 @@ private fun DashboardContent(
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(top = dimens.s),
-            )
-        }
-
-        state.errorMessage?.let { message ->
-            Text(
-                text = message.asString(),
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.error,
-                modifier = Modifier.padding(top = dimens.m),
             )
         }
 

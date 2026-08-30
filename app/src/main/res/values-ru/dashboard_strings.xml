@@ -1,7 +1,8 @@
 <resources>
     <string name="dashboard_no_server_configured">Сервер не настроен</string>
     <string name="dashboard_logs">Логи</string>
-    <string name="dashboard_export_link_cd">Экспортировать ссылку сервера</string>
+    <string name="dashboard_export_link_cd">Поделиться VLESS-ссылкой подключения</string>
+    <string name="dashboard_export_link_label">Поделиться VLESS-ссылкой</string>
     <string name="dashboard_connected_for">Подключено %1$s</string>
 
     <string name="dashboard_state_not_connected">Не подключено</string>
@@ -9,6 +10,7 @@
     <string name="dashboard_state_connected">Подключено</string>
     <string name="dashboard_state_disconnecting">Отключение…</string>
     <string name="dashboard_state_error">Ошибка подключения</string>
+    <string name="dashboard_state_taking_a_while">Всё ещё работаем — свежее подключение иногда занимает больше времени.</string>
 
     <string name="dashboard_server_info_server">Сервер</string>
     <string name="dashboard_server_info_masking_as">Маскировка под</string>

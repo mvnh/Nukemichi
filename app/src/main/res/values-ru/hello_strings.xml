@@ -1,13 +1,13 @@
 <resources>
     <string name="hello_header_title">Свой VPN, %1$s</string>
     <string name="hello_header_title_highlight">без хаоса</string>
-    <string name="hello_header_subtitle">Без стороннего сервера. Без логов, которые вы не контролируете.</string>
+    <string name="hello_header_subtitle">Ваш сервер. Ваш VPN. Мы просто разворачиваем его за вас.</string>
 
     <string name="hello_setup_title">Развернуть свой сервер</string>
-    <string name="hello_setup_description">Дайте root-доступ по SSH к свежей VPS — остальное сделает сам: установка, ключи, маскирующий домен.</string>
+    <string name="hello_setup_description">Просто дайте доступ к вашему серверу. Установку, настройку и защиту от блокировок берём на себя.</string>
 
     <string name="hello_connect_title">Подключить или импортировать</string>
-    <string name="hello_connect_description">Уже есть VLESS-ссылка или доступ к чужому серверу? Пропустите мастер и подключайтесь сразу.</string>
+    <string name="hello_connect_description">Есть готовая ссылка на VPN от друга или другого сервиса? Просто вставьте её.</string>
 
     <string name="hello_learn_title">Сначала изучить</string>
     <string name="hello_learn_description">Не знаете, что такое REALITY, XHTTP, или от чего это вообще защищает? Начните здесь.</string>

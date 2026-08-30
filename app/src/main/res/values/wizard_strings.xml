@@ -6,10 +6,10 @@
     <string name="wizard_step_deployment">Deployment</string>
 
     <!-- Strategy Choice Page -->
-    <string name="wizard_strategy_description">How much setup do you want to deal with? You can always redeploy with a different strategy later.</string>
+    <string name="wizard_strategy_description">Choose how to set it up — you can always redeploy with a different option later.</string>
 
     <string name="wizard_strategy_fast_start_title">Fast Start</string>
-    <string name="wizard_strategy_fast_start_desc">Just a VPS. Nukemichi handles the keys, the masking domain, and the config.</string>
+    <string name="wizard_strategy_fast_start_desc">Just need a server — we\'ll handle everything else.</string>
 
     <string name="wizard_strategy_resilience_title">Maximum Resilience</string>
     <string name="wizard_strategy_resilience_desc">Heavier obfuscation for stricter networks — needs a domain name pointed at your server.</string>
@@ -29,7 +29,7 @@
     <string name="wizard_placeholder_rules_content">Rule generation setup will be here</string>
 
     <!-- Server Data Entry Page -->
-    <string name="wizard_server_data_description">Where\'s the server, and how do we get in?</string>
+    <string name="wizard_server_data_description">Enter your server\'s address and how to connect to it.</string>
     <string name="wizard_server_data_connection_title">Connection</string>
     <string name="wizard_server_data_address">Server address</string>
     <string name="wizard_server_data_authentication">Authentication</string>
@@ -49,7 +49,7 @@
     <string name="wizard_connection_check_failed_detail_prefix">Details: </string>
 
     <string name="wizard_untrusted_host_title">First connection to this server</string>
-    <string name="wizard_untrusted_host_body">This is the first time connecting — there\'s no way to verify this is really your server and not something intercepting the connection. Its SSH host key fingerprint is:\n\n%1$s\n\nIf you just set this server up yourself, this is expected — trust it to continue.</string>
+    <string name="wizard_untrusted_host_body">First connection to this server. If you created it yourself a few minutes ago, you\'re fine — continue. If someone else gave you these connection details, it\'s worth double-checking with them that this is the right server.\n\n(Technical key fingerprint, in case you need to verify it later: %1$s)</string>
     <string name="wizard_untrusted_host_trust">Trust and continue</string>
 
     <!-- Confirmation Page -->
@@ -61,19 +61,19 @@
     <string name="wizard_confirmation_note_body">If you close the app mid-install, don\'t worry — the server stays usable, and running the wizard again cleanly starts over.</string>
 
     <!-- Errors -->
-    <string name="wizard_error_vpn_permission_required">VPN permission is required to start the tunnel.</string>
-    <string name="wizard_error_incomplete_ssh_details">Complete the SSH connection details first.</string>
+    <string name="wizard_error_vpn_permission_required">You need to grant VPN permission — without it, the secure connection can\'t start.</string>
+    <string name="wizard_error_incomplete_ssh_details">Fill in your server connection details first.</string>
     <string name="wizard_error_unknown">Unknown error</string>
 
     <!-- Deployment progress page -->
-    <string name="wizard_deployment_step_install_runtime">Installing xray-core</string>
-    <string name="wizard_deployment_step_find_sni">Finding a masking domain</string>
-    <string name="wizard_deployment_step_generate_secrets">Generating keys</string>
-    <string name="wizard_deployment_step_write_configuration">Uploading configuration</string>
-    <string name="wizard_deployment_step_start_service">Starting the service</string>
+    <string name="wizard_deployment_step_install_runtime">Installing the VPN engine</string>
+    <string name="wizard_deployment_step_find_sni">Finding cover for your traffic</string>
+    <string name="wizard_deployment_step_generate_secrets">Creating secret data to protect the connection</string>
+    <string name="wizard_deployment_step_write_configuration">Applying settings</string>
+    <string name="wizard_deployment_step_start_service">Turning on the VPN</string>
 
-    <string name="wizard_deployment_terminal_show">Show terminal</string>
-    <string name="wizard_deployment_terminal_hide">Hide terminal</string>
+    <string name="wizard_deployment_terminal_show">Show install log</string>
+    <string name="wizard_deployment_terminal_hide">Hide install log</string>
     <string name="wizard_deployment_terminal_copy">Copy log</string>
     <string name="wizard_deployment_terminal_copied">Copied</string>
     <string name="wizard_deployment_idle_message">Working on it…</string>

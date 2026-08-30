@@ -9,7 +9,7 @@
     <string name="wizard_strategy_description">Choose how to set it up — you can always redeploy with a different option later.</string>
 
     <string name="wizard_strategy_fast_start_title">Fast Start</string>
-    <string name="wizard_strategy_fast_start_desc">Just need a server — we'll handle everything else.</string>
+    <string name="wizard_strategy_fast_start_desc">Just need a server — we\'ll handle everything else.</string>
 
     <string name="wizard_strategy_resilience_title">Maximum Resilience</string>
     <string name="wizard_strategy_resilience_desc">Heavier obfuscation for stricter networks — needs a domain name pointed at your server.</string>
@@ -61,7 +61,7 @@
     <string name="wizard_confirmation_note_body">If you close the app mid-install, don\'t worry — the server stays usable, and running the wizard again cleanly starts over.</string>
 
     <!-- Errors -->
-    <string name="wizard_error_vpn_permission_required">You need to grant VPN permission — without it, the secure connection can't start.</string>
+    <string name="wizard_error_vpn_permission_required">You need to grant VPN permission — without it, the secure connection can\'t start.</string>
     <string name="wizard_error_incomplete_ssh_details">Fill in your server connection details first.</string>
     <string name="wizard_error_unknown">Unknown error</string>
 

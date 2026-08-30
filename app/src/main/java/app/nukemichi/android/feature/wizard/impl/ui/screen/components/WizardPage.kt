@@ -1,30 +1,32 @@
 package app.nukemichi.android.feature.wizard.impl.ui.screen.components
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.background
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.dp
 import app.nukemichi.android.core.ui.theme.size.dimens
-import app.nukemichi.android.feature.wizard.impl.ui.screen.components.util.WIZARD_ANIMATION_DURATION
 
-private const val PAGE_BOTTOM_EDGE_SHADOW_ALPHA = 0.12f
+private const val SCROLLBAR_TRACK_ALPHA = 0.06f
+private const val SCROLLBAR_THUMB_ALPHA = 0.24f
+private const val SCROLLBAR_MIN_THUMB_FRACTION = 0.08f
+private val SCROLLBAR_WIDTH = 4.dp
 
 @Composable
 fun WizardPage(
@@ -33,9 +35,13 @@ fun WizardPage(
 ) {
     val scrollState = rememberScrollState()
     val dimens = MaterialTheme.dimens
-    val shadowColor = MaterialTheme.colorScheme.onSurface.copy(PAGE_BOTTOM_EDGE_SHADOW_ALPHA)
+    val trackColor = MaterialTheme.colorScheme.onSurface.copy(alpha = SCROLLBAR_TRACK_ALPHA)
+    val thumbColor = MaterialTheme.colorScheme.onSurface.copy(alpha = SCROLLBAR_THUMB_ALPHA)
+    val density = LocalDensity.current
 
-    Box(modifier = modifier.fillMaxSize()) {
+    BoxWithConstraints(modifier = modifier.fillMaxSize()) {
+        val viewportPx = with(density) { maxHeight.toPx() }
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -45,22 +51,34 @@ fun WizardPage(
             content = content
         )
 
-        AnimatedVisibility(
-            visible = scrollState.canScrollForward,
-            enter = fadeIn(animationSpec = tween(WIZARD_ANIMATION_DURATION)),
-            exit = fadeOut(animationSpec = tween(WIZARD_ANIMATION_DURATION)),
-            modifier = Modifier.align(Alignment.BottomCenter)
-        ) {
-            Box(
+        // A plain, non-interactive scroll-position indicator instead of an edge shadow — a fade
+        // only reads as "content is clipped here" when there's a visible container frame to
+        // anchor it to, which the page no longer has. This sits to the side and never overlaps
+        // content, so unlike a floating hint icon it needs no backing surface of its own.
+        if (scrollState.maxValue > 0) {
+            val contentPx = viewportPx + scrollState.maxValue
+            val thumbFraction = (viewportPx / contentPx).coerceIn(SCROLLBAR_MIN_THUMB_FRACTION, 1f)
+            val positionFraction = scrollState.value / scrollState.maxValue.toFloat()
+
+            Canvas(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(dimens.slimXxl)
-                    .background(
-                        Brush.verticalGradient(
-                            colors = listOf(Color.Transparent, shadowColor)
-                        )
-                    )
-            )
+                    .align(Alignment.CenterEnd)
+                    .fillMaxHeight()
+                    .padding(vertical = dimens.s)
+                    .width(SCROLLBAR_WIDTH)
+            ) {
+                val cornerRadius = CornerRadius(size.width / 2)
+                val thumbHeight = size.height * thumbFraction
+                val thumbOffsetY = (size.height - thumbHeight) * positionFraction
+
+                drawRoundRect(color = trackColor, cornerRadius = cornerRadius)
+                drawRoundRect(
+                    color = thumbColor,
+                    topLeft = Offset(0f, thumbOffsetY),
+                    size = Size(size.width, thumbHeight),
+                    cornerRadius = cornerRadius,
+                )
+            }
         }
     }
 }

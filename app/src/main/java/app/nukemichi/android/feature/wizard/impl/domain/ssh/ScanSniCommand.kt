@@ -1,8 +1,8 @@
 package app.nukemichi.android.feature.wizard.impl.domain.ssh
 
+import app.nukemichi.android.core.ssh.ShellSafe
 import app.nukemichi.android.core.ssh.command.BashScriptCommand
-import app.nukemichi.android.core.ssh.internal.ShellSafe
-import app.nukemichi.android.core.ssh.internal.isSafeHostname
+import app.nukemichi.android.core.ssh.isSafeHostname
 import app.nukemichi.android.core.ssh.model.CommandResult
 
 internal class ScanSniCommand(architecture: String) : BashScriptCommand<List<String>> {

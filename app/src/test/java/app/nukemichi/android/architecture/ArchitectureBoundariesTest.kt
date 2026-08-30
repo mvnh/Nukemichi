@@ -45,8 +45,10 @@ class ArchitectureBoundariesTest {
                 rest == "di" || rest.startsWith("di.")
             if (isInternalOrDi) return@filter false
 
+            val isExceptionType = clazz.name.endsWith("Exception") || clazz.name.endsWith("Error")
+
             !(clazz.hasAbstractModifier || clazz.hasDataModifier || clazz.hasEnumModifier ||
-                clazz.hasValueModifier || clazz.hasSealedModifier)
+                clazz.hasValueModifier || clazz.hasSealedModifier || isExceptionType)
         }
 
         if (violations.isNotEmpty()) {

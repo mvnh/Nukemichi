@@ -7,8 +7,12 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.rememberNavBackStack
@@ -43,58 +47,58 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             NukemichiTheme {
-                val backStack = rememberNavBackStack(startKey)
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background,
+                ) {
+                    val backStack = rememberNavBackStack(startKey)
 
-                val navigator = remember(backStack) {
-                    object : AppNavigator {
-                        override fun navigate(key: NavKey) {
-                            backStack.add(key)
-                        }
+                    val navigator = remember(backStack) {
+                        object : AppNavigator {
+                            override fun navigate(key: NavKey) {
+                                backStack.add(key)
+                            }
 
-                        override fun back() {
-                            if (backStack.size > 1) {
-                                backStack.removeAt(backStack.lastIndex)
+                            override fun back() {
+                                if (backStack.size > 1) {
+                                    backStack.removeAt(backStack.lastIndex)
+                                }
+                            }
+
+                            override fun replaceAll(key: NavKey) {
+                                backStack.clear()
+                                backStack.add(key)
                             }
                         }
-
-                        override fun replaceAll(key: NavKey) {
-                            backStack.clear()
-                            backStack.add(key)
-                        }
                     }
-                }
 
-                CompositionLocalProvider(LocalAppNavigator provides navigator) {
-                    NavDisplay(
-                        backStack = backStack,
-                        onBack = navigator::back,
-                        // Every push is a step forward (slides in from the right, previous screen
-                        // exits left) and every pop reverses that exact motion (slides in from the
-                        // left, current screen exits right) — a single consistent direction along
-                        // the back stack instead of NavDisplay's default crossfade, which gives push
-                        // and pop the same look and no sense of which way the stack just moved.
-                        transitionSpec = {
-                            slideInHorizontally(initialOffsetX = { it }) togetherWith
-                                slideOutHorizontally(targetOffsetX = { -it })
-                        },
-                        popTransitionSpec = {
-                            slideInHorizontally(initialOffsetX = { -it }) togetherWith
-                                slideOutHorizontally(targetOffsetX = { it })
-                        },
-                        predictivePopTransitionSpec = {
-                            slideInHorizontally(initialOffsetX = { -it }) togetherWith
-                                slideOutHorizontally(targetOffsetX = { it })
-                        },
-                    ) { key ->
-                        val rawDestination = requireNotNull(destinations[key::class.java]) {
-                            "Destination not found for key: ${key::class.qualifiedName}. Check your Hilt @NavDestination binding."
-                        }
+                    CompositionLocalProvider(LocalAppNavigator provides navigator) {
+                        NavDisplay(
+                            backStack = backStack,
+                            onBack = navigator::back,
+                            transitionSpec = {
+                                slideInHorizontally(initialOffsetX = { it }) togetherWith
+                                    slideOutHorizontally(targetOffsetX = { -it })
+                            },
+                            popTransitionSpec = {
+                                slideInHorizontally(initialOffsetX = { -it }) togetherWith
+                                    slideOutHorizontally(targetOffsetX = { it })
+                            },
+                            predictivePopTransitionSpec = {
+                                slideInHorizontally(initialOffsetX = { -it }) togetherWith
+                                    slideOutHorizontally(targetOffsetX = { it })
+                            },
+                        ) { key ->
+                            val rawDestination = requireNotNull(destinations[key::class.java]) {
+                                "Destination not found for key: ${key::class.qualifiedName}. Check your Hilt @NavDestination binding."
+                            }
 
-                        @Suppress("UNCHECKED_CAST")
-                        val destination = rawDestination as Destination<NavKey>
+                            @Suppress("UNCHECKED_CAST")
+                            val destination = rawDestination as Destination<NavKey>
 
-                        NavEntry(key) {
-                            destination.Content(key = key)
+                            NavEntry(key) {
+                                destination.Content(key = key)
+                            }
                         }
                     }
                 }

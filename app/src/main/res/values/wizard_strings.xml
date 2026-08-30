@@ -1,7 +1,5 @@
 <resources>
-    <string name="wizard_title_deploy_server">Deploy your server</string>
-    <string name="wizard_title_add_to_subscription">Add server to subscription</string>
-    <string name="wizard_title_import_uri">Import from link</string>
+    <string name="wizard_nav_icon_description">Server setup wizard</string>
     <string name="wizard_strategy_choice">Strategy Choice</string>
     <string name="wizard_step_rule_generation">Rule Generation</string>
     <string name="wizard_step_confirmation">Confirmation</string>

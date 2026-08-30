@@ -16,7 +16,6 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.nukemichi.android.R
 import app.nukemichi.android.core.mode.AppMode
-import app.nukemichi.android.feature.wizard.WizardFlow
 import app.nukemichi.android.core.navigation.LocalAppNavigator
 import app.nukemichi.android.core.ui.components.ConfirmDialog
 import app.nukemichi.android.core.ui.components.LoadingDialog
@@ -49,12 +48,10 @@ private const val PAGE_COUNT = 4
 
 @Composable
 internal fun WizardScreen(
-    flow: WizardFlow,
     onNavigateBack: () -> Unit,
     onNavigateToDashboard: () -> Unit,
     viewModel: WizardViewModel = hiltViewModel()
 ) {
-    val title = flow.title()
     val uiState by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val vpnPermissionLauncher = rememberLauncherForActivityResult(
@@ -171,7 +168,7 @@ internal fun WizardScreen(
                 steps = wizardSteps,
                 state = wizardState,
                 onNavIconClick = { viewModel.processIntent(Intent.OnCloseWizardClicked) },
-                navIconDescription = title,
+                navIconDescription = UiText.Resource(R.string.wizard_nav_icon_description),
             )
         },
     )
@@ -216,10 +213,4 @@ internal fun WizardScreen(
             onDismiss = { viewModel.processIntent(Intent.DismissConnectionErrorDialog) },
         )
     }
-}
-
-private fun WizardFlow.title(): UiText = when (this) {
-    WizardFlow.DEPLOY_SERVER -> UiText.Resource(R.string.wizard_title_deploy_server)
-    WizardFlow.ADD_TO_SUBSCRIPTION -> UiText.Resource(R.string.wizard_title_add_to_subscription)
-    WizardFlow.IMPORT_URI -> UiText.Resource(R.string.wizard_title_import_uri)
 }

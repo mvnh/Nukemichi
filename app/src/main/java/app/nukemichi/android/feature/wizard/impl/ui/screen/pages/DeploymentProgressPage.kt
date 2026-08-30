@@ -84,9 +84,6 @@ private fun DeploymentInProgressContent(
         (deployment.phase as? DeploymentPhase.Failed)?.let { lastFailure = it }
     }
 
-    // Not WizardPage here — the terminal below needs a bounded-height parent to actually fill
-    // the remaining space with Modifier.weight(1f) instead of a fixed cap; WizardPage's own
-    // vertically-scrolling Column has unbounded height, which weight() can't work inside.
     Column(
         modifier = Modifier
             .fillMaxSize()

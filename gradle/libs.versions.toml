@@ -24,6 +24,7 @@ retrofit = "3.0.0"
 nav3Core = "1.1.5"
 lifecycleViewmodelNav3 = "2.11.0"
 kotlinxCollectionsImmutable = "0.5.1"
+konsist = "0.17.3"
 
 
 [libraries]
@@ -58,6 +59,7 @@ androidx-navigation3-runtime = { module = "androidx.navigation3:navigation3-runt
 androidx-navigation3-ui = { module = "androidx.navigation3:navigation3-ui", version.ref = "nav3Core" }
 androidx-lifecycle-viewmodel-navigation3 = { module = "androidx.lifecycle:lifecycle-viewmodel-navigation3", version.ref = "lifecycleViewmodelNav3" }
 kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinxCollectionsImmutable" }
+konsist = { module = "com.lemonappdev:konsist", version.ref = "konsist" }
 
 
 [plugins]

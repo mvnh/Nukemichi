@@ -1,6 +1,8 @@
-package app.nukemichi.android.core.ssh.internal
+package app.nukemichi.android.core.ssh
 
-// Guards script interpolation at the type level, not just by convention at each call site.
+// Guards script interpolation at the type level, not just by convention at each call site. Lives
+// outside .internal on purpose: BashScriptCommand implementations — the things that actually need
+// this guard — are written by feature domain layers, not by core.ssh itself.
 @JvmInline
 value class ShellSafe private constructor(private val raw: String) {
 

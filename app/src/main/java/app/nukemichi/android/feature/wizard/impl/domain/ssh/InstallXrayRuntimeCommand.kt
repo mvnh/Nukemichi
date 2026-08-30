@@ -1,7 +1,7 @@
 package app.nukemichi.android.feature.wizard.impl.domain.ssh
 
+import app.nukemichi.android.core.ssh.ShellSafe
 import app.nukemichi.android.core.ssh.command.BashScriptCommand
-import app.nukemichi.android.core.ssh.internal.ShellSafe
 import app.nukemichi.android.core.ssh.model.CommandResult
 import app.nukemichi.android.feature.wizard.impl.domain.model.PackageManager
 

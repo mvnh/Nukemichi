@@ -1,7 +1,6 @@
 <resources>
     <string name="wizard_nav_icon_description">Server setup wizard</string>
     <string name="wizard_strategy_choice">Strategy Choice</string>
-    <string name="wizard_step_rule_generation">Rule Generation</string>
     <string name="wizard_step_confirmation">Confirmation</string>
     <string name="wizard_step_deployment">Deployment</string>
 
@@ -24,9 +23,6 @@
     <string name="wizard_tag_15_min">~15 min</string>
     <string name="wizard_tag_soon">Soon</string>
     <string name="wizard_tag_recommended">Recommended</string>
-
-    <!-- Placeholders (rule generation page is not built yet) -->
-    <string name="wizard_placeholder_rules_content">Rule generation setup will be here</string>
 
     <!-- Server Data Entry Page -->
     <string name="wizard_server_data_description">Enter your server\'s address and how to connect to it.</string>

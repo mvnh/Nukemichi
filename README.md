@@ -80,5 +80,5 @@ the NDK installed (SDK Manager), then run the `app` module. Requires `minSdk` 26
 - Local storage of anything sensitive (SSH trust, saved connection profiles) is encrypted via the
   Android Keystore.
 
-This is a personal project, not independently audited. Read the code before trusting it with
+Nukemichi is pre-1.0 and has not been independently audited. Read the code before trusting it with
 anything where getting it wrong has real consequences.

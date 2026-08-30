@@ -4,7 +4,9 @@ import app.nukemichi.android.core.ssh.model.CommandResult
 import app.nukemichi.android.feature.wizard.impl.domain.ssh.GenerateXrayServerSecretsCommand
 import app.nukemichi.android.feature.wizard.impl.domain.ssh.InstallXrayRuntimeCommand
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertThrows
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class GenerateXrayServerSecretsCommandTest {
@@ -36,5 +38,22 @@ class GenerateXrayServerSecretsCommandTest {
         assertThrows(IllegalStateException::class.java) {
             InstallXrayRuntimeCommand.releaseAssetFor("mips")
         }
+    }
+
+    /**
+     * These binaries get installed and executed as root on the user's VPS, so a digest that is
+     * absent, truncated or a copy-paste of the other architecture's is a supply-chain hole rather
+     * than a cosmetic slip — assert the shape here so an update can't quietly drop one.
+     */
+    @Test
+    fun `pins a distinct full-length digest per architecture`() {
+        val amd64 = InstallXrayRuntimeCommand.releaseAssetFor("64").sha256
+        val arm64 = InstallXrayRuntimeCommand.releaseAssetFor("arm64-v8a").sha256
+
+        listOf(amd64, arm64).forEach { digest ->
+            assertEquals(64, digest.length)
+            assertTrue("digest is not lowercase hex: $digest", digest.matches(Regex("[0-9a-f]{64}")))
+        }
+        assertNotEquals(amd64, arm64)
     }
 }

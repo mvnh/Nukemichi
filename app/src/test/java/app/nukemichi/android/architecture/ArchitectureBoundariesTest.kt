@@ -53,7 +53,7 @@ class ArchitectureBoundariesTest {
             fail(
                 "core.<module> exposes only abstractions and plain data types outside " +
                     ".internal/.di - a concrete behavioral class belongs in .internal:\n" +
-                    violations.describe()
+                    violations.describeClasses()
             )
         }
     }
@@ -65,7 +65,7 @@ class ArchitectureBoundariesTest {
         if (violations.isNotEmpty()) {
             fail(
                 "feature.<name> root may only contain *Key navigation keys - everything else " +
-                    "belongs in feature.<name>.impl:\n" + violations.describe()
+                    "belongs in feature.<name>.impl:\n" + violations.describeFiles()
             )
         }
     }
@@ -88,7 +88,7 @@ class ArchitectureBoundariesTest {
             fail(
                 "every *Key at a feature's root needs a Destination<Key> implementation " +
                     "under that feature's .impl, or MainActivity's lookup fails at runtime " +
-                    "instead of build time:\n" + violations.describe()
+                    "instead of build time:\n" + violations.describeFiles()
             )
         }
     }
@@ -210,9 +210,9 @@ class ArchitectureBoundariesTest {
 
     private fun KoFileDeclaration.describeLocation(): String = "${packagee?.name}.${fileName()}"
 
-    private fun List<KoClassDeclaration>.describe(): String =
+    private fun List<KoClassDeclaration>.describeClasses(): String =
         joinToString("\n") { " - ${it.packagee?.name}.${it.name}" }
 
-    private fun List<KoFileDeclaration>.describe(): String =
+    private fun List<KoFileDeclaration>.describeFiles(): String =
         joinToString("\n") { " - ${it.describeLocation()}" }
 }

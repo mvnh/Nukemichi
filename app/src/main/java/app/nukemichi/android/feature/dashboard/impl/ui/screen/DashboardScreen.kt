@@ -134,9 +134,9 @@ private fun DashboardContent(
         modifier = modifier
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
-            .padding(dimens.l),
+            .padding(dimens.l)
+            .padding(top = dimens.xl),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(

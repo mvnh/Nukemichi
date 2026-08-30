@@ -1,15 +1,14 @@
 <resources>
     <string name="wizard_nav_icon_description">Мастер настройки сервера</string>
     <string name="wizard_strategy_choice">Выбор стратегии</string>
-    <string name="wizard_step_rule_generation">Генерация правил</string>
     <string name="wizard_step_confirmation">Подтверждение</string>
     <string name="wizard_step_deployment">Установка</string>
 
     <!-- Strategy Choice Page -->
-    <string name="wizard_strategy_description">Сколько возни с настройкой вы готовы терпеть? Позже всегда можно развернуть заново с другой стратегией.</string>
+    <string name="wizard_strategy_description">Выберите способ установки — при желании позже можно развернуть сервер заново с другим вариантом.</string>
 
     <string name="wizard_strategy_fast_start_title">Быстрый старт</string>
-    <string name="wizard_strategy_fast_start_desc">Нужен только сервер — ключи, маскирующий домен и конфиг Nukemichi сделает сам.</string>
+    <string name="wizard_strategy_fast_start_desc">Нужен только сервер — всё остальное настроим сами.</string>
 
     <string name="wizard_strategy_resilience_title">Максимальная устойчивость</string>
     <string name="wizard_strategy_resilience_desc">Более плотная маскировка для жёстких сетей — понадобится доменное имя, указывающее на сервер.</string>
@@ -25,11 +24,8 @@
     <string name="wizard_tag_soon">Скоро</string>
     <string name="wizard_tag_recommended">Рекомендуется</string>
 
-    <!-- Placeholders (rule generation page is not built yet) -->
-    <string name="wizard_placeholder_rules_content">Здесь будет настройка генерации правил</string>
-
     <!-- Server Data Entry Page -->
-    <string name="wizard_server_data_description">Где сервер и как в него попасть?</string>
+    <string name="wizard_server_data_description">Введите адрес вашего сервера и способ подключения к нему.</string>
     <string name="wizard_server_data_connection_title">Подключение</string>
     <string name="wizard_server_data_address">Адрес сервера</string>
     <string name="wizard_server_data_authentication">Аутентификация</string>
@@ -49,7 +45,7 @@
     <string name="wizard_connection_check_failed_detail_prefix">Подробности: </string>
 
     <string name="wizard_untrusted_host_title">Первое подключение к этому серверу</string>
-    <string name="wizard_untrusted_host_body">Вы подключаетесь к этому серверу впервые — нет способа проверить, что это действительно ваш сервер, а не что-то, перехватывающее соединение. Отпечаток SSH-ключа хоста:\n\n%1$s\n\nЕсли вы только что развернули этот сервер сами — это ожидаемо, доверьтесь ему, чтобы продолжить.</string>
+    <string name="wizard_untrusted_host_body">Первое подключение к этому серверу. Если вы сами создавали его несколько минут назад — всё в порядке, продолжайте. Если данные для входа вам передал кто-то другой — на всякий случай уточните у него, что сервер настроен именно так.\n\n(Технический отпечаток ключа, если понадобится сверить: %1$s)</string>
     <string name="wizard_untrusted_host_trust">Доверять и продолжить</string>
 
     <!-- Confirmation Page -->
@@ -61,19 +57,19 @@
     <string name="wizard_confirmation_note_body">Если закрыть приложение во время установки — не страшно, сервер останется рабочим, а повторный запуск мастера аккуратно начнёт всё заново.</string>
 
     <!-- Errors -->
-    <string name="wizard_error_vpn_permission_required">Для запуска туннеля нужен доступ к VPN.</string>
-    <string name="wizard_error_incomplete_ssh_details">Сначала заполните данные SSH-подключения.</string>
+    <string name="wizard_error_vpn_permission_required">Нужно разрешение на VPN-подключение — без него не запустить защищённое соединение.</string>
+    <string name="wizard_error_incomplete_ssh_details">Сначала заполните данные для подключения к серверу.</string>
     <string name="wizard_error_unknown">Неизвестная ошибка</string>
 
     <!-- Deployment progress page -->
-    <string name="wizard_deployment_step_install_runtime">Устанавливаем xray-core</string>
-    <string name="wizard_deployment_step_find_sni">Подбираем маскирующий домен</string>
-    <string name="wizard_deployment_step_generate_secrets">Генерируем ключи</string>
-    <string name="wizard_deployment_step_write_configuration">Загружаем конфигурацию</string>
-    <string name="wizard_deployment_step_start_service">Запускаем сервис</string>
+    <string name="wizard_deployment_step_install_runtime">Устанавливаем VPN-движок</string>
+    <string name="wizard_deployment_step_find_sni">Ищем прикрытие для трафика</string>
+    <string name="wizard_deployment_step_generate_secrets">Создаём секретные данные для защиты соединения</string>
+    <string name="wizard_deployment_step_write_configuration">Применяем настройки</string>
+    <string name="wizard_deployment_step_start_service">Включаем VPN</string>
 
-    <string name="wizard_deployment_terminal_show">Показать терминал</string>
-    <string name="wizard_deployment_terminal_hide">Скрыть терминал</string>
+    <string name="wizard_deployment_terminal_show">Показать журнал установки</string>
+    <string name="wizard_deployment_terminal_hide">Скрыть журнал установки</string>
     <string name="wizard_deployment_terminal_copy">Скопировать лог</string>
     <string name="wizard_deployment_terminal_copied">Скопировано</string>
     <string name="wizard_deployment_idle_message">Работаем над этим…</string>

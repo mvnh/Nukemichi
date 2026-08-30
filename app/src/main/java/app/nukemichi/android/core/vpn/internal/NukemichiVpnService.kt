@@ -172,7 +172,7 @@ internal class NukemichiVpnService : VpnService() {
         scope.launch {
             lifecycleMutex.withLock {
                 healthWatchdog.stop()
-                teardown()
+                teardown(waitForXrayStop = false)
                 telemetry.stopping()
                 stopForeground(STOP_FOREGROUND_REMOVE)
                 Timber.i("stopVpn: torn down, restarting :vpn process for a clean slate")
@@ -200,9 +200,13 @@ internal class NukemichiVpnService : VpnService() {
             .establish()
     ) { "Android rejected VPN interface establishment." }
 
-    private suspend fun teardown() {
+    // waitForXrayStop=false is only for the disconnect path (stopVpn): xray-core's stopLoop() can
+    // hang for minutes, and Process.killProcess() right after cleans up the native state
+    // regardless of whether stopLoop() ever returns. startVpn's own pre-flight teardown needs the
+    // old instance to actually be gone first — the process keeps running there.
+    private suspend fun teardown(waitForXrayStop: Boolean = true) {
         hevSocks5Tunnel.stop()
-        runtime.stop()
+        if (waitForXrayStop) runtime.stop() else runtime.stopWithoutWaiting()
         tunInterface?.close()
         tunInterface = null
     }

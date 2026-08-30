@@ -4,6 +4,10 @@ import android.content.Context
 import app.nukemichi.android.core.vpn.XrayRuntimeConfig
 import app.nukemichi.android.core.vpn.XrayStatsSource
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import libv2ray.CoreCallbackHandler
@@ -35,6 +39,21 @@ internal class XrayRuntime @Inject constructor(
     suspend fun stop() = mutex.withLock {
         controller?.let { running -> runCatching { running.stopLoop() } }
         controller = null
+    }
+
+    /**
+     * Fire-and-forget disconnect: xray-core's native stopLoop() can wedge for minutes on a stuck
+     * goroutine (the same failure mode XrayHealthWatchdog watches for elsewhere), and skips the
+     * mutex too, so a wedged stopLoop() can't block a later start(). Only safe for a caller that
+     * doesn't depend on xray actually being stopped when this returns — NukemichiVpnService's
+     * disconnect path kills the whole :vpn process right after, which is what makes it safe here.
+     */
+    fun stopWithoutWaiting() {
+        val running = controller ?: return
+        controller = null
+        CoroutineScope(SupervisorJob() + Dispatchers.IO).launch {
+            runCatching { running.stopLoop() }
+        }
     }
 
     override fun queryAllOutboundTrafficStats(): String? = controller?.queryAllOutboundTrafficStats()

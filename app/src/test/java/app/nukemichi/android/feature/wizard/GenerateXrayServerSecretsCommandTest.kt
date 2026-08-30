@@ -31,8 +31,8 @@ class GenerateXrayServerSecretsCommandTest {
 
     @Test
     fun `maps known architectures to xray release assets`() {
-        assertEquals("Xray-linux-64.zip", InstallXrayRuntimeCommand.releaseAssetFor("64"))
-        assertEquals("Xray-linux-arm64-v8a.zip", InstallXrayRuntimeCommand.releaseAssetFor("arm64-v8a"))
+        assertEquals("Xray-linux-64.zip", InstallXrayRuntimeCommand.releaseAssetFor("64").name)
+        assertEquals("Xray-linux-arm64-v8a.zip", InstallXrayRuntimeCommand.releaseAssetFor("arm64-v8a").name)
         assertThrows(IllegalStateException::class.java) {
             InstallXrayRuntimeCommand.releaseAssetFor("mips")
         }

@@ -15,14 +15,9 @@ import java.util.concurrent.ArrayBlockingQueue
 import java.util.concurrent.TimeUnit
 
 /**
- * [Socks5Client] hand-rolls RFC 1928/1929 byte layouts — length prefixes, a big-endian port, and
- * offsets computed against a hostname of arbitrary length. Nothing else in the app re-derives those
- * offsets, so a mistake in them is invisible until a probe silently reports a healthy tunnel as
- * broken (or the reverse).
- *
- * The server below therefore asserts on the exact bytes the client wrote, rather than merely
- * completing a handshake — a client that sent a malformed-but-parseable request would still pass
- * the latter.
+ * Asserts the exact bytes written rather than just completing a handshake: a
+ * malformed-but-parseable request would pass the latter, and the only symptom would be the health
+ * probe reporting a working tunnel as dead, or the reverse.
  */
 class Socks5ClientTest {
 
@@ -121,11 +116,7 @@ class Socks5ClientTest {
         }
     }
 
-    /**
-     * Whether a hang-up surfaces as EOF on the read or a reset on the write depends on which side
-     * wins the race, so this pins the contract XrayHealthWatchdog actually relies on — some
-     * IOException — rather than a specific subclass it would be flaky to demand.
-     */
+    /** EOF on the read or a reset on the write, depending on who wins the race — so pin the supertype. */
     @Test
     fun `fails with an IOException when the server hangs up mid-handshake`() {
         val socks = start(RecordingSocksServer(hangUpImmediately = true))
@@ -139,10 +130,7 @@ class Socks5ClientTest {
         socksServer.also { server = it }
 }
 
-/**
- * A SOCKS5 server that records what the client sent and replies with configurable status codes.
- * Records rather than validates, so each test asserts only the bytes it cares about.
- */
+/** Records what the client sent rather than validating it, so each test asserts what it cares about. */
 private class RecordingSocksServer(
     private val methodReply: Byte? = null,
     private val authStatus: Byte = 0x00,
@@ -175,8 +163,8 @@ private class RecordingSocksServer(
         if (methodReply != null) return
 
         if (greeting[2] == 0x02.toByte()) {
-            // version, then two length-prefixed fields — read them by their own declared lengths so
-            // a wrong length written by the client shows up as a wrong recording, not a hang.
+            // Read by the client's own declared lengths, so a wrong length is a wrong recording
+            // rather than a hang.
             val version = input.readByte()
             val user = ByteArray(input.readUnsignedByte()).also(input::readFully)
             val pass = ByteArray(input.readUnsignedByte()).also(input::readFully)

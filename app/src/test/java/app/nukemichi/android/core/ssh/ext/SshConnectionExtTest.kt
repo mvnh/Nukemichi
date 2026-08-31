@@ -16,13 +16,9 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 /**
- * Every command in the deployment pipeline runs through this helper, so its contract is the one
- * that decides whether a failed provisioning step is reported as a failure at all.
- *
- * The case that matters most is a non-zero exit: `parseOutput` must not run. Several commands parse
- * optimistically (`requireValue`, regex scraping) on the assumption that they only ever see output
- * from a command that succeeded — running them over a half-finished or error-laden stdout would
- * turn a clean failure into a confusing one, or worse, into a bogus success.
+ * Commands here parse optimistically (`requireValue`, regex scraping), assuming they only ever see
+ * output from a command that succeeded — so the case that matters is a non-zero exit skipping
+ * `parseOutput` entirely, rather than a bogus success scraped out of error output.
  */
 class SshConnectionExtTest {
 
@@ -66,10 +62,7 @@ class SshConnectionExtTest {
         assertTrue("stderr missing from: $message", message.contains("no such file"))
     }
 
-    /**
-     * The live-terminal UI is fed from this callback, and a step that fails is exactly when the
-     * user needs to see the stderr — so both streams have to reach it, in arrival order.
-     */
+    /** The live terminal is fed from this callback, and stderr is what a failing step needs to show. */
     @Test
     fun `streams both stdout and stderr to the line callback in order`() = runTest {
         val connection = FakeSshConnection(

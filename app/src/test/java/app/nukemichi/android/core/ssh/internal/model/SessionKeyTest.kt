@@ -9,14 +9,12 @@ import org.junit.Assert.assertNotEquals
 import org.junit.Test
 
 /**
- * [SessionKey] decides when SshjManager hands back a pooled connection instead of opening a new
- * one, so anything that changes who you authenticate as, or how, has to change the key — otherwise
- * a second set of credentials silently rides on the first one's session.
+ * Anything that changes who you authenticate as, or how, has to change the key — otherwise a second
+ * set of credentials rides on the first one's pooled session.
  *
- * Note what is deliberately *not* asserted here: `SshConfig.expectedFingerprint` is not part of the
- * key today, so two calls that disagree about which host key to trust can share a pooled
- * connection. Nothing in the current wizard flow varies the fingerprint mid-session, but it is a
- * trust decision living outside the cache key and worth revisiting.
+ * Deliberately not asserted: `expectedFingerprint` is not part of the key, so two calls disagreeing
+ * about which host key to trust can share a connection. Nothing varies it mid-session today, but it
+ * is a trust decision living outside the cache key.
  */
 class SessionKeyTest {
 
@@ -61,7 +59,7 @@ class SessionKeyTest {
         assertNotEquals(key(auth = base), key(auth = SshAuth.PrivateKey(Secret("KEY-A"), Secret("pass"))))
     }
 
-    /** The key is held for the lifetime of the pool, so it must not carry the credential itself. */
+    /** The key outlives the request, so it must not carry the credential. */
     @Test
     fun `the key does not retain the credential`() {
         val password = "correct-horse-battery-staple"

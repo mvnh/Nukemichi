@@ -13,15 +13,11 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 /**
- * Covers the `logs` flow, which neither [XrayTelemetryMonitorTest] (state machine) nor
- * [XrayTelemetryMonitorStatsTest] (traffic accounting) touches.
+ * The `logs` flow, which the sibling tests (state machine, traffic accounting) leave untouched. It
+ * is the only channel that says *why* a start failed — ERROR state alone just greys out a toggle.
  *
- * It matters because this flow is the only channel through which a start failure reaches the user.
- * The engine state going ERROR just greys out a toggle; the log line is what says *why*, and it is
- * what gets copied out of the log screen when someone asks for help.
- *
- * `logs` is a replay-less SharedFlow, so — as in the sibling tests — each case subscribes first and
- * yields before emitting; an emission with no subscriber attached is dropped, not buffered.
+ * A replay-less SharedFlow drops emissions that land with no subscriber attached, hence the
+ * subscribe-then-yield in each case.
  */
 class XrayTelemetryMonitorLogsTest {
 
@@ -38,7 +34,7 @@ class XrayTelemetryMonitorLogsTest {
         assertEquals("Xray core reported success but is not running.", log.message)
     }
 
-    /** A throwable with no message must still say something, or the log screen shows a blank row. */
+    /** Otherwise the log screen renders a blank row. */
     @Test
     fun `a failure without a message falls back to a readable one`() = runBlocking {
         val monitor = monitor()
@@ -50,10 +46,7 @@ class XrayTelemetryMonitorLogsTest {
         assertTrue(received.await().message.isNotBlank())
     }
 
-    /**
-     * The log screen orders by this sequence rather than by arrival, so a duplicate or a reset
-     * would scramble exactly the lines someone is reading to diagnose a failure.
-     */
+    /** The log screen orders by this rather than by arrival. */
     @Test
     fun `log sequence numbers strictly increase`() = runBlocking {
         val monitor = monitor()
@@ -83,7 +76,6 @@ class XrayTelemetryMonitorLogsTest {
     }
 
     private companion object {
-        /** Long enough for the collector above to actually suspend on the flow first. */
         const val COLLECTOR_ATTACH_DELAY_MS = 50L
     }
 }

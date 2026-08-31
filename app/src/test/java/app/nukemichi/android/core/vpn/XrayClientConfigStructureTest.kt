@@ -17,21 +17,12 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 /**
- * The generated config is what the tunnel actually runs on, and a regression in it does not throw —
- * it degrades. A dropped routing rule leaks traffic that was supposed to be blackholed; a stray
- * `flow` on the wrong transport makes the tunnel connect and then quietly fail every request. Both
- * look like "the VPN is a bit broken today" rather than like a bug with a cause.
- *
- * These assertions walk the parsed JSON rather than substring-matching it, so that rule *order* —
- * which decides the outcome in Xray, first match wins — is covered too.
+ * Walks the parsed JSON rather than substring-matching it, because rule *order* decides the outcome
+ * in Xray — first match wins — and a dropped rule degrades the tunnel instead of failing it.
  */
 class XrayClientConfigStructureTest {
 
-    /**
-     * The comment in XrayClientConfigFactory says Vision "silently breaks XHTTP despite the TCP
-     * handshake succeeding". That is a debugging session someone already paid for once; this makes
-     * sure nobody pays for it twice.
-     */
+    /** Vision breaks XHTTP while the TCP handshake still succeeds — a debugging session paid for once. */
     @Test
     fun `xhttp transport never carries a flow`() {
         val user = firstUser(config(transport = XrayTransport.Xhttp()))
@@ -51,10 +42,6 @@ class XrayClientConfigStructureTest {
         assertNull(firstUser(config(transport = XrayTransport.Raw()))["flow"])
     }
 
-    /**
-     * Rule order is the routing policy. Anything landing after the catch-all is dead, and the
-     * blackholes only work if they are matched before it.
-     */
     @Test
     fun `routing sends DNS out, blackholes IPv6 and QUIC, then proxies the rest`() {
         val rules = config().routing().getValue("rules").jsonArray.map { it.jsonObject }
@@ -77,11 +64,7 @@ class XrayClientConfigStructureTest {
         assertEquals("tcp,udp", rules[3].getValue("network").jsonPrimitive.content)
     }
 
-    /**
-     * The TUN interface deliberately exposes no IPv6 path, so this rule is the second line of
-     * defence: anything that still manages to dial v6 through the SOCKS inbound gets blackholed
-     * rather than handed to the proxy.
-     */
+    /** Second line of defence behind the TUN exposing no IPv6 path at all. */
     @Test
     fun `the IPv6 blackhole is matched before the catch-all`() {
         val rules = config().routing().getValue("rules").jsonArray.map { it.jsonObject }
@@ -129,11 +112,7 @@ class XrayClientConfigStructureTest {
         assertNull("a REALITY outbound must not also carry TLS settings", stream["tlsSettings"])
     }
 
-    /**
-     * The loopback SOCKS inbound is reachable by every other app on the device, so the credential
-     * is what keeps it from being an open local proxy. It has to be present, and it has to differ
-     * per session — a constant would be no better than none.
-     */
+    /** Every app on the device can reach 127.0.0.1, and a constant credential would be no better than none. */
     @Test
     fun `the socks inbound requires a freshly generated credential`() {
         val first = XrayClientConfigFactory.createRuntimeConfig(profile())

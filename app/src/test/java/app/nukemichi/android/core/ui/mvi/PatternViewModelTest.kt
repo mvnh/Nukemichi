@@ -19,12 +19,9 @@ import org.junit.Before
 import org.junit.Test
 
 /**
- * Every screen in the app inherits this class, so a defect here is a defect everywhere at once.
- *
- * The property worth pinning hardest is sequential intent processing: `onIntent` is a `suspend`
- * function and several implementations read `state.value`, mutate, and then suspend on I/O. If two
- * intents were processed concurrently, that read-modify-write would interleave and lose updates —
- * a bug that only shows up under fast input and is close to impossible to reproduce by hand.
+ * `onIntent` is suspending, and implementations read `state.value`, mutate, then suspend on I/O.
+ * Concurrent processing would interleave that read-modify-write and lose updates — only under fast
+ * input, and near-impossible to reproduce by hand.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
 class PatternViewModelTest {
@@ -47,10 +44,6 @@ class PatternViewModelTest {
         assertEquals((0 until 50).toList(), viewModel.state.value.seen)
     }
 
-    /**
-     * Each intent suspends midway here. Under concurrent processing the `seen + value` read-copy-
-     * write would drop entries; under sequential processing every one survives.
-     */
     @Test
     fun `a suspending intent does not let the next one interleave`() = runTest(dispatcher) {
         val viewModel = TestViewModel(suspendMidway = true)
@@ -89,10 +82,7 @@ class PatternViewModelTest {
         assertEquals(listOf(TestEffect("first"), TestEffect("second")), effects)
     }
 
-    /**
-     * The effect channel is buffered rather than conflated, so effects raised before the screen is
-     * listening — which is normal during a recreation — are still delivered rather than dropped.
-     */
+    /** Normal during a recreation: the channel is buffered, not conflated. */
     @Test
     fun `effects raised before anyone is collecting are not lost`() = runTest(dispatcher) {
         val viewModel = TestViewModel()

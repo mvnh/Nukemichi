@@ -10,15 +10,10 @@ import java.security.PublicKey
 import java.util.Base64
 
 /**
- * Golden tests: the expected fingerprints below were produced by OpenSSH itself
- * (`ssh-keygen -lf key.pub`) for the keys embedded here, so they pin interoperability with the
- * rest of the world rather than merely with this implementation.
- *
- * That matters because the fingerprint is the whole of TOFU. If the encoding drifts — the classic
- * slip being to hash `PublicKey.encoded`, which is X.509 DER, instead of the SSH wire format — the
- * app keeps working against its own stored values while silently disagreeing with every fingerprint
- * a user could check against their hosting panel or `ssh-keyscan`. Wrong-but-self-consistent is the
- * failure mode these tests exist to catch, and it is invisible without an external oracle.
+ * Expected values come from `ssh-keygen -lf` on the embedded keys, so these pin interoperability
+ * rather than restating the implementation. Wrong-but-self-consistent is the failure mode: hash
+ * X.509 DER instead of SSH wire format and the app still matches its own stored values while
+ * agreeing with nothing a user can check against their hosting panel.
  */
 class SecurityUtilsTest {
 
@@ -57,10 +52,6 @@ class SecurityUtilsTest {
         assertNotEquals(SecurityUtils.getFingerprint("hunter2"), SecurityUtils.getFingerprint("hunter3"))
     }
 
-    /**
-     * [SecurityUtils.getFingerprint] over a secret exists to key a connection cache without the
-     * cache retaining the secret — so the digest must not echo its input back.
-     */
     @Test
     fun `secret digests do not leak the secret`() {
         val secret = "correct-horse-battery-staple"
@@ -74,7 +65,7 @@ class SecurityUtilsTest {
         Buffer.PlainBuffer(Base64.getDecoder().decode(wireBlob)).readPublicKey()
 
     private companion object {
-        /** Body of an `ssh-rsa` line in an OpenSSH `.pub` file — the SSH wire-format key blob. */
+        /** The blob from an OpenSSH `.pub` line, i.e. SSH wire format. */
         const val RSA_WIRE_BLOB =
             "AAAAB3NzaC1yc2EAAAADAQABAAABAQDnEJCs2CtIkTI+1ngercWqb15QmRhJZoYeHr81eK2ZJczu" +
                 "OFH5Jcu3k5OIF7P2OPgP7WWT9tIYaAkfOZ+hERGCr6qqKuKUUZ9IBOxfgT+L/MdDQoTPqomh/44a" +

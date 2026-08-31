@@ -39,12 +39,7 @@ class StoredAppModeRepositoryTest {
         assertEquals(AppMode.NORMAL, StoredAppModeRepository(storage).mode.value)
     }
 
-    /**
-     * Advanced mode unlocks a raw Xray config editor and a shell on the user's server, so the
-     * failure direction matters: anything the repository cannot positively read as "advanced" has
-     * to fall back to NORMAL. A corrupt or half-written value must never be the reason someone
-     * lands in the mode that assumes they know what REALITY is.
-     */
+    /** Advanced mode unlocks a raw config editor and a server shell, so the fallback direction matters. */
     @Test
     fun `an unrecognized persisted value falls back to NORMAL`() {
         listOf("", " ", "TRUE", "yes", "1", "advanced", "{}").forEach { stored ->

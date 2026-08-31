@@ -13,10 +13,8 @@ import org.junit.Assert.assertThrows
 import org.junit.Test
 
 /**
- * The lease count is what SshjManager uses to decide a connection is idle and can be closed. An
- * over-count leaks a live SSH session for the process's lifetime; an under-count closes a
- * connection while another caller is still running commands over it — which surfaces as a
- * mid-deployment failure with no obvious cause.
+ * The lease count is how SshjManager decides a connection is idle. Over-counting pins a live SSH
+ * session open for the process lifetime; under-counting closes one mid-deployment.
  */
 class SharedConnectionTest {
 
@@ -36,11 +34,7 @@ class SharedConnectionTest {
         assertEquals(0, SharedConnection(NoopSshConnection()).leases)
     }
 
-    /**
-     * Releasing more often than acquiring would drive the count negative, and a negative count
-     * never reaches the zero that triggers the idle close — the session would be pinned open
-     * forever instead. Better to fail loudly at the bug than to leak quietly.
-     */
+    /** A negative count never reaches the zero that triggers the idle close. */
     @Test
     fun `releasing more than was acquired fails loudly`() {
         val shared = SharedConnection(NoopSshConnection())

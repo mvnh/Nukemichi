@@ -5,12 +5,6 @@ import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Test
 
-/**
- * [Secret] exists so that a secret cannot reach a log or a crash report by accident. The masking
- * only pays off if it survives being nested inside the structures that actually get printed, which
- * is what the state-level assertions below cover: a `data class` builds its own `toString` from its
- * properties, so the guarantee is only as good as Kotlin's dispatch to the value class's override.
- */
 class SecretTest {
 
     @Test
@@ -28,11 +22,8 @@ class SecretTest {
         assertFalse("${Secret("hunter2")}".contains("hunter2"))
     }
 
-    /**
-     * The wizard's state holds both the SSH password and the private key for the whole session and
-     * is the single largest object in the app carrying secrets — in a debug build it is exactly the
-     * kind of thing that ends up in a log line while someone is chasing an unrelated bug.
-     */
+    // A data class builds its own toString from its properties, so the masking holds only if Kotlin
+    // dispatches to the value class override rather than to the underlying String.
     @Test
     fun `wizard state does not leak its secrets when printed`() {
         val state = WizardContract.State(
@@ -45,7 +36,6 @@ class SecretTest {
 
         assertFalse("password leaked into state.toString()", printed.contains(PASSWORD))
         assertFalse("private key leaked into state.toString()", printed.contains(PRIVATE_KEY))
-        // Non-secret fields should still be readable, or the masking has gone too far to debug with.
         org.junit.Assert.assertTrue(printed.contains("192.0.2.10"))
     }
 

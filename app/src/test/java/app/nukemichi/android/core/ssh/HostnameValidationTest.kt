@@ -7,13 +7,9 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 /**
- * [isSafeHostname] is the boundary between a value the app did not author and a script that runs
- * as root on the user's VPS. The candidates it screens come from RealiTLScanner echoing back
- * whatever a neighbour on the VPS's own /24 put in its certificate's CN/SAN — so every rejected
- * case below is an input an attacker can choose, not a hypothetical.
- *
- * Kept exhaustive on purpose: a guard whose failure mode is silent root command execution earns
- * more assertions than its size suggests.
+ * Candidates come from RealiTLScanner echoing back whatever a neighbour on the VPS's own /24 put
+ * in its certificate CN/SAN, and land in a script that runs as root — so the rejected cases below
+ * are attacker-chosen inputs, which is why the list is exhaustive rather than representative.
  */
 class HostnameValidationTest {
 
@@ -97,7 +93,7 @@ class HostnameValidationTest {
         ).forEach { assertFalse("expected rejected: '$it'", isSafeHostname(it)) }
     }
 
-    /** Certificate SANs frequently carry wildcards, and a wildcard is not a usable SNI value. */
+    /** Real SANs carry these constantly, and a wildcard is not a usable SNI value. */
     @Test
     fun `rejects wildcards`() {
         listOf("*.example.com", "*", "*.com", "www.*.com")

@@ -2,6 +2,7 @@ package app.nukemichi.android.core.mode
 
 import app.nukemichi.android.core.mode.internal.StoredAppModeRepository
 import app.nukemichi.android.core.storage.AppStorage
+import app.nukemichi.android.core.storage.ExperienceKeys
 import app.nukemichi.android.core.storage.StorageDomain
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -36,6 +37,27 @@ class StoredAppModeRepositoryTest {
         repository.setMode(AppMode.NORMAL)
 
         assertEquals(AppMode.NORMAL, StoredAppModeRepository(storage).mode.value)
+    }
+
+    /**
+     * Advanced mode unlocks a raw Xray config editor and a shell on the user's server, so the
+     * failure direction matters: anything the repository cannot positively read as "advanced" has
+     * to fall back to NORMAL. A corrupt or half-written value must never be the reason someone
+     * lands in the mode that assumes they know what REALITY is.
+     */
+    @Test
+    fun `an unrecognized persisted value falls back to NORMAL`() {
+        listOf("", " ", "TRUE", "yes", "1", "advanced", "{}").forEach { stored ->
+            val storage = InMemoryAppStorage().apply {
+                putString(StorageDomain.EXPERIENCE, ExperienceKeys.ADVANCED_MODE_ENABLED, stored)
+            }
+
+            assertEquals(
+                "'$stored' must not be read as advanced mode",
+                AppMode.NORMAL,
+                StoredAppModeRepository(storage).mode.value,
+            )
+        }
     }
 
     private class InMemoryAppStorage : AppStorage {

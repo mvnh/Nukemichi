@@ -7,13 +7,6 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
-/**
- * MVI state and intents are `data class`es, so each builds its own `toString` from its properties
- * and prints in full the moment anything logs one — and logging the intent stream is the first
- * thing anybody reaches for when debugging an MVI flow. Everything carrying a user's SSH password
- * or private key is asserted here, since the masking is only worth having if it holds at every
- * point the value passes through.
- */
 class WizardSecretMaskingTest {
 
     @Test

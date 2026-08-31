@@ -15,9 +15,6 @@ internal fun WizardContract.State.toSshConfigOrNull(): SshConfig? =
         }
     }
 
-// The one place a UI-layer secret becomes a data-layer one. Mapping state into core models is what
-// this file is for, so the conversion belongs here rather than leaking UiSecret deeper or Secret
-// shallower.
 private fun UiSecret.toSecret(): Secret = Secret(value)
 
 internal fun WizardContract.State.toSshAuth(): SshAuth = when (serverAuthMethod) {

@@ -21,6 +21,7 @@ import app.nukemichi.android.core.ui.components.ConfirmDialog
 import app.nukemichi.android.core.ui.components.LoadingDialog
 import app.nukemichi.android.core.ui.components.MessageDialog
 import app.nukemichi.android.core.ui.util.EffectHandler
+import app.nukemichi.android.core.ui.util.UiSecret
 import app.nukemichi.android.core.ui.util.UiText
 import app.nukemichi.android.core.ui.util.asString
 import app.nukemichi.android.feature.wizard.impl.ui.screen.components.WizardContainer
@@ -101,11 +102,11 @@ internal fun WizardScreen(
                 },
                 password = uiState.password.value,
                 onPasswordChange = {
-                    viewModel.processIntent(Intent.PasswordChanged(it))
+                    viewModel.processIntent(Intent.PasswordChanged(UiSecret(it)))
                 },
                 sshKey = uiState.sshKey.value,
                 onSshKeyChange = {
-                    viewModel.processIntent(Intent.SshKeyChanged(it))
+                    viewModel.processIntent(Intent.SshKeyChanged(UiSecret(it)))
                 },
                 port = uiState.sshPort,
                 onPortChange = {

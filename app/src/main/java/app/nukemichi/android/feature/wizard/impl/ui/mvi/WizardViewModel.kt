@@ -3,7 +3,6 @@ package app.nukemichi.android.feature.wizard.impl.ui.mvi
 import androidx.compose.runtime.Stable
 import app.nukemichi.android.R
 import app.nukemichi.android.core.mode.AppModeRepository
-import app.nukemichi.android.core.security.Secret
 import app.nukemichi.android.core.storage.AppStorage
 import app.nukemichi.android.core.storage.ExperienceKeys
 import app.nukemichi.android.core.storage.StorageDomain
@@ -45,8 +44,8 @@ internal class WizardViewModel @Inject constructor(
             is Intent.SetupStrategyChanged -> reduce { copy(setupStrategy = intent.strategy) }
             is Intent.ServerAuthMethodChanged -> reduce { copy(serverAuthMethod = intent.method) }
             is Intent.ServerAddressChanged -> reduce { copy(serverAddress = intent.address) }
-            is Intent.PasswordChanged -> reduce { copy(password = Secret(intent.password)) }
-            is Intent.SshKeyChanged -> reduce { copy(sshKey = Secret(intent.sshKey)) }
+            is Intent.PasswordChanged -> reduce { copy(password = intent.password) }
+            is Intent.SshKeyChanged -> reduce { copy(sshKey = intent.sshKey) }
             is Intent.SshPortChanged -> reduce { copy(sshPort = intent.port) }
             is Intent.UsernameChanged -> reduce { copy(username = intent.username) }
             is Intent.SshFingerprintChanged -> reduce { copy(sshFingerprint = intent.fingerprint) }

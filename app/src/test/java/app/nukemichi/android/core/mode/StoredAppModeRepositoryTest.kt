@@ -2,6 +2,7 @@ package app.nukemichi.android.core.mode
 
 import app.nukemichi.android.core.mode.internal.StoredAppModeRepository
 import app.nukemichi.android.core.storage.AppStorage
+import app.nukemichi.android.core.storage.ExperienceKeys
 import app.nukemichi.android.core.storage.StorageDomain
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -36,6 +37,22 @@ class StoredAppModeRepositoryTest {
         repository.setMode(AppMode.NORMAL)
 
         assertEquals(AppMode.NORMAL, StoredAppModeRepository(storage).mode.value)
+    }
+
+    /** Advanced mode unlocks a raw config editor and a server shell, so the fallback direction matters. */
+    @Test
+    fun `an unrecognized persisted value falls back to NORMAL`() {
+        listOf("", " ", "TRUE", "yes", "1", "advanced", "{}").forEach { stored ->
+            val storage = InMemoryAppStorage().apply {
+                putString(StorageDomain.EXPERIENCE, ExperienceKeys.ADVANCED_MODE_ENABLED, stored)
+            }
+
+            assertEquals(
+                "'$stored' must not be read as advanced mode",
+                AppMode.NORMAL,
+                StoredAppModeRepository(storage).mode.value,
+            )
+        }
     }
 
     private class InMemoryAppStorage : AppStorage {

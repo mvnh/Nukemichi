@@ -1,0 +1,28 @@
+name: PR title
+
+# Squash is the only merge method enabled on this repository, so the pull request title — not the
+# individual commits on the branch — is what becomes the commit message on master. That is the
+# string worth linting; commits inside a branch are squashed away and can stay scruffy.
+#
+# `edited` matters: without it a title fixed after the first run would never be re-checked.
+on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize]
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    name: Conventional Commits
+    runs-on: ubuntu-latest
+    steps:
+      # Submodules stay off (the default): this job needs one script, not the native sources.
+      - uses: actions/checkout@v4
+
+      - name: Check the title against the convention
+        env:
+          # Via the environment, never interpolated into the script: a title is attacker-controlled
+          # text on a fork PR, and `${{ }}` would paste it straight into the shell.
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: bash .github/workflows/conventional-title.sh "$PR_TITLE"

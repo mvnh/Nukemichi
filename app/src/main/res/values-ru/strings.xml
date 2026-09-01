@@ -6,6 +6,7 @@
     <string name="back">Назад</string>
     <string name="cancel">Отмена</string>
     <string name="ok">Понятно</string>
+    <string name="badge_soon">Скоро</string>
 
     <string name="notification_vpn_title">Nukemichi VPN</string>
     <string name="notification_vpn_content">Подключено</string>

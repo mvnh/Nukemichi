@@ -12,7 +12,7 @@
     <string name="dashboard_state_connected">Connected</string>
     <string name="dashboard_state_disconnecting">Disconnecting…</string>
     <string name="dashboard_state_error">Connection error</string>
-    <string name="dashboard_state_taking_a_while">Still working on it — a fresh connection can take a little longer.</string>
+    <string name="dashboard_state_taking_a_while">Still working on it. A first connection takes a little longer.</string>
 
     <string name="dashboard_server_info_server">Server</string>
     <string name="dashboard_server_info_masking_as">Masking as</string>
@@ -24,9 +24,9 @@
 
     <string name="dashboard_error_vpn_permission_denied">VPN permission was denied.</string>
     <string name="dashboard_error_failed_to_stop_vpn">Failed to stop VPN.</string>
-    <string name="dashboard_error_connection_stalled">Connection stalled — reconnecting…</string>
+    <string name="dashboard_error_connection_stalled">Connection stalled. Reconnecting…</string>
     <string name="dashboard_error_reconnect_timed_out">Reconnect timed out. Try connecting again.</string>
-    <string name="dashboard_error_no_server_configured">No server configured yet — run the setup wizard first.</string>
+    <string name="dashboard_error_no_server_configured">No server configured yet. Run the setup first.</string>
     <string name="dashboard_error_failed_to_start_vpn">Failed to start VPN.</string>
 
     <string name="xray_logs_title">Xray logs</string>

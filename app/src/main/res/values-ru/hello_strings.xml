@@ -1,10 +1,10 @@
 <resources>
     <string name="hello_header_title">Свой VPN, %1$s</string>
     <string name="hello_header_title_highlight">без хаоса</string>
-    <string name="hello_header_subtitle">Ваш сервер. Ваш VPN. Мы просто разворачиваем его за вас.</string>
+    <string name="hello_header_subtitle">Ваш сервер. Ваш VPN. Nukemichi только настраивает его.</string>
 
     <string name="hello_setup_title">Развернуть свой сервер</string>
-    <string name="hello_setup_description">Просто дайте доступ к вашему серверу. Установку, настройку и защиту от блокировок берём на себя.</string>
+    <string name="hello_setup_description">Дайте приложению доступ к серверу. Оно всё установит, настроит и спрячет ваш трафик от фильтров.</string>
 
     <string name="hello_connect_title">Подключить или импортировать</string>
     <string name="hello_connect_description">Есть готовая ссылка на VPN от друга или другого сервиса? Просто вставьте её.</string>
@@ -12,18 +12,17 @@
     <string name="hello_learn_title">Сначала изучить</string>
     <string name="hello_learn_description">Не знаете, что такое REALITY, XHTTP, или от чего это вообще защищает? Начните здесь.</string>
 
-    <string name="hello_badge_soon">Скоро</string>
     <string name="hello_view_source_code">Открыть исходный код</string>
     <string name="hello_view_advanced_mode">Посмотреть расширенный режим</string>
 
     <string name="advanced_mode_intro_title">Расширенный режим</string>
-    <string name="advanced_mode_intro_capabilities_title">Что открывается</string>
+    <string name="advanced_mode_intro_capabilities_title">Что даёт</string>
     <string name="advanced_mode_intro_capability_transport">Выбор транспортного протокола вручную вместо автоматического</string>
     <string name="advanced_mode_intro_capability_config">Редактирование всего конфига Xray, включая редактор сырого JSON</string>
     <string name="advanced_mode_intro_capability_stats">Подробная статистика по каждому соединению</string>
     <string name="advanced_mode_intro_capability_tty">Запуск команд на сервере прямо из приложения</string>
-    <string name="advanced_mode_intro_warning_title">Это нужно не большинству</string>
-    <string name="advanced_mode_intro_warning_body">Расширенный режим предполагает, что вы понимаете REALITY, XHTTP и схему конфига Xray. Ошибка в любом из этого может упростить вашу идентификацию или полностью разорвать соединение — встроенной защиты от этого нет.</string>
+    <string name="advanced_mode_intro_warning_title">Обычно это не нужно</string>
+    <string name="advanced_mode_intro_warning_body">Расширенный режим предполагает, что вы понимаете REALITY, XHTTP и схему конфига Xray. Ошибка в любом из этого может упростить вашу идентификацию или вовсе разорвать соединение. Приложение никак от этого не защищает.</string>
     <string name="advanced_mode_intro_acknowledge">Я понимаю риски и хочу полный контроль</string>
     <string name="advanced_mode_intro_enable">Включить расширенный режим</string>
 </resources>

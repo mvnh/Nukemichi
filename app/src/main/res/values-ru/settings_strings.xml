@@ -2,13 +2,13 @@
     <string name="settings_title">Настройки</string>
     <string name="settings_mode_section_title">Режим</string>
     <string name="settings_mode_normal_title">Обычный</string>
-    <string name="settings_mode_normal_description">Подключение в один тап. Всё остальное — автоматически.</string>
+    <string name="settings_mode_normal_description">Подключение в один тап. Всё остальное автоматически.</string>
     <string name="settings_mode_advanced_title">Расширенный</string>
-    <string name="settings_mode_advanced_description">Хирургический контроль над транспортом, конфигом и статистикой.</string>
+    <string name="settings_mode_advanced_description">Выбор транспорта, редактирование конфига, статистика по соединениям.</string>
 
     <string name="settings_advanced_section_title">Расширенные</string>
     <string name="settings_sni_override_title">Маскировочный домен (SNI)</string>
-    <string name="settings_sni_override_warning">Должен совпадать с доменом, с которым развёрнут сервер — иначе соединение не установится.</string>
+    <string name="settings_sni_override_warning">Должен совпадать с доменом, с которым развёрнут сервер, иначе соединение не установится.</string>
     <string name="settings_utls_fingerprint_title">TLS-отпечаток</string>
     <string name="settings_mux_title">Мультиплексирование</string>
     <string name="settings_mux_description">Использовать одно соединение для нескольких потоков.</string>

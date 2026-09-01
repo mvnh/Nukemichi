@@ -54,7 +54,7 @@ internal fun HelloContent(
             icon = NukemichiIcons.Common.Cable,
             onClick = onConnectOrImportClick,
             enabled = false,
-            badgeText = UiText.Resource(R.string.hello_badge_soon),
+            badgeText = UiText.Resource(R.string.badge_soon),
         )
 
         HelloActionCard(
@@ -63,7 +63,7 @@ internal fun HelloContent(
             icon = NukemichiIcons.Common.AutoStories,
             onClick = onLearnFirstClick,
             enabled = false,
-            badgeText = UiText.Resource(R.string.hello_badge_soon),
+            badgeText = UiText.Resource(R.string.badge_soon),
         )
 
         HelloBottomActions(

@@ -58,8 +58,7 @@ internal fun StrategyChoicePage(
             title = UiText.Resource(R.string.wizard_strategy_fast_start_title),
             description = UiText.Resource(R.string.wizard_strategy_fast_start_desc),
             icon = NukemichiIcons.Common.RocketLaunch,
-            timeEstimate = UiText.Resource(R.string.wizard_tag_5_min),
-            difficulty = UiText.Resource(R.string.wizard_tag_easy),
+            requirement = UiText.Resource(R.string.wizard_requirement_fast_start),
             badgeText = UiText.Resource(R.string.wizard_tag_recommended),
             techStack = persistentListOf(
                 UiText.Raw("xray-core"),
@@ -79,9 +78,8 @@ internal fun StrategyChoicePage(
             title = UiText.Resource(R.string.wizard_strategy_resilience_title),
             description = UiText.Resource(R.string.wizard_strategy_resilience_desc),
             icon = NukemichiIcons.Common.Shield,
-            timeEstimate = UiText.Resource(R.string.wizard_tag_15_min),
-            difficulty = UiText.Resource(R.string.wizard_tag_hard),
-            badgeText = UiText.Resource(R.string.wizard_tag_soon),
+            requirement = UiText.Resource(R.string.wizard_requirement_resilience),
+            badgeText = UiText.Resource(R.string.badge_soon),
             techStack = persistentListOf(
                 UiText.Raw("naiveproxy"),
                 UiText.Resource(R.string.wizard_tag_domain)
@@ -99,8 +97,7 @@ internal fun StrategyCard(
     title: UiText,
     description: UiText,
     icon: ImageVector,
-    timeEstimate: UiText,
-    difficulty: UiText,
+    requirement: UiText,
     techStack: ImmutableList<UiText>,
     isSelected: Boolean,
     onClick: () -> Unit,
@@ -204,10 +201,7 @@ internal fun StrategyCard(
 
             Spacer(modifier = Modifier.height(dimens.m))
 
-            StrategyMetadata(
-                timeEstimate = timeEstimate,
-                difficulty = difficulty
-            )
+            StrategyRequirement(requirement = requirement)
 
             if (showTechStack) {
                 Spacer(modifier = Modifier.height(dimens.m))
@@ -218,9 +212,8 @@ internal fun StrategyCard(
 }
 
 @Composable
-internal fun StrategyMetadata(
-    timeEstimate: UiText,
-    difficulty: UiText,
+internal fun StrategyRequirement(
+    requirement: UiText,
     modifier: Modifier = Modifier
 ) {
     val dimens = MaterialTheme.dimens
@@ -231,23 +224,13 @@ internal fun StrategyMetadata(
         horizontalArrangement = Arrangement.spacedBy(dimens.s)
     ) {
         Icon(
-            imageVector = NukemichiIcons.Common.Schedule,
+            imageVector = NukemichiIcons.Common.Dns,
             contentDescription = null,
             modifier = Modifier.size(dimens.l),
             tint = MaterialTheme.colorScheme.onSurfaceVariant
         )
         Text(
-            text = timeEstimate.asString(),
-            style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-        Text(
-            text = "•",
-            style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-        Text(
-            text = difficulty.asString(),
+            text = requirement.asString(),
             style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )

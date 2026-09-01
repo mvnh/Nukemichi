@@ -1,10 +1,10 @@
 <resources>
     <string name="hello_header_title">Your very own VPN, %1$s</string>
     <string name="hello_header_title_highlight">chaos omitted</string>
-    <string name="hello_header_subtitle">Your server. Your VPN. We just set it up for you.</string>
+    <string name="hello_header_subtitle">Your server. Your VPN. Nukemichi just sets it up.</string>
 
     <string name="hello_setup_title">Set up my own server</string>
-    <string name="hello_setup_description">Just give us access to your server. We handle the install, setup, and blocking protection.</string>
+    <string name="hello_setup_description">Give the app access to your server. It installs everything, sets it up, and hides your traffic from filters.</string>
 
     <string name="hello_connect_title">Connect or import</string>
     <string name="hello_connect_description">Already have a VPN link from a friend or another service? Just paste it in.</string>
@@ -12,7 +12,6 @@
     <string name="hello_learn_title">Learn first</string>
     <string name="hello_learn_description">New to REALITY, XHTTP, or what any of this actually protects you from? Start here.</string>
 
-    <string name="hello_badge_soon">Soon</string>
     <string name="hello_view_source_code">View source code</string>
     <string name="hello_view_advanced_mode">View advanced mode</string>
 
@@ -23,7 +22,7 @@
     <string name="advanced_mode_intro_capability_stats">See detailed, per-connection statistics</string>
     <string name="advanced_mode_intro_capability_tty">Run commands on your server directly from the app</string>
     <string name="advanced_mode_intro_warning_title">This is not what most people need</string>
-    <string name="advanced_mode_intro_warning_body">Advanced mode assumes you understand REALITY, XHTTP, and the Xray config schema. Misconfiguring any of it can make you easier to fingerprint, or break your connection outright — there is no built-in guardrail stopping you from doing either.</string>
+    <string name="advanced_mode_intro_warning_body">Advanced mode assumes you understand REALITY, XHTTP, and the Xray config schema. Getting any of it wrong can make you easier to fingerprint, or break your connection outright. Nothing in the app stops you.</string>
     <string name="advanced_mode_intro_acknowledge">I understand the risks and want full control</string>
     <string name="advanced_mode_intro_enable">Enable advanced mode</string>
 </resources>

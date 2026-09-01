@@ -4,7 +4,7 @@
     <string name="settings_mode_normal_title">Normal</string>
     <string name="settings_mode_normal_description">Connect with one tap. Everything else is automatic.</string>
     <string name="settings_mode_advanced_title">Advanced</string>
-    <string name="settings_mode_advanced_description">Surgical control over transport, config, and stats.</string>
+    <string name="settings_mode_advanced_description">Pick the transport, edit the config, see per-connection stats.</string>
 
     <string name="settings_advanced_section_title">Advanced</string>
     <string name="settings_sni_override_title">Masking domain (SNI)</string>

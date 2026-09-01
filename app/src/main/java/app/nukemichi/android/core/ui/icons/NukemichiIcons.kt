@@ -12,7 +12,6 @@ import app.nukemichi.android.core.ui.icons.sources._dns
 import app.nukemichi.android.core.ui.icons.sources._lock
 import app.nukemichi.android.core.ui.icons.sources._more_vert
 import app.nukemichi.android.core.ui.icons.sources._rocket_launch
-import app.nukemichi.android.core.ui.icons.sources._schedule
 import app.nukemichi.android.core.ui.icons.sources._share
 import app.nukemichi.android.core.ui.icons.sources._shield
 import app.nukemichi.android.core.ui.icons.sources._visibility
@@ -24,7 +23,6 @@ object NukemichiIcons {
     object Common {
         val RocketLaunch: ImageVector get() = _rocket_launch
         val Shield: ImageVector get() = _shield
-        val Schedule: ImageVector get() = _schedule
         val Check: ImageVector get() = _check
         val Cable: ImageVector get() = _cable
         val Dns: ImageVector get() = _dns

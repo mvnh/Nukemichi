@@ -5,8 +5,10 @@ import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
 import androidx.core.content.edit
 import app.nukemichi.android.core.storage.AppStorage
+import app.nukemichi.android.core.storage.SecureStorageUnreadableException
 import app.nukemichi.android.core.storage.StorageDomain
 import dagger.hilt.android.qualifiers.ApplicationContext
+import timber.log.Timber
 import java.security.KeyStore
 import java.util.Base64
 import javax.crypto.Cipher
@@ -46,9 +48,9 @@ internal class AppStorageImpl @Inject constructor(
     private fun read(domain: StorageDomain, key: String): String? = when {
         !domain.encrypted -> persistentPrefs.getString(key, null)
         else -> securePrefs.getString(key, null)?.let { payload ->
-            runCatching { decrypt(payload) }.getOrElse {
-                securePrefs.edit { remove(key) }
-                null
+            runCatching { decrypt(payload) }.getOrElse { error ->
+                Timber.e(error, "Cannot decrypt the stored value for %s", key)
+                throw SecureStorageUnreadableException(key, error)
             }
         }
     }

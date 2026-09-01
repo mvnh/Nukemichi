@@ -2,6 +2,7 @@ package app.nukemichi.android.core.ui.icons
 
 import androidx.compose.ui.graphics.vector.ImageVector
 import app.nukemichi.android.core.ui.icons.sources._arrow_back
+import app.nukemichi.android.core.ui.icons.sources._arrow_drop_down
 import app.nukemichi.android.core.ui.icons.sources._arrow_drop_up
 import app.nukemichi.android.core.ui.icons.sources._auto_stories
 import app.nukemichi.android.core.ui.icons.sources._cable
@@ -37,7 +38,7 @@ object NukemichiIcons {
     object Navigation {
         val ArrowBack: ImageVector get() = _arrow_back
         val ArrowDropUp: ImageVector get() = _arrow_drop_up
-        val ArrowDropDown: ImageVector get() = _arrow_drop_up
+        val ArrowDropDown: ImageVector get() = _arrow_drop_down
         val Close: ImageVector get() = _close
         val MoreVert: ImageVector get() = _more_vert
         val Share: ImageVector get() = _share

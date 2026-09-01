@@ -69,7 +69,7 @@ internal fun HelloActionCard(
                     imageVector = icon,
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(dims.slimXl)
+                    modifier = Modifier.size(dims.icon)
                 )
 
                 Text(

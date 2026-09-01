@@ -56,7 +56,7 @@ internal fun DeploymentSuccessCelebration(
     ) {
         Box(
             modifier = Modifier
-                .size(dimens.slimXxl + dimens.xl)
+                .size(dimens.successBadge)
                 .graphicsLayer {
                     alpha = badgeAlpha.value
                     scaleX = badgeScale.value

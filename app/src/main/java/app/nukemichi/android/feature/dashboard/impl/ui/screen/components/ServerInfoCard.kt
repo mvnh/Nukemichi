@@ -30,7 +30,7 @@ internal fun ServerInfoCard(
 
     Card(
         modifier = modifier,
-        shape = RoundedCornerShape(dimens.slimL),
+        shape = RoundedCornerShape(dimens.cornerRadius),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow),
     ) {
         Column(

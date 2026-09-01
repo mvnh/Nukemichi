@@ -73,7 +73,7 @@ private fun ModeOption(
         modifier = modifier
             .fillMaxWidth()
             .selectable(selected = selected, onClick = onClick, role = Role.RadioButton),
-        shape = RoundedCornerShape(dimens.slimL),
+        shape = RoundedCornerShape(dimens.cornerRadius),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow),
     ) {
         Row(

@@ -26,7 +26,7 @@ internal fun StatsRow(
 
     Row(
         modifier = modifier
-            .clip(RoundedCornerShape(dimens.slimL))
+            .clip(RoundedCornerShape(dimens.cornerRadius))
             .background(MaterialTheme.colorScheme.surfaceContainerLow)
             .padding(dimens.l),
         horizontalArrangement = Arrangement.SpaceEvenly,

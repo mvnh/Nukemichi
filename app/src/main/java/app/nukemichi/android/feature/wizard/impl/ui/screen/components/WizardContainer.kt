@@ -233,7 +233,7 @@ fun WizardTopBar(
                 progress = { progress },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(dimens.slimM)
+                    .height(dimens.scrollIndicatorHeight)
                     .clip(CircleShape),
                 color = MaterialTheme.colorScheme.primary,
                 trackColor = MaterialTheme.colorScheme.surfaceVariant,

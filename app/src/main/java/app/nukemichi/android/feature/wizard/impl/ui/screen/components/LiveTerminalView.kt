@@ -138,7 +138,7 @@ private fun IdlePlaceholder(modifier: Modifier = Modifier) {
                 painter = painterResource(R.drawable.michi_cat),
                 contentDescription = null,
                 modifier = Modifier
-                    .size(dimens.oversizeXl)
+                    .size(dimens.control)
                     .graphicsLayer { translationY = -bounce * 8f },
             )
             Text(

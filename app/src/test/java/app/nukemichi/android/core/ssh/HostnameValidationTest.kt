@@ -121,14 +121,24 @@ class HostnameValidationTest {
     }
 
     @Test
-    fun `ShellSafe refuses to wrap an unsafe value`() {
-        assertThrows(IllegalArgumentException::class.java) { ShellSafe.of("example.com;rm -rf /") }
-        assertThrows(IllegalArgumentException::class.java) { ShellSafe.of("") }
-        assertThrows(IllegalArgumentException::class.java) { ShellSafe.of("*.example.com") }
+    fun `ShellHost refuses to wrap an unsafe value`() {
+        assertThrows(IllegalArgumentException::class.java) { ShellHost.of("example.com;rm -rf /") }
+        assertThrows(IllegalArgumentException::class.java) { ShellHost.of("") }
+        assertThrows(IllegalArgumentException::class.java) { ShellHost.of("*.example.com") }
+    }
+
+    /** The message reaches a log, and candidates come from certificates strangers control. */
+    @Test
+    fun `a rejected value is not repeated in the failure message`() {
+        val injected = "example.com;rm -rf /"
+
+        val error = assertThrows(IllegalArgumentException::class.java) { ShellHost.of(injected) }
+
+        assertFalse(error.message.orEmpty().contains(injected))
     }
 
     @Test
-    fun `ShellSafe renders an accepted value verbatim`() {
-        assertEquals("example.com", ShellSafe.of("example.com").toString())
+    fun `ShellHost renders an accepted value verbatim`() {
+        assertEquals("example.com", ShellHost.of("example.com").toString())
     }
 }

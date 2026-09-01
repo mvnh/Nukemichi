@@ -6,7 +6,7 @@ import app.nukemichi.android.core.mode.AppModeRepository
 import app.nukemichi.android.core.storage.AppStorage
 import app.nukemichi.android.core.storage.ExperienceKeys
 import app.nukemichi.android.core.storage.StorageDomain
-import app.nukemichi.android.core.ui.mvi.PatternViewModel
+import app.nukemichi.android.core.ui.mvi.MviViewModel
 import app.nukemichi.android.core.ui.util.UiText
 import app.nukemichi.android.core.vpn.XrayControl
 import app.nukemichi.android.core.vpn.XrayVpnProfile
@@ -30,7 +30,7 @@ internal class WizardViewModel @Inject constructor(
     private val appModeRepository: AppModeRepository,
     private val connectionCheckDelegate: ConnectionCheckDelegate,
     private val deploymentDelegate: DeploymentDelegate,
-) : PatternViewModel<State, Intent, Effect>(
+) : MviViewModel<State, Intent, Effect>(
     initialState = State()
 ) {
     init {

@@ -5,7 +5,7 @@ import android.net.VpnService
 import android.os.SystemClock
 import androidx.compose.runtime.Stable
 import app.nukemichi.android.R
-import app.nukemichi.android.core.ui.mvi.PatternViewModel
+import app.nukemichi.android.core.ui.mvi.MviViewModel
 import app.nukemichi.android.core.ui.util.UiText
 import app.nukemichi.android.core.vpn.configfactory.XrayClientConfigFactory
 import app.nukemichi.android.core.vpn.XrayEngineState
@@ -28,7 +28,7 @@ internal class DashboardViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val profileStore: XrayProfileStore,
     private val serviceProvider: XrayServiceProvider,
-) : PatternViewModel<DashboardContract.State, DashboardContract.Intent, DashboardContract.Effect>(
+) : MviViewModel<DashboardContract.State, DashboardContract.Intent, DashboardContract.Effect>(
     profileStore.getActiveProfile().let { profile ->
         DashboardContract.State(
             profileName = profile?.name,

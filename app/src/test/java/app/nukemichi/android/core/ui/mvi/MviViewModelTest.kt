@@ -24,7 +24,7 @@ import org.junit.Test
  * input, and near-impossible to reproduce by hand.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
-class PatternViewModelTest {
+class MviViewModelTest {
 
     private val dispatcher = StandardTestDispatcher()
 
@@ -130,7 +130,7 @@ private data class TestEffect(val label: String)
 private class TestViewModel(
     private val suspendMidway: Boolean = false,
     delegate: CountingDelegate? = null,
-) : PatternViewModel<TestState, TestIntent, TestEffect>(TestState()) {
+) : MviViewModel<TestState, TestIntent, TestEffect>(TestState()) {
 
     init {
         delegate?.let { attachDelegates(it) }

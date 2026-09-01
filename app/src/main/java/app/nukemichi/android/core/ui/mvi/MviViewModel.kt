@@ -15,39 +15,39 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 @Stable
-abstract class PatternViewModel<State, Intent, Effect>(
+abstract class MviViewModel<State, Intent, Effect>(
     initialState: State
 ) : ViewModel(), ViewModelContext<State, Effect> {
-    private val _state = MutableStateFlow(initialState)
-    override val state: StateFlow<State> = _state.asStateFlow()
+    private val mutableState = MutableStateFlow(initialState)
+    override val state: StateFlow<State> = mutableState.asStateFlow()
 
     override val scope: CoroutineScope = viewModelScope
 
-    private val _effect = Channel<Effect>(Channel.BUFFERED)
-    val effect: Flow<Effect> = _effect.receiveAsFlow()
+    private val effects = Channel<Effect>(Channel.BUFFERED)
+    val effect: Flow<Effect> = effects.receiveAsFlow()
 
-    private val _intents = Channel<Intent>(Channel.UNLIMITED)
+    private val intents = Channel<Intent>(Channel.UNLIMITED)
 
     init {
         viewModelScope.launch {
-            for (intent in _intents) {
+            for (intent in intents) {
                 onIntent(intent)
             }
         }
     }
 
     fun processIntent(intent: Intent) {
-        _intents.trySend(intent)
+        intents.trySend(intent)
     }
 
     protected abstract suspend fun onIntent(intent: Intent)
 
     override fun reduce(action: State.() -> State) {
-        _state.update { action(it) }
+        mutableState.update { action(it) }
     }
 
     override fun sendEffect(effect: Effect) {
-        _effect.trySend(effect).onFailure { error ->
+        effects.trySend(effect).onFailure { error ->
             Timber.w(error, "Dropped effect %s: channel full or closed", effect)
         }
     }

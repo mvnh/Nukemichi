@@ -1,6 +1,6 @@
 package app.nukemichi.android.feature.wizard.impl.domain.ssh
 
-import app.nukemichi.android.core.ssh.ShellSafe
+import app.nukemichi.android.core.ssh.ShellHost
 import app.nukemichi.android.core.ssh.command.BashScriptCommand
 import app.nukemichi.android.core.ssh.model.CommandResult
 import app.nukemichi.android.feature.wizard.impl.domain.model.PackageManager
@@ -9,13 +9,13 @@ internal class InstallXrayRuntimeCommand(
     packageManager: PackageManager,
     releaseAsset: ReleaseAsset,
 ) : BashScriptCommand<Unit> {
-    private val assetName = ShellSafe.of(releaseAsset.name)
+    private val assetName = ShellHost.of(releaseAsset.name)
 
-    // Not ShellSafe: a 64-char digest exceeds the 63-char label limit that guard enforces. Safety
+    // Not ShellHost: a 64-char digest exceeds the 63-char label limit that guard enforces. Safety
     // comes from it being a compile-time literal below, never anything the server or network says.
     private val assetSha256: String = releaseAsset.sha256
 
-    // Not ShellSafe: this is assembled shell syntax (`;`/`&&`), not a single token — its safety
+    // Not ShellHost: this is assembled shell syntax (`;`/`&&`), not a single token — its safety
     // comes from every argument to installCommand(...) above being a compile-time literal.
     private val installDependencies: String = packageManager.installCommand("ca-certificates", "curl", "unzip", "openssl")
 

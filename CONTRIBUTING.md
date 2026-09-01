@@ -131,7 +131,7 @@ upstream release — so a test cannot agree with a bug by restating it.
 
 Read the surrounding code before changing any of these:
 
-- **Shell interpolation.** Anything reaching a remote script goes through `ShellSafe`, which
+- **Shell interpolation.** Anything reaching a remote script goes through `ShellHost`, which
   validates at construction. Candidate SNI domains come from certificates controlled by whoever
   shares the VPS's subnet — treat them as attacker input.
 - **Downloaded binaries.** Xray-core and RealiTLScanner are pinned by SHA-256 and verified before

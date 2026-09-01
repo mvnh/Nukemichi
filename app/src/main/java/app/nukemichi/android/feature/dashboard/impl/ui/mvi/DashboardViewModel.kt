@@ -2,6 +2,7 @@ package app.nukemichi.android.feature.dashboard.impl.ui.mvi
 
 import android.content.Context
 import android.net.VpnService
+import android.os.SystemClock
 import androidx.compose.runtime.Stable
 import app.nukemichi.android.R
 import app.nukemichi.android.core.ui.mvi.PatternViewModel
@@ -49,13 +50,13 @@ internal class DashboardViewModel @Inject constructor(
                 reduce {
                     copy(
                         engineState = engineState,
-                        // Set once entering RUNNING, cleared on any exit — recomputing it on every
-                        // stats tick would reset "connected for" to zero each time.
-                        connectedSinceMillis = when {
-                            engineState == XrayEngineState.RUNNING && connectedSinceMillis == null ->
-                                System.currentTimeMillis()
+                        // Set once entering RUNNING and cleared on any exit. Recomputing it on
+                        // every stats tick would reset "connected for" to zero each time.
+                        connectedSinceRealtime = when {
+                            engineState == XrayEngineState.RUNNING && connectedSinceRealtime == null ->
+                                SystemClock.elapsedRealtime()
                             engineState != XrayEngineState.RUNNING -> null
-                            else -> connectedSinceMillis
+                            else -> connectedSinceRealtime
                         },
                     )
                 }

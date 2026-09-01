@@ -156,6 +156,7 @@ class XrayClientConfigStructureTest {
             shortId = "abcd",
         ),
         transport = transport,
+        deployedAtMillis = 0L,
     )
 
     private fun config(transport: XrayTransport = XrayTransport.Xhttp()): JsonObject =

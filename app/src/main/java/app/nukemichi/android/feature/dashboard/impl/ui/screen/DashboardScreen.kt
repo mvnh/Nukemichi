@@ -1,6 +1,7 @@
 package app.nukemichi.android.feature.dashboard.impl.ui.screen
 
 import android.content.Intent
+import android.os.SystemClock
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
@@ -28,6 +29,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -191,11 +193,18 @@ private fun DashboardContent(
             }
         }
 
-        state.connectedSinceMillis?.let { since ->
+        state.connectedSinceRealtime?.let { since ->
+            var nowRealtime by remember(since) { mutableLongStateOf(SystemClock.elapsedRealtime()) }
+            LaunchedEffect(since) {
+                while (true) {
+                    nowRealtime = SystemClock.elapsedRealtime()
+                    delay(1_000)
+                }
+            }
             Text(
                 text = stringResource(
                     R.string.dashboard_connected_for,
-                    formatDuration(System.currentTimeMillis() - since),
+                    formatDuration(nowRealtime - since),
                 ),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
@@ -232,10 +241,12 @@ private fun XrayEngineState.label(): UiText = when (this) {
     XrayEngineState.ERROR -> UiText.Resource(R.string.dashboard_state_error)
 }
 
+@Composable
 private fun formatDuration(millis: Long): String {
     val totalSeconds = (millis / 1000).coerceAtLeast(0)
     val hours = totalSeconds / 3600
     val minutes = (totalSeconds % 3600) / 60
     val seconds = totalSeconds % 60
-    return if (hours > 0) "%dh %02dm".format(hours, minutes) else "%dm %02ds".format(minutes, seconds)
+    return if (hours > 0) stringResource(R.string.duration_hours_minutes, hours, minutes)
+    else stringResource(R.string.duration_minutes_seconds, minutes, seconds)
 }

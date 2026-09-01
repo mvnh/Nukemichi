@@ -4,6 +4,8 @@
     <string name="dashboard_export_link_cd">Поделиться VLESS-ссылкой подключения</string>
     <string name="dashboard_export_link_label">Поделиться VLESS-ссылкой</string>
     <string name="dashboard_connected_for">Подключено %1$s</string>
+    <string name="duration_hours_minutes">%1$d ч %2$02d мин</string>
+    <string name="duration_minutes_seconds">%1$d мин %2$02d с</string>
 
     <string name="dashboard_state_not_connected">Не подключено</string>
     <string name="dashboard_state_connecting">Подключение…</string>

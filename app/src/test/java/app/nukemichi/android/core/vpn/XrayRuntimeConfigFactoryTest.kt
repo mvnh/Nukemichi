@@ -21,6 +21,7 @@ class XrayRuntimeConfigFactoryTest {
                 publicKey = "public-key",
                 shortId = "abcd",
             ),
+            deployedAtMillis = 0L,
         )
 
         val config = XrayClientConfigFactory.createRuntimeConfig(profile)

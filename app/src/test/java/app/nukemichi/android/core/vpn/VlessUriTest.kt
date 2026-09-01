@@ -21,6 +21,7 @@ class VlessUriTest {
                 publicKey = "publicKeyValue",
                 shortId = "shortIdValue",
             ),
+            deployedAtMillis = 0L,
         )
 
     @Test

@@ -6,9 +6,8 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
-/** Regression coverage for a real shipped bug: username/password lines built with the wrong
- *  indentation landed outside the `socks5:` mapping, which hev's YAML parser silently read as
- *  no-auth — every real connection was then rejected with "no matching auth method". */
+/** hev reads this config by indentation. username/password one level short of `socks5:` parse
+ *  as top-level keys, the proxy falls back to no-auth, and xray refuses the connection. */
 class HevTunnelConfigFactoryTest {
 
     @Test

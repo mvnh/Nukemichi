@@ -22,12 +22,11 @@ import org.junit.Test
  */
 class XrayClientConfigStructureTest {
 
-    /** Vision breaks XHTTP while the TCP handshake still succeeds — a debugging session paid for once. */
     @Test
-    fun `xhttp transport never carries a flow`() {
+    fun `xhttp transport never carries a flow, because vision breaks it after the handshake`() {
         val user = firstUser(config(transport = XrayTransport.Xhttp()))
 
-        assertNull("Vision on XHTTP connects and then fails every request", user["flow"])
+        assertNull(user["flow"])
     }
 
     @Test

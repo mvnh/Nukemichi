@@ -90,7 +90,7 @@ class MainActivity : ComponentActivity() {
                             },
                         ) { key ->
                             val rawDestination = requireNotNull(destinations[key::class.java]) {
-                                "Destination not found for key: ${key::class.qualifiedName}. Check your Hilt @NavDestination binding."
+                                "No Destination registered for ${key::class.qualifiedName}"
                             }
 
                             @Suppress("UNCHECKED_CAST")

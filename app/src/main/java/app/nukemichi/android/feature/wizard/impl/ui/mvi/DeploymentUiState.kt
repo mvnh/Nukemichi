@@ -5,6 +5,7 @@ import app.nukemichi.android.core.ui.util.UiText
 import app.nukemichi.android.feature.wizard.impl.domain.model.DeploymentStep
 import app.nukemichi.android.feature.wizard.impl.domain.model.XrayServerCredentials
 import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toPersistentList
 
@@ -28,6 +29,6 @@ internal sealed interface DeploymentPhase {
 internal data class DeploymentUiState(
     val steps: ImmutableList<DeploymentStepUi> = DeploymentStep.entries.map(::DeploymentStepUi).toPersistentList(),
     val phase: DeploymentPhase = DeploymentPhase.NotStarted,
-    val logLines: ImmutableList<String> = persistentListOf(),
+    val logLines: PersistentList<String> = persistentListOf(),
     val isTerminalExpanded: Boolean = false,
 )

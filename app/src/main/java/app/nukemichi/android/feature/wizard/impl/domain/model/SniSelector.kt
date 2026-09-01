@@ -1,14 +1,17 @@
 package app.nukemichi.android.feature.wizard.impl.domain.model
 
 internal object SniSelector {
+    // A masking domain hosted in the same jurisdiction as the censorship being avoided defeats the
+    // point: the traffic reads as ordinary domestic traffic, which is exactly what gets inspected.
     private val blockedTlds = setOf(
         ".ru",
         ".by",
-        // Dynamic-DNS providers point at a single, usually home-hosted machine rather than a
-        // server built for sustained HTTP/2 traffic — RealiTLScanner only checks that the TLS
-        // handshake itself succeeds, not that the backend survives real XHTTP load. Confirmed in
-        // practice: a duckdns.org pick accepted the handshake but dropped every XHTTP POST
-        // mid-request (EOF), making every proxied request unreliable despite the SNI "working".
+    )
+
+    // Dynamic-DNS names usually point at a single home-hosted machine, not at a server built for
+    // sustained HTTP/2 traffic. RealiTLScanner only proves the TLS handshake succeeds, so such a
+    // host can pass the scan and still drop XHTTP POSTs mid-request.
+    private val blockedDynamicDnsSuffixes = setOf(
         ".duckdns.org",
         ".no-ip.org",
         ".no-ip.com",
@@ -18,6 +21,9 @@ internal object SniSelector {
         ".dyndns.org",
     )
 
+    // Names fronted by a global CDN or anycast edge. Their TLS terminates wherever the client is,
+    // not near the VPS, so a REALITY handshake claiming one from a single VPS address is
+    // geographically implausible in a way an observer can check cheaply.
     private val blockedDomains = setOf(
         "vk.com",
         "yahoo.com",
@@ -42,6 +48,7 @@ internal object SniSelector {
         if (normalized.isEmpty()) return false
         if (!validHostname.matches(normalized)) return false
         if (blockedTlds.any { normalized.endsWith(it) }) return false
+        if (blockedDynamicDnsSuffixes.any { normalized.endsWith(it) }) return false
         if (blockedDomains.any { normalized == it || normalized.endsWith(".$it") }) return false
         return true
     }

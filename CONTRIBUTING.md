@@ -119,8 +119,8 @@ instrumented tests and reading, not wrapped in interfaces for the sake of a numb
 Two habits worth keeping:
 
 - **Check that an assertion has teeth.** Break the implementation on purpose and confirm the test
-  fails. This has already caught a test that passed against a deleted routing rule, because
-  `indexOfFirst` returns `-1` and `-1` sorts before everything.
+  fails. Watch in particular for assertions that pass on absence: `indexOfFirst` returns `-1`,
+  and `-1` compares before every real index, so an ordering check alone survives a deleted rule.
 - **Prefer fakes to mocks.** There is no mocking library here on purpose. A loopback `ServerSocket`
   says more about a SOCKS client than a recorded call ever will.
 

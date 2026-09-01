@@ -5,20 +5,25 @@ import android.net.VpnService
 import android.os.SystemClock
 import androidx.compose.runtime.Stable
 import app.nukemichi.android.R
+import app.nukemichi.android.core.di.IoDispatcher
 import app.nukemichi.android.core.ui.mvi.MviViewModel
 import app.nukemichi.android.core.ui.util.UiText
 import app.nukemichi.android.core.vpn.configfactory.XrayClientConfigFactory
 import app.nukemichi.android.core.vpn.XrayEngineState
 import app.nukemichi.android.core.vpn.XrayProfileStore
 import app.nukemichi.android.core.vpn.XrayServiceProvider
+import app.nukemichi.android.core.vpn.XrayVpnProfile
 import app.nukemichi.android.core.vpn.spec.XraySecurity
 import app.nukemichi.android.core.vpn.toVlessUri
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
 import timber.log.Timber
 
@@ -28,15 +33,9 @@ internal class DashboardViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val profileStore: XrayProfileStore,
     private val serviceProvider: XrayServiceProvider,
+    @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) : MviViewModel<DashboardContract.State, DashboardContract.Intent, DashboardContract.Effect>(
-    profileStore.getActiveProfile().let { profile ->
-        DashboardContract.State(
-            profileName = profile?.name,
-            serverAddress = profile?.serverAddress,
-            realityServerName = (profile?.security as? XraySecurity.Reality)?.serverName,
-            deployedAtMillis = profile?.deployedAtMillis,
-        )
-    }
+    DashboardContract.State()
 ) {
 
     // Guards against re-entering handleHealthDegraded(): its own reconnect passes through the same
@@ -44,6 +43,17 @@ internal class DashboardViewModel @Inject constructor(
     private var autoReconnecting = false
 
     init {
+        scope.launch {
+            val profile = activeProfile() ?: return@launch
+            reduce {
+                copy(
+                    profileName = profile.name,
+                    serverAddress = profile.serverAddress,
+                    realityServerName = (profile.security as? XraySecurity.Reality)?.serverName,
+                    deployedAtMillis = profile.deployedAtMillis,
+                )
+            }
+        }
         serviceProvider.monitoring.healthDegraded
             .onEach { handleHealthDegraded() }
             .launchIn(scope)
@@ -80,11 +90,18 @@ internal class DashboardViewModel @Inject constructor(
         }
     }
 
-    private fun exportVlessLink() {
-        profileStore.getActiveProfile()?.let { profile ->
+    private suspend fun exportVlessLink() {
+        activeProfile()?.let { profile ->
             sendEffect(DashboardContract.Effect.ShareVlessLink(profile.toVlessUri()))
         }
     }
+
+    /**
+     * Reading the profile decrypts it under a Keystore key and parses the JSON, so it never runs
+     * on the main thread even though every caller here is already inside a coroutine.
+     */
+    private suspend fun activeProfile(): XrayVpnProfile? =
+        withContext(ioDispatcher) { profileStore.getActiveProfile() }
 
     /** Confirmation of start/stop arrives later over IPC, leaving a window (widest on a cold
      *  `:vpn` process spawn) where a repeat tap would dispatch a second START/STOP that Android's
@@ -155,7 +172,7 @@ internal class DashboardViewModel @Inject constructor(
     }
 
     private suspend fun startVpn() {
-        val profile = profileStore.getActiveProfile()
+        val profile = activeProfile()
         if (profile == null) {
             reduce {
                 copy(

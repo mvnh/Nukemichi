@@ -84,7 +84,7 @@ internal class WizardViewModel @Inject constructor(
     private suspend fun finishSetup() {
         coordinator.saveProfile(state.value.toProfileDraft())
             .onSuccess { profile ->
-                appStorage.putString(StorageDomain.EXPERIENCE, ExperienceKeys.WIZARD_COMPLETED, "true")
+                appStorage.putBoolean(StorageDomain.EXPERIENCE, ExperienceKeys.WIZARD_COMPLETED, true)
                 if (xrayControl.needsVpnPermission()) sendEffect(Effect.RequestVpnPermission)
                 else startVpn(profile)
             }

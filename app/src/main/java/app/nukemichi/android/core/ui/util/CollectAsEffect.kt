@@ -13,15 +13,6 @@ import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 @Composable
-fun <T> EffectHandler(
-    effectFlow: Flow<T>,
-    vararg keys: Any?,
-    onEffect: (T) -> Unit
-) {
-    effectFlow.CollectAsEffect(keys = keys, onEffect = onEffect)
-}
-
-@Composable
 fun <T> Flow<T>.CollectAsEffect(
     vararg keys: Any?,
     onEffect: (T) -> Unit

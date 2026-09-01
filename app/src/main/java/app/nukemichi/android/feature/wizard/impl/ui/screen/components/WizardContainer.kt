@@ -57,11 +57,12 @@ import app.nukemichi.android.core.ui.icons.NukemichiIcons
 import app.nukemichi.android.core.ui.theme.size.dimens
 import app.nukemichi.android.core.ui.util.UiText
 import app.nukemichi.android.core.ui.util.asString
-import app.nukemichi.android.feature.wizard.impl.ui.screen.components.util.WIZARD_ANIMATION_DURATION
 import app.nukemichi.android.feature.wizard.impl.ui.model.WizardScopeImpl
 import app.nukemichi.android.feature.wizard.impl.ui.model.WizardState
 import app.nukemichi.android.feature.wizard.impl.ui.model.WizardStep
 import kotlinx.collections.immutable.ImmutableList
+
+private const val WIZARD_ANIMATION_DURATION = 350
 
 private val slideAnimationSpec = tween<IntOffset>(
     durationMillis = WIZARD_ANIMATION_DURATION,

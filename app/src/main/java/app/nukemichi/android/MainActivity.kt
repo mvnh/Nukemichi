@@ -42,7 +42,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        val hasCompletedWizard = appStorage.getString(StorageDomain.EXPERIENCE, ExperienceKeys.WIZARD_COMPLETED) != null
+        val hasCompletedWizard = appStorage.getBoolean(StorageDomain.EXPERIENCE, ExperienceKeys.WIZARD_COMPLETED)
         val startKey: NavKey = if (hasCompletedWizard) DashboardKey else HelloKey
 
         setContent {

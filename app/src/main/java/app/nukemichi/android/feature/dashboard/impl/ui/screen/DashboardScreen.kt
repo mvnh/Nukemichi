@@ -43,7 +43,7 @@ import app.nukemichi.android.R
 import app.nukemichi.android.core.ui.components.StatusBadge
 import app.nukemichi.android.core.ui.icons.NukemichiIcons
 import app.nukemichi.android.core.ui.theme.size.dimens
-import app.nukemichi.android.core.ui.util.EffectHandler
+import app.nukemichi.android.core.ui.util.CollectAsEffect
 import app.nukemichi.android.core.ui.util.UiText
 import app.nukemichi.android.core.ui.util.asString
 import app.nukemichi.android.core.vpn.XrayEngineState
@@ -85,7 +85,7 @@ internal fun DashboardScreen(
         viewModel.processIntent(intent)
     }
 
-    EffectHandler(viewModel.effect) { effect ->
+    viewModel.effect.CollectAsEffect { effect ->
         when (effect) {
             is DashboardContract.Effect.RequestVpnPermission ->
                 permissionLauncher.launch(effect.permissionIntent)

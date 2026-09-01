@@ -20,7 +20,7 @@ import app.nukemichi.android.core.navigation.LocalAppNavigator
 import app.nukemichi.android.core.ui.components.ConfirmDialog
 import app.nukemichi.android.core.ui.components.LoadingDialog
 import app.nukemichi.android.core.ui.components.MessageDialog
-import app.nukemichi.android.core.ui.util.EffectHandler
+import app.nukemichi.android.core.ui.util.CollectAsEffect
 import app.nukemichi.android.core.ui.util.UiSecret
 import app.nukemichi.android.core.ui.util.UiText
 import app.nukemichi.android.core.ui.util.asString
@@ -68,7 +68,7 @@ internal fun WizardScreen(
     val navigator = LocalAppNavigator.current
     var isAdvancedSheetOpen by remember { mutableStateOf(false) }
 
-    EffectHandler(viewModel.effect) { effect ->
+    viewModel.effect.CollectAsEffect { effect ->
         when (effect) {
             is WizardContract.Effect.GoToNextPage -> wizardState.next()
             is WizardContract.Effect.NavigateBack -> onNavigateBack()

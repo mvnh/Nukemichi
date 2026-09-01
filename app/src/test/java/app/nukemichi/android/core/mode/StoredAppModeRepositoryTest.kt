@@ -64,6 +64,13 @@ class StoredAppModeRepositoryTest {
             values[domain to key] = value
         }
 
+        override fun getBoolean(domain: StorageDomain, key: String): Boolean =
+            getString(domain, key) == "true"
+
+        override fun putBoolean(domain: StorageDomain, key: String, value: Boolean) {
+            putString(domain, key, value.toString())
+        }
+
         override fun remove(domain: StorageDomain, key: String) {
             values.remove(domain to key)
         }

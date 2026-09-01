@@ -60,6 +60,8 @@
     <string name="wizard_error_vpn_permission_required">You need to grant VPN permission — without it, the secure connection can\'t start.</string>
     <string name="wizard_error_incomplete_ssh_details">Fill in your server connection details first.</string>
     <string name="wizard_error_unknown">Unknown error</string>
+    <string name="wizard_error_save_failed">Couldn\'t save the server details.</string>
+    <string name="wizard_error_start_failed">Couldn\'t start the VPN.</string>
 
     <!-- Deployment progress page -->
     <string name="wizard_deployment_step_install_runtime">Installing the VPN engine</string>

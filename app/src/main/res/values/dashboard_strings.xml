@@ -25,6 +25,7 @@
     <string name="dashboard_error_vpn_permission_denied">VPN permission was denied.</string>
     <string name="dashboard_error_failed_to_stop_vpn">Failed to stop VPN.</string>
     <string name="dashboard_error_connection_stalled">Connection stalled — reconnecting…</string>
+    <string name="dashboard_error_reconnect_timed_out">Reconnect timed out. Try connecting again.</string>
     <string name="dashboard_error_no_server_configured">No server configured yet — run the setup wizard first.</string>
     <string name="dashboard_error_failed_to_start_vpn">Failed to start VPN.</string>
 

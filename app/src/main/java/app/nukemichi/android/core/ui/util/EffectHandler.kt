@@ -5,10 +5,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 
 @Composable
 fun <T> EffectHandler(
@@ -30,7 +32,10 @@ fun <T> Flow<T>.CollectAsEffect(
         lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
             withContext(Dispatchers.Main.immediate) {
                 this@CollectAsEffect
-                    .catch { throwable -> throwable.printStackTrace() }
+                    .catch { throwable ->
+                        if (throwable is CancellationException) throw throwable
+                        Timber.e(throwable, "Effect stream failed")
+                    }
                     .collect { effect ->
                         onEffect(effect)
                     }

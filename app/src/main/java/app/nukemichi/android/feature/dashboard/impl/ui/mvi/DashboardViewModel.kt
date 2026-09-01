@@ -19,6 +19,8 @@ import javax.inject.Inject
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.withTimeoutOrNull
+import timber.log.Timber
 
 @Stable
 @HiltViewModel
@@ -97,11 +99,11 @@ internal class DashboardViewModel @Inject constructor(
                 serviceProvider.control.stop().onFailure { error ->
                     // Dispatch failed synchronously — nothing arrives over IPC to undo the
                     // optimistic state above, so this does it instead.
+                    Timber.e(error, "stop() dispatch failed")
                     reduce {
                         copy(
                             engineState = XrayEngineState.RUNNING,
-                            errorMessage = error.message?.let(UiText::Raw)
-                                ?: UiText.Resource(R.string.dashboard_error_failed_to_stop_vpn),
+                            errorMessage = UiText.Resource(R.string.dashboard_error_failed_to_stop_vpn),
                         )
                     }
                 }
@@ -134,7 +136,18 @@ internal class DashboardViewModel @Inject constructor(
         autoReconnecting = true
         try {
             reduce { copy(errorMessage = UiText.Resource(R.string.dashboard_error_connection_stalled)) }
-            serviceProvider.monitoring.state.first { it == XrayEngineState.IDLE }
+            val wentIdle = withTimeoutOrNull(IDLE_WAIT_TIMEOUT_MS) {
+                serviceProvider.monitoring.state.first { it == XrayEngineState.IDLE }
+            }
+            if (wentIdle == null) {
+                reduce {
+                    copy(
+                        engineState = XrayEngineState.ERROR,
+                        errorMessage = UiText.Resource(R.string.dashboard_error_reconnect_timed_out),
+                    )
+                }
+                return
+            }
             beginStartingVpn()
         } finally {
             autoReconnecting = false
@@ -155,13 +168,17 @@ internal class DashboardViewModel @Inject constructor(
         val config = XrayClientConfigFactory.createRuntimeConfig(profile)
         serviceProvider.control.start(config)
             .onFailure { error ->
+                Timber.e(error, "start() dispatch failed")
                 reduce {
                     copy(
                         engineState = XrayEngineState.IDLE,
-                        errorMessage = error.message?.let(UiText::Raw)
-                            ?: UiText.Resource(R.string.dashboard_error_failed_to_start_vpn),
+                        errorMessage = UiText.Resource(R.string.dashboard_error_failed_to_start_vpn),
                     )
                 }
             }
+    }
+
+    private companion object {
+        const val IDLE_WAIT_TIMEOUT_MS = 15_000L
     }
 }

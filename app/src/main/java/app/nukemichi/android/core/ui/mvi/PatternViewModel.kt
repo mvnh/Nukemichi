@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @Stable
 abstract class PatternViewModel<State, Intent, Effect>(
@@ -46,7 +47,9 @@ abstract class PatternViewModel<State, Intent, Effect>(
     }
 
     override fun sendEffect(effect: Effect) {
-        _effect.trySend(effect)
+        _effect.trySend(effect).onFailure { error ->
+            Timber.w(error, "Dropped effect %s: channel full or closed", effect)
+        }
     }
 
     protected fun attachDelegates(vararg delegates: ViewModelDelegate<State, Effect>) {

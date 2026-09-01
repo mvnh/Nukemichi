@@ -1,4 +1,4 @@
-import java.net.URL
+import java.net.URI
 import java.security.MessageDigest
 import java.util.Properties
 
@@ -20,20 +20,15 @@ abstract class DownloadLibV2rayTask : DefaultTask() {
 
         val url = "https://github.com/2dust/AndroidLibXrayLite/releases/download/${version.get()}/libv2ray.aar"
         val tempFile = File(temporaryDir, "libv2ray.aar")
-        logger.lifecycle("⬇️ Downloading libv2ray.aar ${version.get()}...")
+        logger.lifecycle("Downloading libv2ray.aar ${version.get()}")
 
-        try {
-            URL(url).openStream().use { input ->
-                tempFile.outputStream().use { output -> input.copyTo(output) }
-            }
-            verifyChecksum(tempFile)
-            target.parentFile.mkdirs()
-            tempFile.copyTo(target, overwrite = true)
-            logger.lifecycle("✅ libv2ray.aar verified and staged at: ${target.path}")
-        } catch (e: Exception) {
-            logger.error("❌ Failed to download libv2ray.aar: ${e.message}")
-            throw e
+        URI(url).toURL().openStream().use { input ->
+            tempFile.outputStream().use { output -> input.copyTo(output) }
         }
+        verifyChecksum(tempFile)
+        target.parentFile.mkdirs()
+        tempFile.copyTo(target, overwrite = true)
+        logger.lifecycle("libv2ray.aar staged at ${target.path}")
     }
 
     private fun verifyChecksum(archive: File) {
@@ -53,13 +48,13 @@ abstract class DownloadLibV2rayTask : DefaultTask() {
             archive.delete()
             throw GradleException("libv2ray.aar checksum mismatch: expected $expected but got $actual.")
         }
-        logger.lifecycle("🔒 Verified libv2ray.aar SHA-256")
+        logger.info("libv2ray.aar matches the pinned SHA-256")
     }
 }
 
 val libv2rayVersion = "v26.8.20"
 
-// Filename carries the version so bumping libv2rayVersion is itself a cache miss — otherwise the
+// Filename carries the version so bumping libv2rayVersion is itself a cache miss. Otherwise the
 // task's own "if (target.exists()) return" would keep serving a stale local build/ artifact.
 val downloadedLibv2rayAarFile = layout.buildDirectory.file("generated/libv2ray/libv2ray-$libv2rayVersion.aar")
 
@@ -68,12 +63,12 @@ val downloadLibV2ray = tasks.register<DownloadLibV2rayTask>("downloadLibV2ray") 
     description = "Downloads and verifies the libv2ray.aar xray-core Android library"
 
     version.set(libv2rayVersion)
-    // Must be updated together with version above — taken from the release asset's own digest.
+    // Must be updated together with the version above. Taken from the release asset's own digest.
     sha256.set("670cf11d9d10a6bb6548ac4f593acfa4339155732f6f8de4d45923f30a74deed")
     outputFile.set(downloadedLibv2rayAarFile)
 }
 
-val libv2rayAar: Any = downloadedLibv2rayAarFile
+val libv2rayAar: Provider<RegularFile> = downloadedLibv2rayAarFile
 
 val keystoreProperties = Properties().apply {
     rootProject.file("keystore.properties").takeIf { it.exists() }?.inputStream()?.use(::load)
@@ -112,7 +107,7 @@ android {
         applicationId = "app.nukemichi.android"
         minSdk = 26
         targetSdk = 36
-        versionCode = gitCommitCount.get()
+        versionCode = gitCommitCount.getOrElse(1)
         versionName = "0.1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -120,10 +115,10 @@ android {
         externalNativeBuild {
             ndkBuild {
                 // hev-jni.c's JNI_OnLoad does FindClass(PKGNAME "/" CLSNAME) to bind its native
-                // methods — this must match TProxyService.kt's actual package, or the class
+                // methods, so this must match TProxyService.kt's actual package, or the class
                 // lookup fails at library-load time and the process aborts. Android.mk never
                 // forwards an ndk-build `arguments()` variable into LOCAL_CFLAGS, so it has to be
-                // injected here instead — cFlags is applied globally as -D flags by ndk-build.
+                // injected here instead: cFlags is applied globally as -D flags by ndk-build.
                 cFlags("-O3", "-DPKGNAME=app/nukemichi/android/core/vpn/internal")
             }
         }
@@ -182,7 +177,7 @@ android {
             isEnable = true
             reset()
             include("arm64-v8a", "x86_64")
-            // A device that isn't arm64/x86_64 gets no split it can install — this is the
+            // A device that isn't arm64/x86_64 gets no split it can install. This is the
             // fallback for that case, not the recommended everyday download.
             isUniversalApk = true
         }
@@ -190,7 +185,6 @@ android {
 }
 
 dependencies {
-    // Android
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)
     implementation(libs.material)
@@ -211,15 +205,11 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
 
-    // SSH and crypto
     implementation(libs.sshj)
     implementation(libs.bcpkix.jdk18on)
     implementation(libs.bcprov.jdk18on)
-
-    // Logging
     implementation(libs.timber)
 
-    // DI and symbol processing
     ksp(libs.hilt.android.compiler)
     implementation(libs.hilt.android)
     implementation(libs.hilt.navigation.compose)
@@ -228,12 +218,9 @@ dependencies {
     // Xray-core, as a prebuilt gomobile Android library
     implementation(files(libv2rayAar))
 
-    // Navigation
     implementation(libs.androidx.navigation3.ui)
     implementation(libs.androidx.navigation3.runtime)
     implementation(libs.androidx.lifecycle.viewmodel.navigation3)
-
-    // Kotlin
     implementation(libs.kotlinx.collections.immutable)
 }
 

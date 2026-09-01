@@ -15,7 +15,7 @@ internal class InstallXrayRuntimeCommand(
     // comes from it being a compile-time literal below, never anything the server or network says.
     private val assetSha256: String = releaseAsset.sha256
 
-    // Not ShellHost: this is assembled shell syntax (`;`/`&&`), not a single token — its safety
+    // Not ShellHost: this is assembled shell syntax (`;`/`&&`), not a single token. Its safety
     // comes from every argument to installCommand(...) above being a compile-time literal.
     private val installDependencies: String = packageManager.installCommand("ca-certificates", "curl", "unzip", "openssl")
 
@@ -39,7 +39,7 @@ internal class InstallXrayRuntimeCommand(
 
     override fun parseOutput(result: CommandResult) = Unit
 
-    /** A release asset and the digest it must hash to — paired so the two can't drift apart. */
+    /** A release asset paired with the digest it must hash to, so the two cannot drift apart. */
     data class ReleaseAsset(val name: String, val sha256: String)
 
     companion object {

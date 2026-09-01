@@ -49,7 +49,7 @@ object XrayClientConfigFactory {
     }
 
     /** The same shape of config [createRuntimeConfig] would run, minus a real [SocksEndpoint] to
-     *  hand a runtime — for previewing/testing the generated JSON without a caller needing to
+     *  hand a runtime. For previewing or testing the generated JSON without a caller needing to
      *  thread a throwaway SOCKS credential through as well. */
     fun build(profile: XrayVpnProfile): XrayConfig = build(profile, generateSocksCredential())
 
@@ -63,8 +63,8 @@ object XrayClientConfigFactory {
                         address = profile.serverAddress,
                         port = profile.serverPort,
                         users = listOf(
-                            // Vision only applies to raw TCP — it silently breaks XHTTP despite the
-                            // TCP handshake succeeding, so it's only set for Raw transport.
+                            // Vision only applies to raw TCP. It silently breaks XHTTP despite
+                            // the TCP handshake succeeding, so it is only set for Raw transport.
                             VlessVnextUser(
                                 id = profile.uuid,
                                 encryption = "none",
@@ -109,7 +109,7 @@ object XrayClientConfigFactory {
                 proxyOutboundTag = PROXY_OUTBOUND_TAG,
             ),
             // Gives xray's own accounting a health signal for the stuck-dial failure mode
-            // (XTLS/Xray-core#6590) — see XrayHealthWatchdog for the actual detection.
+            // (XTLS/Xray-core#6590). See XrayHealthWatchdog for the actual detection.
             burstObservatory = BurstObservatoryObject(
                 subjectSelector = listOf(PROXY_OUTBOUND_TAG),
                 pingConfig = PingConfigObject(
@@ -122,7 +122,7 @@ object XrayClientConfigFactory {
         )
     }
 
-    /** "password" auth, not "noauth" — see SocksEndpoint for why. */
+    /** "password" auth, not "noauth". See SocksEndpoint for why. */
     private fun socksInbound(credential: SocksCredential) = InboundObject(
         listen = LOOPBACK,
         port = intPrimitive(SOCKS_PORT),

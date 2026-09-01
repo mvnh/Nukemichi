@@ -18,7 +18,7 @@ import org.junit.Test
 
 /**
  * Walks the parsed JSON rather than substring-matching it, because rule *order* decides the outcome
- * in Xray — first match wins — and a dropped rule degrades the tunnel instead of failing it.
+ * in Xray, where first match wins, and a dropped rule degrades the tunnel instead of failing it.
  */
 class XrayClientConfigStructureTest {
 
@@ -72,7 +72,7 @@ class XrayClientConfigStructureTest {
         val catchAllIndex = rules.indexOfFirst { it["balancerTag"] != null }
 
         // Checked before the ordering comparison: indexOfFirst returns -1 when absent, and -1 is
-        // "before" everything — so ordering alone would silently pass on a deleted rule.
+        // "before" everything, so ordering alone would silently pass on a deleted rule.
         assertTrue("the IPv6 blackhole rule is gone entirely", blackholeIndex >= 0)
         assertTrue("the catch-all rule is gone entirely", catchAllIndex >= 0)
         assertTrue("IPv6 blackhole is unreachable after the catch-all", blackholeIndex < catchAllIndex)

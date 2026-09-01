@@ -18,7 +18,7 @@ fun StatusBadge(
     containerColor: Color = MaterialTheme.colorScheme.surfaceContainerHigh,
     contentColor: Color = MaterialTheme.colorScheme.onSurfaceVariant,
 ) {
-    val dims = MaterialTheme.dimens
+    val dimens = MaterialTheme.dimens
 
     Surface(
         modifier = modifier,
@@ -29,7 +29,7 @@ fun StatusBadge(
         Text(
             text = text.asString(),
             style = MaterialTheme.typography.labelSmall,
-            modifier = Modifier.padding(horizontal = dims.s, vertical = dims.xs)
+            modifier = Modifier.padding(horizontal = dimens.s, vertical = dimens.xs)
         )
     }
 }

@@ -38,7 +38,7 @@ internal object SniSelector {
     )
 
     // Certificate SANs are frequently wildcards (e.g. "*.userapi.com"); scraping RealiTLScanner's
-    // output can surface those verbatim. A wildcard isn't a valid literal SNI/Host value — using
+    // output can surface those verbatim. A wildcard is not a valid literal SNI/Host value: using
     // one breaks the REALITY handshake and XHTTP dial silently (TCP connects, TLS/HTTP never
     // completes), so candidates must be a plain, valid hostname.
     private val validHostname = Regex("""^(?!-)[a-z0-9-]{1,63}(?<!-)(\.(?!-)[a-z0-9-]{1,63}(?<!-))+$""")

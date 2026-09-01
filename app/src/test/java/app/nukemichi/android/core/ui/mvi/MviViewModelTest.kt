@@ -20,8 +20,8 @@ import org.junit.Test
 
 /**
  * `onIntent` is suspending, and implementations read `state.value`, mutate, then suspend on I/O.
- * Concurrent processing would interleave that read-modify-write and lose updates — only under fast
- * input, and near-impossible to reproduce by hand.
+ * Concurrent processing would interleave that read-modify-write and lose updates, but only under
+ * fast input, and near-impossible to reproduce by hand.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
 class MviViewModelTest {

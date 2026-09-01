@@ -83,7 +83,7 @@ internal class VpnIpcService : Service() {
     /**
      * Brings a newly-registered client up to date. Telemetry is broadcast on change, so without
      * this a client binding into an already-running connection would sit on IDLE and no traffic
-     * until something happened to change — which, on an idle-but-connected tunnel, may be a while.
+     * until something happened to change, which on an idle-but-connected tunnel may be a while.
      */
     private fun replayCurrentState(client: Messenger) {
         client.trySend(

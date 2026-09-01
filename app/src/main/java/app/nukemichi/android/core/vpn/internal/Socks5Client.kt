@@ -24,7 +24,7 @@ internal object Socks5Client {
         sendConnectRequest(out, input, host, port)
     }
 
-    /** Step 1 — greeting: offer one auth method, expect the server to echo it back. */
+    /** Step 1, greeting: offer one auth method, expect the server to echo it back. */
     private fun negotiateAuthMethod(out: OutputStream, input: DataInputStream, useAuth: Boolean) {
         val offeredMethod = if (useAuth) USERNAME_PASSWORD_AUTH else NO_AUTH
         out.write(byteArrayOf(VERSION, 0x01, offeredMethod))
@@ -35,7 +35,7 @@ internal object Socks5Client {
         check(reply[0] == VERSION && reply[1] == offeredMethod) { "SOCKS5 greeting rejected" }
     }
 
-    /** Step 2 (RFC 1929) — version byte, then username/password each length-prefixed. */
+    /** Step 2 (RFC 1929): version byte, then username/password each length-prefixed. */
     private fun authenticate(out: OutputStream, input: DataInputStream, username: String, password: String) {
         val userBytes = username.toByteArray(Charsets.US_ASCII)
         val passBytes = password.toByteArray(Charsets.US_ASCII)
@@ -53,8 +53,8 @@ internal object Socks5Client {
         check(reply[1] == REPLY_SUCCEEDED) { "SOCKS5 auth rejected" }
     }
 
-    /** Step 3 — CONNECT: version, command, reserved byte, then a length-prefixed hostname and the
-     *  port. Only checks for success, not which failure — the caller just needs reachable/not. */
+    /** Step 3, CONNECT: version, command, reserved byte, then a length-prefixed hostname and the
+     *  port. Only checks for success, not which failure; the caller just needs reachable/not. */
     private fun sendConnectRequest(out: OutputStream, input: DataInputStream, host: String, port: Int) {
         val hostBytes = host.toByteArray(Charsets.US_ASCII)
         val request = ByteArray(7 + hostBytes.size)

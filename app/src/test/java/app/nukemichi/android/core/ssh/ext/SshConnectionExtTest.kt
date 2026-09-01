@@ -17,8 +17,8 @@ import org.junit.Test
 
 /**
  * Commands here parse optimistically (`requireValue`, regex scraping), assuming they only ever see
- * output from a command that succeeded — so the case that matters is a non-zero exit skipping
- * `parseOutput` entirely, rather than a bogus success scraped out of error output.
+ * output from a command that succeeded. The case that matters is therefore a non-zero exit
+ * skipping `parseOutput` entirely, rather than a bogus success scraped out of error output.
  */
 class SshConnectionExtTest {
 

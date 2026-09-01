@@ -56,7 +56,7 @@ internal class XrayRuntime @Inject constructor(
      * Fire-and-forget disconnect: xray-core's native stopLoop() can wedge for minutes on a stuck
      * goroutine (the same failure mode XrayHealthWatchdog watches for elsewhere), and skips the
      * mutex too, so a wedged stopLoop() can't block a later start(). Safe for a caller that
-     * doesn't need xray actually stopped when this returns — start() still waits (briefly) for
+     * doesn't need xray actually stopped when this returns: start() still waits (briefly) for
      * this to finish before handing out a new CoreController, so a quick reconnect can't race the
      * old one for the same inbound port.
      */
@@ -70,7 +70,7 @@ internal class XrayRuntime @Inject constructor(
 
     // Bounded, not unconditional: a stuck stopLoop() must not turn a plain reconnect into the
     // same kind of indefinite wait stopWithoutWaiting() exists to avoid. If it's still not done
-    // by the timeout, start() proceeds anyway — worst case a bind conflict on the old inbound
+    // by the timeout, start() proceeds anyway; worst case is a bind conflict on the old inbound
     // port, which surfaces as a normal start failure rather than a hang.
     private suspend fun awaitPendingStop() {
         val job = pendingStop ?: return

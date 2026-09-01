@@ -74,7 +74,7 @@ private val fadeAnimationSpec = tween<Float>(
 )
 
 @Composable
-fun WizardContainer(
+internal fun WizardContainer(
     modifier: Modifier = Modifier,
     state: WizardState,
     steps: ImmutableList<WizardStep>,
@@ -169,7 +169,7 @@ fun WizardContainer(
 }
 
 @Composable
-fun WizardTopBar(
+internal fun WizardTopBar(
     steps: ImmutableList<WizardStep>,
     state: WizardState,
     isNavButtonVisible: Boolean = true,

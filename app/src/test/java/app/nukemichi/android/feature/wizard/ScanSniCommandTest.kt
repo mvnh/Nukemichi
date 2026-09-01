@@ -33,7 +33,7 @@ class ScanSniCommandTest {
      * A neighbor on the VPS's own /24 controls what its own certificate's CN/SAN says, and
      * RealiTLScanner echoes that back verbatim as "domain=<value>" with no validation of its own.
      * A malicious one could shape that value to break out of the shell script
-     * VerifySniCandidateCommand later builds around a scanned candidate — this must never reach
+     * VerifySniCandidateCommand later builds around a scanned candidate, so it must never reach
      * that class in the first place.
      */
     @Test

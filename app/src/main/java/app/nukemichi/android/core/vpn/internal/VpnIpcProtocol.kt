@@ -6,7 +6,7 @@ internal object VpnIpcProtocol {
     const val MSG_STATE_CHANGED = 10
     const val MSG_STATS_UPDATED = 11
     const val MSG_LOG_LINE = 12
-    /** No payload — see [app.nukemichi.android.core.vpn.internal.XrayHealthWatchdog]. */
+    /** No payload. See [app.nukemichi.android.core.vpn.internal.XrayHealthWatchdog]. */
     const val MSG_HEALTH_DEGRADED = 13
 
     const val KEY_UPLINK_BPS = "uplink_bps"

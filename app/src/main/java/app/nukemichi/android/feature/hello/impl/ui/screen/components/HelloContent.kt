@@ -27,17 +27,17 @@ internal fun HelloContent(
     modifier: Modifier = Modifier,
 ) {
     val scrollState = rememberScrollState()
-    val dims = MaterialTheme.dimens
+    val dimens = MaterialTheme.dimens
 
     Column(
         modifier = modifier
             .fillMaxSize()
             .windowInsetsPadding(WindowInsets.systemBars)
             .verticalScroll(scrollState)
-            .padding(horizontal = dims.l, vertical = dims.l),
+            .padding(horizontal = dimens.l, vertical = dimens.l),
         // Centers the block when it's shorter than the viewport (the common case); once content
         // overflows, verticalScroll naturally takes over and this has no effect.
-        verticalArrangement = Arrangement.spacedBy(dims.m, Alignment.CenterVertically)
+        verticalArrangement = Arrangement.spacedBy(dimens.m, Alignment.CenterVertically)
     ) {
         HelloHeader(subtitle = UiText.Resource(R.string.hello_header_subtitle))
 

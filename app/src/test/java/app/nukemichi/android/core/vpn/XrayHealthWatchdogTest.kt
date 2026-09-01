@@ -16,7 +16,7 @@ import java.net.Socket
 
 /**
  * Drives [XrayHealthWatchdog] against a real loopback [ServerSocket] standing in for xray-core's
- * local SOCKS5 inbound — the same probe path it exercises against the genuine one — rather than
+ * local SOCKS5 inbound, over the same probe path it exercises against the genuine one, rather than
  * faking the socket layer, since the class's whole reason to exist is trusting nothing but a raw
  * socket. Probe cadence (15s) and the consecutive-failure threshold (2 probes) come straight from
  * the production constants, so the test drives them through [kotlinx.coroutines.test]'s virtual
@@ -68,7 +68,7 @@ class XrayHealthWatchdogTest {
         runCurrent()
         assertEquals(1, degradedCount)
 
-        // The watchdog stops probing itself once degraded is reported — no further calls.
+        // The watchdog stops probing itself once degraded is reported, so no further calls.
         advanceTimeBy(5 * PROBE_INTERVAL_MS)
         runCurrent()
         assertEquals(1, degradedCount)
@@ -111,7 +111,7 @@ class XrayHealthWatchdogTest {
  * A minimal loopback SOCKS5 server. [Behavior.ACCEPT] completes the same no-auth negotiation and
  * CONNECT reply [XrayHealthWatchdog]'s probe expects from a healthy xray-core; [Behavior.HANG_UP]
  * closes the connection the instant it's accepted, which is what a stuck/blackholed dial pool
- * looks like from the probing socket's side — no reply, connection just dies — without paying for
+ * looks like from the probing socket's side: no reply, the connection just dies. It costs none of
  * the real probe timeout in test time.
  */
 private class FakeSocksServer(@Volatile var behavior: Behavior) {

@@ -24,8 +24,8 @@ class VerifySniCandidateCommandTest {
     /**
      * A malicious/compromised host on the VPS's own /24 (see ScanSniCommand) can shape what
      * RealiTLScanner reports as a "domain=" candidate. Without this check that value would land
-     * directly in this class's shell script source text — this is the boundary that must reject
-     * it, independent of whether ScanSniCommand's own filtering ever regresses.
+     * directly in this class's shell script source text. This is the boundary that must reject it,
+     * independent of whether ScanSniCommand's own filtering ever regresses.
      */
     @Test
     fun `refuses a domain carrying shell metacharacters`() {

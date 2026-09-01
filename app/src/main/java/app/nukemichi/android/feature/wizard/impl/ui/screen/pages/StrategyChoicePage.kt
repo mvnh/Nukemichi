@@ -37,7 +37,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
-fun StrategyChoicePage(
+internal fun StrategyChoicePage(
     selectedStrategy: SetupStrategy?,
     onStrategySelected: (SetupStrategy) -> Unit,
     isAdvancedMode: Boolean,
@@ -95,7 +95,7 @@ fun StrategyChoicePage(
 }
 
 @Composable
-fun StrategyCard(
+internal fun StrategyCard(
     title: UiText,
     description: UiText,
     icon: ImageVector,
@@ -109,7 +109,7 @@ fun StrategyCard(
     badgeText: UiText? = null,
     showTechStack: Boolean = false,
 ) {
-    val dims = MaterialTheme.dimens
+    val dimens = MaterialTheme.dimens
     val shape = CardDefaults.shape
 
     val containerColor = if (isSelected) {
@@ -149,7 +149,7 @@ fun StrategyCard(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(dims.l)
+                .padding(dimens.l)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -159,13 +159,13 @@ fun StrategyCard(
                 Row(
                     modifier = Modifier.weight(1f),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(dims.m)
+                    horizontalArrangement = Arrangement.spacedBy(dimens.m)
                 ) {
                     Icon(
                         imageVector = icon,
                         contentDescription = null,
                         tint = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
-                        modifier = Modifier.size(dims.xl)
+                        modifier = Modifier.size(dimens.xl)
                     )
 
                     Text(
@@ -178,8 +178,8 @@ fun StrategyCard(
                 if (badgeText != null) {
                     StatusBadge(
                         text = badgeText,
-                        // "Recommended" is a positive nudge, "Soon" is a neutral status — same
-                        // component, tint is what tells them apart.
+                        // "Recommended" is a positive nudge and "Soon" is a neutral status.
+                        // Same component; the tint is what tells them apart.
                         containerColor = if (enabled) {
                             MaterialTheme.colorScheme.primaryContainer
                         } else {
@@ -194,7 +194,7 @@ fun StrategyCard(
                 }
             }
 
-            Spacer(modifier = Modifier.height(dims.s))
+            Spacer(modifier = Modifier.height(dimens.s))
 
             Text(
                 text = description.asString(),
@@ -202,7 +202,7 @@ fun StrategyCard(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
-            Spacer(modifier = Modifier.height(dims.m))
+            Spacer(modifier = Modifier.height(dimens.m))
 
             StrategyMetadata(
                 timeEstimate = timeEstimate,
@@ -210,7 +210,7 @@ fun StrategyCard(
             )
 
             if (showTechStack) {
-                Spacer(modifier = Modifier.height(dims.m))
+                Spacer(modifier = Modifier.height(dimens.m))
                 TechStackRow(techStack = techStack)
             }
         }
@@ -218,22 +218,22 @@ fun StrategyCard(
 }
 
 @Composable
-fun StrategyMetadata(
+internal fun StrategyMetadata(
     timeEstimate: UiText,
     difficulty: UiText,
     modifier: Modifier = Modifier
 ) {
-    val dims = MaterialTheme.dimens
+    val dimens = MaterialTheme.dimens
 
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(dims.s)
+        horizontalArrangement = Arrangement.spacedBy(dimens.s)
     ) {
         Icon(
             imageVector = NukemichiIcons.Common.Schedule,
             contentDescription = null,
-            modifier = Modifier.size(dims.l),
+            modifier = Modifier.size(dimens.l),
             tint = MaterialTheme.colorScheme.onSurfaceVariant
         )
         Text(
@@ -256,26 +256,26 @@ fun StrategyMetadata(
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun TechStackRow(
+internal fun TechStackRow(
     techStack: ImmutableList<UiText>,
     modifier: Modifier = Modifier,
 ) {
-    val dims = MaterialTheme.dimens
+    val dimens = MaterialTheme.dimens
 
     FlowRow(
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(dims.m),
-        verticalArrangement = Arrangement.spacedBy(dims.xs)
+        horizontalArrangement = Arrangement.spacedBy(dimens.m),
+        verticalArrangement = Arrangement.spacedBy(dimens.xs)
     ) {
         techStack.forEach { tech ->
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(dims.xs)
+                horizontalArrangement = Arrangement.spacedBy(dimens.xs)
             ) {
                 Icon(
                     imageVector = NukemichiIcons.Common.Cable,
                     contentDescription = null,
-                    modifier = Modifier.size(dims.m),
+                    modifier = Modifier.size(dimens.m),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(

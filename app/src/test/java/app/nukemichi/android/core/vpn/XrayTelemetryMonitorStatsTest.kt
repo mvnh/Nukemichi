@@ -16,7 +16,7 @@ import org.junit.Test
 
 /**
  * Covers [XrayTelemetryMonitor]'s traffic-stats parsing/accumulation and its side-channel
- * [XrayTelemetryMonitor.healthDegraded] signal — the parts of the class [XrayTelemetryMonitorTest]
+ * [XrayTelemetryMonitor.healthDegraded] signal: the parts of the class [XrayTelemetryMonitorTest]
  * deliberately leaves untouched to stay focused on the state machine. `queryAllOutboundTrafficStats()`
  * returns a *delta* since the previous call (see the class's own comment on `uplinkTotalBytes`), so
  * these tests drive it through a scripted [XrayStatsSource] rather than asserting on the raw string
@@ -38,7 +38,7 @@ class XrayTelemetryMonitorStatsTest {
 
         assertEquals(1000L, first.uplinkTotalBytes)
         assertEquals(2000L, first.downlinkTotalBytes)
-        // delta / (pollIntervalMillis in seconds) — 1000 bytes over a 250ms poll is 4000 B/s.
+        // delta / (pollIntervalMillis in seconds): 1000 bytes over a 250ms poll is 4000 B/s.
         assertEquals(4000L, first.uplinkBytesPerSecond)
         assertEquals(8000L, first.downlinkBytesPerSecond)
     }

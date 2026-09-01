@@ -39,8 +39,8 @@ internal class DashboardViewModel @Inject constructor(
     }
 ) {
 
-    // Guards against re-entering handleHealthDegraded() — its own reconnect passes through the
-    // same STOPPING/STOPPED/IDLE states as a manual disconnect, with nothing else to tell them apart.
+    // Guards against re-entering handleHealthDegraded(): its own reconnect passes through the same
+    // STOPPING/STOPPED/IDLE states as a manual disconnect, with nothing else to tell them apart.
     private var autoReconnecting = false
 
     init {
@@ -97,8 +97,8 @@ internal class DashboardViewModel @Inject constructor(
             XrayEngineState.RUNNING -> {
                 reduce { copy(engineState = XrayEngineState.STOPPING, errorMessage = null) }
                 serviceProvider.control.stop().onFailure { error ->
-                    // Dispatch failed synchronously — nothing arrives over IPC to undo the
-                    // optimistic state above, so this does it instead.
+                    // Dispatch failed synchronously, so nothing arrives over IPC to undo the
+                    // optimistic state above and this has to do it instead.
                     Timber.e(error, "stop() dispatch failed")
                     reduce {
                         copy(
@@ -128,8 +128,8 @@ internal class DashboardViewModel @Inject constructor(
 
     /**
      * The `:vpn` process has already stopped itself and is about to be killed and respawned (see
-     * `NukemichiVpnService.onHealthDegraded`) — just waits for [XrayEngineState.IDLE] before
-     * starting a new session.
+     * `NukemichiVpnService.onHealthDegraded`), so this only waits for [XrayEngineState.IDLE]
+     * before starting a new session.
      */
     private suspend fun handleHealthDegraded() {
         if (autoReconnecting) return

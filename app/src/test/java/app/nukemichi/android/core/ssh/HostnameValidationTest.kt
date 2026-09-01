@@ -8,8 +8,8 @@ import org.junit.Test
 
 /**
  * Candidates come from RealiTLScanner echoing back whatever a neighbour on the VPS's own /24 put
- * in its certificate CN/SAN, and land in a script that runs as root — so the rejected cases below
- * are attacker-chosen inputs, which is why the list is exhaustive rather than representative.
+ * in its certificate CN/SAN, and land in a script that runs as root. The rejected cases below are
+ * therefore attacker-chosen inputs, which is why the list is exhaustive rather than representative.
  */
 class HostnameValidationTest {
 
@@ -19,7 +19,7 @@ class HostnameValidationTest {
             "example.com",
             "sub.example.com",
             "deep.sub.example.co.uk",
-            "xn--80ak6aa92e.com", // punycode — already ASCII by the time it reaches us
+            "xn--80ak6aa92e.com", // punycode, already ASCII by the time it reaches us
             "a.b",
             "host-with-hyphens.example.com",
             "123.example.com",

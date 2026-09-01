@@ -36,7 +36,7 @@ internal fun HelloActionCard(
     enabled: Boolean = true,
     badgeText: UiText? = null,
 ) {
-    val dims = MaterialTheme.dimens
+    val dimens = MaterialTheme.dimens
     val shape = CardDefaults.shape
     val dashedColor = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
 
@@ -58,18 +58,18 @@ internal fun HelloActionCard(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(dims.l)
+                .padding(dimens.l)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(dims.m),
+                horizontalArrangement = Arrangement.spacedBy(dimens.m),
             ) {
                 Icon(
                     imageVector = icon,
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.size(dims.icon)
+                    modifier = Modifier.size(dimens.icon)
                 )
 
                 Text(
@@ -84,7 +84,7 @@ internal fun HelloActionCard(
                 }
             }
 
-            Spacer(modifier = Modifier.height(dims.s))
+            Spacer(modifier = Modifier.height(dimens.s))
 
             Text(
                 text = description.asString(),

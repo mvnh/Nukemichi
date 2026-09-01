@@ -30,7 +30,7 @@ class WizardState(
 }
 
 @Composable
-fun rememberWizardState(initialPage: Int = 0, pageCount: Int): WizardState {
+internal fun rememberWizardState(initialPage: Int = 0, pageCount: Int): WizardState {
     return rememberSaveable(
         saver = listSaver(
             save = { listOf(it.currentPage, it.pageCount) },

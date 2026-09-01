@@ -21,7 +21,7 @@ import app.nukemichi.android.feature.wizard.impl.ui.mvi.WizardContract.SetupStra
 import app.nukemichi.android.feature.wizard.impl.ui.screen.components.WizardPage
 
 @Composable
-fun ConfirmationPage(
+internal fun ConfirmationPage(
     serverAddress: String,
     sshPort: String,
     username: String,

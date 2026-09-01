@@ -38,7 +38,7 @@ internal class ScanSniCommand(architecture: String) : BashScriptCommand<List<Str
             .distinct()
             .toList()
 
-    /** A release asset and the digest it must hash to — paired so the two can't drift apart. */
+    /** A release asset paired with the digest it must hash to, so the two cannot drift apart. */
     data class ScannerAsset(val name: String, val sha256: String)
 
     companion object {

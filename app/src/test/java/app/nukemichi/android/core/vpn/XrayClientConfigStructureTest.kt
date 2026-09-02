@@ -18,16 +18,15 @@ import org.junit.Test
 
 /**
  * Walks the parsed JSON rather than substring-matching it, because rule *order* decides the outcome
- * in Xray — first match wins — and a dropped rule degrades the tunnel instead of failing it.
+ * in Xray, where first match wins, and a dropped rule degrades the tunnel instead of failing it.
  */
 class XrayClientConfigStructureTest {
 
-    /** Vision breaks XHTTP while the TCP handshake still succeeds — a debugging session paid for once. */
     @Test
-    fun `xhttp transport never carries a flow`() {
+    fun `xhttp transport never carries a flow, because vision breaks it after the handshake`() {
         val user = firstUser(config(transport = XrayTransport.Xhttp()))
 
-        assertNull("Vision on XHTTP connects and then fails every request", user["flow"])
+        assertNull(user["flow"])
     }
 
     @Test
@@ -73,7 +72,7 @@ class XrayClientConfigStructureTest {
         val catchAllIndex = rules.indexOfFirst { it["balancerTag"] != null }
 
         // Checked before the ordering comparison: indexOfFirst returns -1 when absent, and -1 is
-        // "before" everything — so ordering alone would silently pass on a deleted rule.
+        // "before" everything, so ordering alone would silently pass on a deleted rule.
         assertTrue("the IPv6 blackhole rule is gone entirely", blackholeIndex >= 0)
         assertTrue("the catch-all rule is gone entirely", catchAllIndex >= 0)
         assertTrue("IPv6 blackhole is unreachable after the catch-all", blackholeIndex < catchAllIndex)
@@ -156,6 +155,7 @@ class XrayClientConfigStructureTest {
             shortId = "abcd",
         ),
         transport = transport,
+        deployedAtMillis = 0L,
     )
 
     private fun config(transport: XrayTransport = XrayTransport.Xhttp()): JsonObject =

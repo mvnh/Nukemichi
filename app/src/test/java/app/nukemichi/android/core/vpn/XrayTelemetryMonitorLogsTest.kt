@@ -14,7 +14,7 @@ import org.junit.Test
 
 /**
  * The `logs` flow, which the sibling tests (state machine, traffic accounting) leave untouched. It
- * is the only channel that says *why* a start failed — ERROR state alone just greys out a toggle.
+ * is the only channel that says *why* a start failed. ERROR state alone just greys out a toggle.
  *
  * A replay-less SharedFlow drops emissions that land with no subscriber attached, hence the
  * subscribe-then-yield in each case.

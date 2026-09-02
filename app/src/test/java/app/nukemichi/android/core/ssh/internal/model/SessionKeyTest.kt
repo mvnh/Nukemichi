@@ -9,7 +9,7 @@ import org.junit.Assert.assertNotEquals
 import org.junit.Test
 
 /**
- * Anything that changes who you authenticate as, or how, has to change the key — otherwise a second
+ * Anything that changes who you authenticate as, or how, has to change the key. Otherwise a second
  * set of credentials rides on the first one's pooled session.
  *
  * Deliberately not asserted: `expectedFingerprint` is not part of the key, so two calls disagreeing

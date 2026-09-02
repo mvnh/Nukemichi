@@ -47,8 +47,8 @@ internal class ConnectionCheckDelegate @Inject constructor(
                     graceJob.cancel()
                     // sshj wraps whatever the HostKeyVerifier throws as the *cause* of its own
                     // TransportException (confirmed in KeyExchanger.verifyHost's bytecode) rather
-                    // than propagating it directly — has to be unwrapped here to tell "first
-                    // connection to this host" apart from a real failure.
+                    // than propagating it directly, so it has to be unwrapped here to tell
+                    // "first connection to this host" apart from a real failure.
                     val untrusted = generateSequence(error) { it.cause }
                         .filterIsInstance<SshUntrustedHostException>()
                         .firstOrNull()

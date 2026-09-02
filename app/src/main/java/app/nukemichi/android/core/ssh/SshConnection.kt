@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.StateFlow
 interface SshConnection {
     val isConnected: StateFlow<Boolean>
 
-    /** sshj has no push notification for a connection dying server-side — this asks the
+    /** sshj has no push notification for a connection dying server-side, so this asks the
      *  underlying client right now and updates [isConnected] to match before returning. */
     fun refreshConnectionState(): Boolean
 

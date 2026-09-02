@@ -1,28 +1,25 @@
 <resources>
     <string name="wizard_nav_icon_description">Server setup wizard</string>
-    <string name="wizard_strategy_choice">Strategy Choice</string>
-    <string name="wizard_step_confirmation">Confirmation</string>
+    <string name="wizard_strategy_choice">Setup type</string>
+    <string name="wizard_step_confirmation">Review</string>
     <string name="wizard_step_deployment">Deployment</string>
 
     <!-- Strategy Choice Page -->
-    <string name="wizard_strategy_description">Choose how to set it up — you can always redeploy with a different option later.</string>
+    <string name="wizard_strategy_description">Choose how to set it up. You can redeploy with a different option any time.</string>
 
-    <string name="wizard_strategy_fast_start_title">Fast Start</string>
-    <string name="wizard_strategy_fast_start_desc">Just need a server — we\'ll handle everything else.</string>
+    <string name="wizard_strategy_fast_start_title">Fast start</string>
+    <string name="wizard_strategy_fast_start_desc">You bring the server. Everything else is set up for you.</string>
 
-    <string name="wizard_strategy_resilience_title">Maximum Resilience</string>
-    <string name="wizard_strategy_resilience_desc">Heavier obfuscation for stricter networks — needs a domain name pointed at your server.</string>
-
-    <string name="wizard_badge_soon">Soon</string>
+    <string name="wizard_strategy_resilience_title">Maximum resilience</string>
+    <string name="wizard_strategy_resilience_desc">Heavier disguise for stricter networks. Needs a domain name pointed at your server.</string>
 
     <!-- Tags -->
-    <string name="wizard_tag_5_min">~5 min</string>
     <string name="wizard_tag_domain">domain</string>
-    <string name="wizard_tag_hard">Hard</string>
-    <string name="wizard_tag_easy">Easy</string>
-    <string name="wizard_tag_15_min">~15 min</string>
-    <string name="wizard_tag_soon">Soon</string>
     <string name="wizard_tag_recommended">Recommended</string>
+
+    <!-- What each option needs from you, in place of an invented time and difficulty. -->
+    <string name="wizard_requirement_fast_start">A server you have root SSH access to</string>
+    <string name="wizard_requirement_resilience">A server and a domain name</string>
 
     <!-- Server Data Entry Page -->
     <string name="wizard_server_data_description">Enter your server\'s address and how to connect to it.</string>
@@ -34,8 +31,8 @@
     <string name="wizard_server_data_advanced_settings">Advanced settings</string>
     <string name="wizard_server_data_port">Port</string>
     <string name="wizard_server_data_username">Username</string>
-    <string name="wizard_server_data_entry">Server Data Entry</string>
-    <string name="wizard_server_data_fingerprint">SSH host key fingerprint (optional — you\'ll be asked to trust it on first connect)</string>
+    <string name="wizard_server_data_entry">Server details</string>
+    <string name="wizard_server_data_fingerprint">SSH host key fingerprint (optional; you\'ll confirm it on first connect)</string>
 
     <!-- Connection check dialog -->
     <string name="wizard_connection_check_checking">Checking connection to your server…</string>
@@ -45,7 +42,7 @@
     <string name="wizard_connection_check_failed_detail_prefix">Details: </string>
 
     <string name="wizard_untrusted_host_title">First connection to this server</string>
-    <string name="wizard_untrusted_host_body">First connection to this server. If you created it yourself a few minutes ago, you\'re fine — continue. If someone else gave you these connection details, it\'s worth double-checking with them that this is the right server.\n\n(Technical key fingerprint, in case you need to verify it later: %1$s)</string>
+    <string name="wizard_untrusted_host_body">If you created this server yourself, go ahead. If someone else gave you these details, check with them that this is the right server.\n\nHost key fingerprint: %1$s</string>
     <string name="wizard_untrusted_host_trust">Trust and continue</string>
 
     <!-- Confirmation Page -->
@@ -54,12 +51,14 @@
     <string name="wizard_confirmation_auth_label">Authentication</string>
     <string name="wizard_confirmation_strategy_label">Strategy</string>
     <string name="wizard_confirmation_note_title">Good to know</string>
-    <string name="wizard_confirmation_note_body">If you close the app mid-install, don\'t worry — the server stays usable, and running the wizard again cleanly starts over.</string>
+    <string name="wizard_confirmation_note_body">Closing the app mid-install is safe. The server stays usable, and running setup again starts over cleanly.</string>
 
     <!-- Errors -->
-    <string name="wizard_error_vpn_permission_required">You need to grant VPN permission — without it, the secure connection can\'t start.</string>
+    <string name="wizard_error_vpn_permission_required">Nukemichi needs VPN permission to start the connection.</string>
     <string name="wizard_error_incomplete_ssh_details">Fill in your server connection details first.</string>
     <string name="wizard_error_unknown">Unknown error</string>
+    <string name="wizard_error_save_failed">Couldn\'t save the server details.</string>
+    <string name="wizard_error_start_failed">Couldn\'t start the VPN.</string>
 
     <!-- Deployment progress page -->
     <string name="wizard_deployment_step_install_runtime">Installing the VPN engine</string>
@@ -76,7 +75,6 @@
 
     <string name="wizard_deployment_error_title">Installation stopped</string>
     <string name="wizard_deployment_retry">Retry</string>
-    <string name="wizard_deployment_back">Back</string>
 
     <string name="wizard_deployment_success_title">Installation complete</string>
     <string name="wizard_deployment_success_body">You can browse securely now.</string>

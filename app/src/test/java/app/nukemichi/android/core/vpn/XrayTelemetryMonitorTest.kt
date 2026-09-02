@@ -9,7 +9,7 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 /**
- * Exercises the monitor as its own state machine, driven purely through its public entry points —
+ * Exercises the monitor as its own state machine, driven purely through its public entry points:
  * the same ones [app.nukemichi.android.core.vpn.internal.NukemichiVpnService] drives it through,
  * now that state transitions come from `XrayRuntime.start()`/`stop()` succeeding or throwing
  * rather than from watching an external process.

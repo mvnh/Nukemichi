@@ -50,6 +50,7 @@ internal class WizardSetupCoordinator @Inject constructor(
                 publicKey = draft.realityPublicKey,
                 shortId = draft.realityShortId,
             ),
+            deployedAtMillis = System.currentTimeMillis(),
         ).also(profileStore::saveActiveProfile)
     }
 

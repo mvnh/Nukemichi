@@ -108,7 +108,7 @@ class Socks5ClientTest {
 
     @Test
     fun `fails when the server refuses the connect request`() {
-        // 0x05 — connection refused by ruleset, a reply xray returns for a blocked destination.
+        // 0x05 is "connection refused by ruleset", the reply xray returns for a blocked destination.
         val socks = start(RecordingSocksServer(connectStatus = 0x05))
 
         assertThrows(IllegalStateException::class.java) {
@@ -116,7 +116,7 @@ class Socks5ClientTest {
         }
     }
 
-    /** EOF on the read or a reset on the write, depending on who wins the race — so pin the supertype. */
+    /** EOF on the read or a reset on the write, depending on who wins the race, so pin the supertype. */
     @Test
     fun `fails with an IOException when the server hangs up mid-handshake`() {
         val socks = start(RecordingSocksServer(hangUpImmediately = true))

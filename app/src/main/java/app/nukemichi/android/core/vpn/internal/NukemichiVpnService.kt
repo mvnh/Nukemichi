@@ -8,7 +8,6 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.net.VpnService
-import android.os.Build
 import android.os.ParcelFileDescriptor
 import android.os.Process
 import android.os.SystemClock
@@ -65,7 +64,7 @@ internal class NukemichiVpnService : VpnService() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        Timber.i("onStartCommand: action=%s startId=%d", intent?.action, startId)
+        Timber.i("onStartCommand: %s", intent?.action)
         when (intent?.action) {
             ACTION_START, ACTION_RELOAD -> {
                 if (!isStarting.compareAndSet(false, true)) {
@@ -95,32 +94,25 @@ internal class NukemichiVpnService : VpnService() {
     }
 
     private fun startVpn(config: XrayRuntimeConfig) {
-        Timber.i("startVpn: begin")
         lastConfig = config
         startForeground(NOTIFICATION_ID, createNotification())
         scope.launch {
             try {
                 lifecycleMutex.withLock {
-                    Timber.d("startVpn: tearing down any previous tunnel/session before starting fresh")
                     healthWatchdog.stop()
                     teardown()
                     telemetry.stopping()
                     telemetry.starting()
-                    Timber.d("startVpn: establishing TUN")
                     val establishedTun = establishTun()
-                    Timber.d("startVpn: TUN established, starting hev-socks5-tunnel")
                     try {
                         hevSocks5Tunnel.start(establishedTun, config.socksEndpoint)
                     } catch (error: Throwable) {
-                        Timber.e(error, "startVpn: hev-socks5-tunnel failed to start")
                         establishedTun.close()
                         throw error
                     }
-                    Timber.d("startVpn: hev-socks5-tunnel running, starting xray core")
                     try {
                         runtime.start(config, telemetry)
                     } catch (error: Throwable) {
-                        Timber.e(error, "startVpn: xray core failed to start")
                         hevSocks5Tunnel.stop()
                         establishedTun.close()
                         throw error
@@ -128,12 +120,12 @@ internal class NukemichiVpnService : VpnService() {
                     tunInterface = establishedTun
                     telemetry.running(config.statusIntervalMillis)
                     healthWatchdog.start(scope, config.socksEndpoint, ::onHealthDegraded)
-                    Timber.i("startVpn: complete, RUNNING")
+                    Timber.i("VPN started")
                 }
             } catch (error: CancellationException) {
                 throw error
             } catch (error: Throwable) {
-                Timber.e(error, "startVpn: failed")
+                Timber.e(error, "VPN failed to start")
                 telemetry.failed(error)
                 stopForeground(STOP_FOREGROUND_REMOVE)
                 stopSelf()
@@ -147,8 +139,8 @@ internal class NukemichiVpnService : VpnService() {
         Timber.w("onHealthDegraded: tunnel silently stuck, forcing a full reconnect")
         telemetry.degraded()
         // This process is about to die (see stopVpnAndRestartProcess's killProcess) and can't
-        // restart itself — schedule the restart through AlarmManager, which survives that,
-        // instead of leaving it to whichever app process happens to be alive to notice the
+        // restart itself. The restart goes through AlarmManager, which survives that, instead
+        // of being left to whichever app process happens to be alive to notice the
         // degraded signal and reconnect.
         lastConfig?.let(::scheduleRestart)
         stopVpnAndRestartProcess()
@@ -169,20 +161,19 @@ internal class NukemichiVpnService : VpnService() {
     }
 
     // Plain user-initiated disconnect: tear down and let this process live on. It must NOT kill
-    // the process — VpnIpcService is bound from the main process, and killing a process out from
+    // the process: VpnIpcService is bound from the main process, and killing a process out from
     // under an active bind reads to Android as a crash, which is throttled by an escalating
     // restart backoff. That backoff is what made disconnects look like they took minutes: the
     // native side was already stopped well before the UI ever found out, because it was waiting
     // on the killed :vpn process to be let back up and rebound.
     private fun stopVpn() {
-        Timber.i("stopVpn: begin")
         scope.launch {
             lifecycleMutex.withLock {
                 healthWatchdog.stop()
                 teardown(waitForXrayStop = false)
                 telemetry.stopping()
                 stopForeground(STOP_FOREGROUND_REMOVE)
-                Timber.i("stopVpn: torn down")
+                Timber.i("VPN stopped")
                 stopSelf()
             }
         }
@@ -192,14 +183,13 @@ internal class NukemichiVpnService : VpnService() {
     // starting a new CoreController can fix in-process, so this path accepts the process-kill (and
     // the restart-backoff delay that comes with it) to guarantee a genuinely fresh instance.
     private fun stopVpnAndRestartProcess() {
-        Timber.i("stopVpnAndRestartProcess: begin")
         scope.launch {
             lifecycleMutex.withLock {
                 healthWatchdog.stop()
                 teardown(waitForXrayStop = false)
                 telemetry.stopping()
                 stopForeground(STOP_FOREGROUND_REMOVE)
-                Timber.i("stopVpnAndRestartProcess: torn down, restarting :vpn process for a clean slate")
+                Timber.i("VPN stopped; restarting the :vpn process for a clean slate")
                 Process.killProcess(Process.myPid())
             }
         }
@@ -214,7 +204,7 @@ internal class NukemichiVpnService : VpnService() {
         Builder()
             .addAddress(VpnTunnelDefaults.VPN_ADDRESS, VpnTunnelDefaults.VPN_PREFIX_LENGTH)
             .addRoute("0.0.0.0", 0)
-            // No IPv6 address/route on the interface — apps see no IPv6 path at all and go
+            // No IPv6 address or route on the interface, so apps see no IPv6 path at all and go
             // straight to IPv4 instead of dialing out, timing out, then falling back. xray's own
             // routing still blackholes ::/0 from the socks inbound as defense in depth regardless.
             .addDnsServer("1.1.1.1")
@@ -227,7 +217,7 @@ internal class NukemichiVpnService : VpnService() {
     // waitForXrayStop=false is only for the disconnect path (stopVpn): xray-core's stopLoop() can
     // hang for minutes, and Process.killProcess() right after cleans up the native state
     // regardless of whether stopLoop() ever returns. startVpn's own pre-flight teardown needs the
-    // old instance to actually be gone first — the process keeps running there.
+    // old instance to actually be gone first, because the process keeps running there.
     private suspend fun teardown(waitForXrayStop: Boolean = true) {
         hevSocks5Tunnel.stop()
         if (waitForXrayStop) runtime.stop() else runtime.stopWithoutWaiting()
@@ -259,14 +249,12 @@ internal class NukemichiVpnService : VpnService() {
     }
 
     private fun ensureNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                NOTIFICATION_CHANNEL_ID,
-                getString(R.string.notification_vpn_title),
-                NotificationManager.IMPORTANCE_LOW,
-            )
-            getSystemService(NotificationManager::class.java).createNotificationChannel(channel)
-        }
+        val channel = NotificationChannel(
+            NOTIFICATION_CHANNEL_ID,
+            getString(R.string.notification_vpn_title),
+            NotificationManager.IMPORTANCE_LOW,
+        )
+        getSystemService(NotificationManager::class.java).createNotificationChannel(channel)
     }
 
     companion object {

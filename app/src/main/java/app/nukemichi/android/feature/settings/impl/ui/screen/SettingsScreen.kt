@@ -21,7 +21,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.nukemichi.android.R
 import app.nukemichi.android.core.mode.AppMode
 import app.nukemichi.android.core.ui.theme.size.dimens
-import app.nukemichi.android.core.ui.util.EffectHandler
+import app.nukemichi.android.core.ui.util.CollectAsEffect
 import app.nukemichi.android.core.vpn.spec.XrayFingerprint
 import app.nukemichi.android.feature.settings.impl.ui.mvi.SettingsContract
 import app.nukemichi.android.feature.settings.impl.ui.mvi.SettingsViewModel
@@ -37,7 +37,7 @@ internal fun SettingsScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
 
-    EffectHandler(viewModel.effect) { effect ->
+    viewModel.effect.CollectAsEffect { effect ->
         when (effect) {
             is SettingsContract.Effect.ShareVlessLink -> {
                 val sendIntent = Intent(Intent.ACTION_SEND).apply {

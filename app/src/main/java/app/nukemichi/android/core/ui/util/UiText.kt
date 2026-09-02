@@ -1,12 +1,10 @@
 package app.nukemichi.android.core.ui.util
 
 import android.content.Context
-import androidx.annotation.PluralsRes
 import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.Stable
-import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 
 @Stable
@@ -21,14 +19,6 @@ sealed interface UiText {
         constructor(@StringRes resId: Int, vararg args: Any) : this(resId, args.toList())
     }
 
-    data class Plural(
-        @PluralsRes val resId: Int,
-        val count: Int,
-        val args: List<Any> = emptyList()
-    ) : UiText {
-        constructor(@PluralsRes resId: Int, count: Int, vararg args: Any) : this(resId, count, args.toList())
-    }
-
     data object Empty : UiText
 }
 
@@ -38,7 +28,6 @@ fun UiText.asString(): String {
     return when (this) {
         is UiText.Raw -> value
         is UiText.Resource -> stringResource(resId, *args.toTypedArray())
-        is UiText.Plural -> pluralStringResource(resId, count, *args.toTypedArray())
         is UiText.Empty -> ""
     }
 }
@@ -47,7 +36,6 @@ fun UiText.asString(context: Context): String {
     return when (this) {
         is UiText.Raw -> value
         is UiText.Resource -> context.getString(resId, *args.toTypedArray())
-        is UiText.Plural -> context.resources.getQuantityString(resId, count, *args.toTypedArray())
         is UiText.Empty -> ""
     }
 }

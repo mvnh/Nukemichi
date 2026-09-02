@@ -29,7 +29,7 @@ private const val SCROLLBAR_MIN_THUMB_FRACTION = 0.08f
 private val SCROLLBAR_WIDTH = 4.dp
 
 @Composable
-fun WizardPage(
+internal fun WizardPage(
     modifier: Modifier = Modifier,
     content: @Composable ColumnScope.() -> Unit
 ) {
@@ -51,7 +51,7 @@ fun WizardPage(
             content = content
         )
 
-        // A plain, non-interactive scroll-position indicator instead of an edge shadow — a fade
+        // A plain, non-interactive scroll-position indicator instead of an edge shadow. A fade
         // only reads as "content is clipped here" when there's a visible container frame to
         // anchor it to, which the page no longer has. This sits to the side and never overlaps
         // content, so unlike a floating hint icon it needs no backing surface of its own.

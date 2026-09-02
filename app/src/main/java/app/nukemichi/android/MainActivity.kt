@@ -11,12 +11,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
+import app.nukemichi.android.core.di.IoDispatcher
 import app.nukemichi.android.core.navigation.AppNavigator
 import app.nukemichi.android.core.navigation.Destination
 import app.nukemichi.android.core.navigation.LocalAppNavigator
@@ -28,6 +31,8 @@ import app.nukemichi.android.feature.dashboard.DashboardKey
 import app.nukemichi.android.feature.hello.HelloKey
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -38,12 +43,13 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var appStorage: AppStorage
 
+    @Inject
+    @IoDispatcher
+    lateinit var ioDispatcher: CoroutineDispatcher
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
-        val hasCompletedWizard = appStorage.getString(StorageDomain.EXPERIENCE, ExperienceKeys.WIZARD_COMPLETED) != null
-        val startKey: NavKey = if (hasCompletedWizard) DashboardKey else HelloKey
 
         setContent {
             NukemichiTheme {
@@ -51,7 +57,21 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background,
                 ) {
-                    val backStack = rememberNavBackStack(startKey)
+                    // Which screen opens depends on a stored flag, and reading it touches disk.
+                    // The Surface above is already painted, so resolving it off the main thread
+                    // costs a themed frame rather than a stalled one.
+                    val startKey by produceState<NavKey?>(initialValue = null) {
+                        value = withContext(ioDispatcher) {
+                            val done = appStorage.getBoolean(
+                                StorageDomain.EXPERIENCE,
+                                ExperienceKeys.WIZARD_COMPLETED,
+                            )
+                            if (done) DashboardKey else HelloKey
+                        }
+                    }
+                    val resolvedStartKey = startKey ?: return@Surface
+
+                    val backStack = rememberNavBackStack(resolvedStartKey)
 
                     val navigator = remember(backStack) {
                         object : AppNavigator {
@@ -90,7 +110,7 @@ class MainActivity : ComponentActivity() {
                             },
                         ) { key ->
                             val rawDestination = requireNotNull(destinations[key::class.java]) {
-                                "Destination not found for key: ${key::class.qualifiedName}. Check your Hilt @NavDestination binding."
+                                "No Destination registered for ${key::class.qualifiedName}"
                             }
 
                             @Suppress("UNCHECKED_CAST")

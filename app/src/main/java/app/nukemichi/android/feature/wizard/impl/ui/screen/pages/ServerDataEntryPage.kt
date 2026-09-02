@@ -44,7 +44,7 @@ import app.nukemichi.android.feature.wizard.impl.ui.screen.components.WizardPage
 import app.nukemichi.android.feature.wizard.impl.ui.mvi.WizardContract.ServerAuthMethod
 
 @Composable
-fun ServerDataEntryPage(
+internal fun ServerDataEntryPage(
     serverAddress: String,
     onServerAddressChange: (String) -> Unit,
     authMethod: ServerAuthMethod,

@@ -42,7 +42,8 @@ internal fun DeploymentSuccessCelebration(
     val buttonAlpha = remember { Animatable(0f) }
 
     LaunchedEffect(Unit) {
-        // A quick, decisive "stamp" — slams down from slightly oversized/tilted to rest, no bounce.
+        // A quick, decisive "stamp": it slams down from slightly oversized and tilted to rest,
+        // with no bounce.
         badgeAlpha.animateTo(1f, tween(120))
         badgeScale.animateTo(1f, tween(220, easing = FastOutSlowInEasing))
         badgeRotation.animateTo(0f, tween(220, easing = FastOutSlowInEasing))
@@ -56,7 +57,7 @@ internal fun DeploymentSuccessCelebration(
     ) {
         Box(
             modifier = Modifier
-                .size(dimens.slimXxl + dimens.xl)
+                .size(dimens.successBadge)
                 .graphicsLayer {
                     alpha = badgeAlpha.value
                     scaleX = badgeScale.value

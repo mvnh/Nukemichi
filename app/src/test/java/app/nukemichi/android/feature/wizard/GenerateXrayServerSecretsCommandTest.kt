@@ -43,7 +43,7 @@ class GenerateXrayServerSecretsCommandTest {
     /**
      * These binaries get installed and executed as root on the user's VPS, so a digest that is
      * absent, truncated or a copy-paste of the other architecture's is a supply-chain hole rather
-     * than a cosmetic slip — assert the shape here so an update can't quietly drop one.
+     * than a cosmetic slip. Asserting the shape here stops an update quietly dropping one.
      */
     @Test
     fun `pins a distinct full-length digest per architecture`() {

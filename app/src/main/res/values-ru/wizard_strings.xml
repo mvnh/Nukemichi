@@ -1,27 +1,24 @@
 <resources>
     <string name="wizard_nav_icon_description">Мастер настройки сервера</string>
-    <string name="wizard_strategy_choice">Выбор стратегии</string>
+    <string name="wizard_strategy_choice">Способ установки</string>
     <string name="wizard_step_confirmation">Подтверждение</string>
     <string name="wizard_step_deployment">Установка</string>
 
     <!-- Strategy Choice Page -->
-    <string name="wizard_strategy_description">Выберите способ установки — при желании позже можно развернуть сервер заново с другим вариантом.</string>
+    <string name="wizard_strategy_description">Выберите способ установки. Позже сервер можно развернуть заново с другим вариантом.</string>
 
     <string name="wizard_strategy_fast_start_title">Быстрый старт</string>
-    <string name="wizard_strategy_fast_start_desc">Нужен только сервер — всё остальное настроим сами.</string>
+    <string name="wizard_strategy_fast_start_desc">С вас сервер. Всё остальное настроится само.</string>
 
     <string name="wizard_strategy_resilience_title">Максимальная устойчивость</string>
-    <string name="wizard_strategy_resilience_desc">Более плотная маскировка для жёстких сетей — понадобится доменное имя, указывающее на сервер.</string>
+    <string name="wizard_strategy_resilience_desc">Более плотная маскировка для жёстких сетей. Понадобится доменное имя, указывающее на сервер.</string>
 
-    <string name="wizard_badge_soon">Скоро</string>
 
     <!-- Tags -->
-    <string name="wizard_tag_5_min">~5 мин</string>
     <string name="wizard_tag_domain">домен</string>
-    <string name="wizard_tag_hard">Сложно</string>
-    <string name="wizard_tag_easy">Легко</string>
-    <string name="wizard_tag_15_min">~15 мин</string>
-    <string name="wizard_tag_soon">Скоро</string>
+    <!-- Что нужно для варианта, вместо выдуманных времени и сложности. -->
+    <string name="wizard_requirement_fast_start">Сервер с root-доступом по SSH</string>
+    <string name="wizard_requirement_resilience">Сервер и доменное имя</string>
     <string name="wizard_tag_recommended">Рекомендуется</string>
 
     <!-- Server Data Entry Page -->
@@ -35,7 +32,7 @@
     <string name="wizard_server_data_port">Порт</string>
     <string name="wizard_server_data_username">Имя пользователя</string>
     <string name="wizard_server_data_entry">Данные сервера</string>
-    <string name="wizard_server_data_fingerprint">Отпечаток SSH-ключа хоста (необязательно — при первом подключении предложим подтвердить)</string>
+    <string name="wizard_server_data_fingerprint">Отпечаток SSH-ключа хоста (необязательно, при первом подключении вы его подтвердите)</string>
 
     <!-- Connection check dialog -->
     <string name="wizard_connection_check_checking">Проверяем подключение к серверу…</string>
@@ -45,7 +42,7 @@
     <string name="wizard_connection_check_failed_detail_prefix">Подробности: </string>
 
     <string name="wizard_untrusted_host_title">Первое подключение к этому серверу</string>
-    <string name="wizard_untrusted_host_body">Первое подключение к этому серверу. Если вы сами создавали его несколько минут назад — всё в порядке, продолжайте. Если данные для входа вам передал кто-то другой — на всякий случай уточните у него, что сервер настроен именно так.\n\n(Технический отпечаток ключа, если понадобится сверить: %1$s)</string>
+    <string name="wizard_untrusted_host_body">Если вы сами создавали этот сервер, продолжайте. Если данные для входа передал кто-то другой, уточните у него, что сервер именно тот.\n\nОтпечаток ключа хоста: %1$s</string>
     <string name="wizard_untrusted_host_trust">Доверять и продолжить</string>
 
     <!-- Confirmation Page -->
@@ -54,12 +51,14 @@
     <string name="wizard_confirmation_auth_label">Аутентификация</string>
     <string name="wizard_confirmation_strategy_label">Стратегия</string>
     <string name="wizard_confirmation_note_title">На всякий случай</string>
-    <string name="wizard_confirmation_note_body">Если закрыть приложение во время установки — не страшно, сервер останется рабочим, а повторный запуск мастера аккуратно начнёт всё заново.</string>
+    <string name="wizard_confirmation_note_body">Закрыть приложение во время установки не страшно. Сервер останется рабочим, а повторный запуск начнёт всё заново.</string>
 
     <!-- Errors -->
-    <string name="wizard_error_vpn_permission_required">Нужно разрешение на VPN-подключение — без него не запустить защищённое соединение.</string>
+    <string name="wizard_error_vpn_permission_required">Nukemichi нужно разрешение на VPN, чтобы запустить соединение.</string>
     <string name="wizard_error_incomplete_ssh_details">Сначала заполните данные для подключения к серверу.</string>
     <string name="wizard_error_unknown">Неизвестная ошибка</string>
+    <string name="wizard_error_save_failed">Не удалось сохранить данные сервера.</string>
+    <string name="wizard_error_start_failed">Не удалось запустить VPN.</string>
 
     <!-- Deployment progress page -->
     <string name="wizard_deployment_step_install_runtime">Устанавливаем VPN-движок</string>
@@ -76,7 +75,6 @@
 
     <string name="wizard_deployment_error_title">Установка прервана</string>
     <string name="wizard_deployment_retry">Повторить</string>
-    <string name="wizard_deployment_back">Назад</string>
 
     <string name="wizard_deployment_success_title">Установка завершена</string>
     <string name="wizard_deployment_success_body">Можно выходить в интернет защищённо.</string>

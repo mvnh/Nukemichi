@@ -14,7 +14,7 @@ internal object DashboardContract {
         val deployedAtMillis: Long? = null,
         val engineState: XrayEngineState = XrayEngineState.IDLE,
         val stats: XrayTrafficStats? = null,
-        val connectedSinceMillis: Long? = null,
+        val connectedSinceRealtime: Long? = null,
         val errorMessage: UiText? = null,
     )
 

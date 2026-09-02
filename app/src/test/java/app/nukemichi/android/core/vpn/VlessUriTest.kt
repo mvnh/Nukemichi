@@ -21,6 +21,7 @@ class VlessUriTest {
                 publicKey = "publicKeyValue",
                 shortId = "shortIdValue",
             ),
+            deployedAtMillis = 0L,
         )
 
     @Test
@@ -44,7 +45,7 @@ class VlessUriTest {
     @Test
     fun `sets mode and host explicitly rather than relying on an importing client's own defaults`() {
         // Regression test: an omitted mode left it to each importing client's own guess at
-        // xray-core's REALITY-aware auto-resolution, which isn't guaranteed to match — a real
+        // xray-core's REALITY-aware auto-resolution, which is not guaranteed to match. A
         // "context deadline exceeded" against a live server traced back to exactly this gap.
         val uri = profile().toVlessUri()
 

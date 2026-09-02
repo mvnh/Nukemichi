@@ -119,8 +119,8 @@ instrumented tests and reading, not wrapped in interfaces for the sake of a numb
 Two habits worth keeping:
 
 - **Check that an assertion has teeth.** Break the implementation on purpose and confirm the test
-  fails. This has already caught a test that passed against a deleted routing rule, because
-  `indexOfFirst` returns `-1` and `-1` sorts before everything.
+  fails. Watch in particular for assertions that pass on absence: `indexOfFirst` returns `-1`,
+  and `-1` compares before every real index, so an ordering check alone survives a deleted rule.
 - **Prefer fakes to mocks.** There is no mocking library here on purpose. A loopback `ServerSocket`
   says more about a SOCKS client than a recorded call ever will.
 
@@ -131,7 +131,7 @@ upstream release — so a test cannot agree with a bug by restating it.
 
 Read the surrounding code before changing any of these:
 
-- **Shell interpolation.** Anything reaching a remote script goes through `ShellSafe`, which
+- **Shell interpolation.** Anything reaching a remote script goes through `ShellHost`, which
   validates at construction. Candidate SNI domains come from certificates controlled by whoever
   shares the VPS's subnet — treat them as attacker input.
 - **Downloaded binaries.** Xray-core and RealiTLScanner are pinned by SHA-256 and verified before

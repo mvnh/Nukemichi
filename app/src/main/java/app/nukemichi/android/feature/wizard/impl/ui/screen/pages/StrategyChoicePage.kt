@@ -37,7 +37,7 @@ import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 
 @Composable
-fun StrategyChoicePage(
+internal fun StrategyChoicePage(
     selectedStrategy: SetupStrategy?,
     onStrategySelected: (SetupStrategy) -> Unit,
     isAdvancedMode: Boolean,
@@ -58,8 +58,7 @@ fun StrategyChoicePage(
             title = UiText.Resource(R.string.wizard_strategy_fast_start_title),
             description = UiText.Resource(R.string.wizard_strategy_fast_start_desc),
             icon = NukemichiIcons.Common.RocketLaunch,
-            timeEstimate = UiText.Resource(R.string.wizard_tag_5_min),
-            difficulty = UiText.Resource(R.string.wizard_tag_easy),
+            requirement = UiText.Resource(R.string.wizard_requirement_fast_start),
             badgeText = UiText.Resource(R.string.wizard_tag_recommended),
             techStack = persistentListOf(
                 UiText.Raw("xray-core"),
@@ -79,9 +78,8 @@ fun StrategyChoicePage(
             title = UiText.Resource(R.string.wizard_strategy_resilience_title),
             description = UiText.Resource(R.string.wizard_strategy_resilience_desc),
             icon = NukemichiIcons.Common.Shield,
-            timeEstimate = UiText.Resource(R.string.wizard_tag_15_min),
-            difficulty = UiText.Resource(R.string.wizard_tag_hard),
-            badgeText = UiText.Resource(R.string.wizard_tag_soon),
+            requirement = UiText.Resource(R.string.wizard_requirement_resilience),
+            badgeText = UiText.Resource(R.string.badge_soon),
             techStack = persistentListOf(
                 UiText.Raw("naiveproxy"),
                 UiText.Resource(R.string.wizard_tag_domain)
@@ -95,12 +93,11 @@ fun StrategyChoicePage(
 }
 
 @Composable
-fun StrategyCard(
+internal fun StrategyCard(
     title: UiText,
     description: UiText,
     icon: ImageVector,
-    timeEstimate: UiText,
-    difficulty: UiText,
+    requirement: UiText,
     techStack: ImmutableList<UiText>,
     isSelected: Boolean,
     onClick: () -> Unit,
@@ -109,7 +106,7 @@ fun StrategyCard(
     badgeText: UiText? = null,
     showTechStack: Boolean = false,
 ) {
-    val dims = MaterialTheme.dimens
+    val dimens = MaterialTheme.dimens
     val shape = CardDefaults.shape
 
     val containerColor = if (isSelected) {
@@ -149,7 +146,7 @@ fun StrategyCard(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(dims.l)
+                .padding(dimens.l)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -159,13 +156,13 @@ fun StrategyCard(
                 Row(
                     modifier = Modifier.weight(1f),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(dims.m)
+                    horizontalArrangement = Arrangement.spacedBy(dimens.m)
                 ) {
                     Icon(
                         imageVector = icon,
                         contentDescription = null,
                         tint = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface,
-                        modifier = Modifier.size(dims.xl)
+                        modifier = Modifier.size(dimens.xl)
                     )
 
                     Text(
@@ -178,8 +175,8 @@ fun StrategyCard(
                 if (badgeText != null) {
                     StatusBadge(
                         text = badgeText,
-                        // "Recommended" is a positive nudge, "Soon" is a neutral status — same
-                        // component, tint is what tells them apart.
+                        // "Recommended" is a positive nudge and "Soon" is a neutral status.
+                        // Same component; the tint is what tells them apart.
                         containerColor = if (enabled) {
                             MaterialTheme.colorScheme.primaryContainer
                         } else {
@@ -194,7 +191,7 @@ fun StrategyCard(
                 }
             }
 
-            Spacer(modifier = Modifier.height(dims.s))
+            Spacer(modifier = Modifier.height(dimens.s))
 
             Text(
                 text = description.asString(),
@@ -202,15 +199,12 @@ fun StrategyCard(
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
 
-            Spacer(modifier = Modifier.height(dims.m))
+            Spacer(modifier = Modifier.height(dimens.m))
 
-            StrategyMetadata(
-                timeEstimate = timeEstimate,
-                difficulty = difficulty
-            )
+            StrategyRequirement(requirement = requirement)
 
             if (showTechStack) {
-                Spacer(modifier = Modifier.height(dims.m))
+                Spacer(modifier = Modifier.height(dimens.m))
                 TechStackRow(techStack = techStack)
             }
         }
@@ -218,36 +212,25 @@ fun StrategyCard(
 }
 
 @Composable
-fun StrategyMetadata(
-    timeEstimate: UiText,
-    difficulty: UiText,
+internal fun StrategyRequirement(
+    requirement: UiText,
     modifier: Modifier = Modifier
 ) {
-    val dims = MaterialTheme.dimens
+    val dimens = MaterialTheme.dimens
 
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(dims.s)
+        horizontalArrangement = Arrangement.spacedBy(dimens.s)
     ) {
         Icon(
-            imageVector = NukemichiIcons.Common.Schedule,
+            imageVector = NukemichiIcons.Common.Dns,
             contentDescription = null,
-            modifier = Modifier.size(dims.l),
+            modifier = Modifier.size(dimens.l),
             tint = MaterialTheme.colorScheme.onSurfaceVariant
         )
         Text(
-            text = timeEstimate.asString(),
-            style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-        Text(
-            text = "•",
-            style = MaterialTheme.typography.labelMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-        Text(
-            text = difficulty.asString(),
+            text = requirement.asString(),
             style = MaterialTheme.typography.labelMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
@@ -256,26 +239,26 @@ fun StrategyMetadata(
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun TechStackRow(
+internal fun TechStackRow(
     techStack: ImmutableList<UiText>,
     modifier: Modifier = Modifier,
 ) {
-    val dims = MaterialTheme.dimens
+    val dimens = MaterialTheme.dimens
 
     FlowRow(
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy(dims.m),
-        verticalArrangement = Arrangement.spacedBy(dims.xs)
+        horizontalArrangement = Arrangement.spacedBy(dimens.m),
+        verticalArrangement = Arrangement.spacedBy(dimens.xs)
     ) {
         techStack.forEach { tech ->
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(dims.xs)
+                horizontalArrangement = Arrangement.spacedBy(dimens.xs)
             ) {
                 Icon(
                     imageVector = NukemichiIcons.Common.Cable,
                     contentDescription = null,
-                    modifier = Modifier.size(dims.m),
+                    modifier = Modifier.size(dimens.m),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(

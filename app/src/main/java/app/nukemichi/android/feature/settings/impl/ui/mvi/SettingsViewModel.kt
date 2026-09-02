@@ -2,7 +2,7 @@ package app.nukemichi.android.feature.settings.impl.ui.mvi
 
 import androidx.compose.runtime.Stable
 import app.nukemichi.android.core.mode.AppModeRepository
-import app.nukemichi.android.core.ui.mvi.PatternViewModel
+import app.nukemichi.android.core.ui.mvi.MviViewModel
 import app.nukemichi.android.core.vpn.XrayProfileStore
 import app.nukemichi.android.core.vpn.XrayVpnProfile
 import app.nukemichi.android.core.vpn.spec.XrayFingerprint
@@ -21,7 +21,7 @@ internal class SettingsViewModel @Inject constructor(
     private val appModeRepository: AppModeRepository,
     private val profileStore: XrayProfileStore,
     private val updateXrayTransport: UpdateXrayTransportUseCase,
-) : PatternViewModel<SettingsContract.State, SettingsContract.Intent, SettingsContract.Effect>(
+) : MviViewModel<SettingsContract.State, SettingsContract.Intent, SettingsContract.Effect>(
     initialState(appModeRepository, profileStore)
 ) {
 

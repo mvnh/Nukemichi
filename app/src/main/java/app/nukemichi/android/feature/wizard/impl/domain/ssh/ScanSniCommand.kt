@@ -1,15 +1,15 @@
 package app.nukemichi.android.feature.wizard.impl.domain.ssh
 
-import app.nukemichi.android.core.ssh.ShellSafe
+import app.nukemichi.android.core.ssh.ShellHost
 import app.nukemichi.android.core.ssh.command.BashScriptCommand
 import app.nukemichi.android.core.ssh.isSafeHostname
 import app.nukemichi.android.core.ssh.model.CommandResult
 
 internal class ScanSniCommand(architecture: String) : BashScriptCommand<List<String>> {
     private val asset = assetFor(architecture)
-    private val assetName = ShellSafe.of(asset.name)
+    private val assetName = ShellHost.of(asset.name)
 
-    // Not ShellSafe: a 64-char digest exceeds the 63-char label limit that guard enforces. Safety
+    // Not ShellHost: a 64-char digest exceeds the 63-char label limit that guard enforces. Safety
     // comes from it being a compile-time literal below, never anything the server or network says.
     private val assetSha256: String = asset.sha256
 
@@ -38,7 +38,7 @@ internal class ScanSniCommand(architecture: String) : BashScriptCommand<List<Str
             .distinct()
             .toList()
 
-    /** A release asset and the digest it must hash to — paired so the two can't drift apart. */
+    /** A release asset paired with the digest it must hash to, so the two cannot drift apart. */
     data class ScannerAsset(val name: String, val sha256: String)
 
     companion object {

@@ -5,8 +5,10 @@ import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
 import androidx.core.content.edit
 import app.nukemichi.android.core.storage.AppStorage
+import app.nukemichi.android.core.storage.SecureStorageUnreadableException
 import app.nukemichi.android.core.storage.StorageDomain
 import dagger.hilt.android.qualifiers.ApplicationContext
+import timber.log.Timber
 import java.security.KeyStore
 import java.util.Base64
 import javax.crypto.Cipher
@@ -20,35 +22,35 @@ import javax.inject.Singleton
 internal class AppStorageImpl @Inject constructor(
     @ApplicationContext context: Context,
 ) : AppStorage {
-    private val persistentPrefs = context.getSharedPreferences(PERSISTENT_PREFS, Context.MODE_PRIVATE)
+    private val plainPrefs = context.getSharedPreferences(PLAIN_PREFS, Context.MODE_PRIVATE)
     private val securePrefs = context.getSharedPreferences(SECURE_PREFS, Context.MODE_PRIVATE)
 
-    override fun getString(domain: StorageDomain, key: String): String? {
-        val scopedKey = scopedKey(domain, key)
-        read(domain, scopedKey)?.let { return it }
-
-        val legacy = read(domain, key) ?: legacyPlaintextValue(domain, key) ?: return null
-        write(domain, scopedKey, legacy)
-        removeLegacy(domain, key)
-        return legacy
-    }
+    override fun getString(domain: StorageDomain, key: String): String? =
+        read(domain, scopedKey(domain, key))
 
     override fun putString(domain: StorageDomain, key: String, value: String) {
         write(domain, scopedKey(domain, key), value)
-        removeLegacy(domain, key)
+    }
+
+    // Exact match, not String.toBoolean(): a case-insensitive read would accept "TRUE" and any
+    // other near-miss a future writer produces, and these flags gate what the app unlocks.
+    override fun getBoolean(domain: StorageDomain, key: String): Boolean =
+        getString(domain, key) == TRUE_VALUE
+
+    override fun putBoolean(domain: StorageDomain, key: String, value: Boolean) {
+        putString(domain, key, if (value) TRUE_VALUE else FALSE_VALUE)
     }
 
     override fun remove(domain: StorageDomain, key: String) {
         removeStored(domain, scopedKey(domain, key))
-        removeLegacy(domain, key)
     }
 
     private fun read(domain: StorageDomain, key: String): String? = when {
-        !domain.encrypted -> persistentPrefs.getString(key, null)
+        !domain.encrypted -> plainPrefs.getString(key, null)
         else -> securePrefs.getString(key, null)?.let { payload ->
-            runCatching { decrypt(payload) }.getOrElse {
-                securePrefs.edit { remove(key) }
-                null
+            runCatching { decrypt(payload) }.getOrElse { error ->
+                Timber.e(error, "Cannot decrypt the stored value for %s", key)
+                throw SecureStorageUnreadableException(key, error)
             }
         }
     }
@@ -57,21 +59,13 @@ internal class AppStorageImpl @Inject constructor(
         if (domain.encrypted) {
             securePrefs.edit { putString(key, encrypt(value)) }
         } else {
-            persistentPrefs.edit { putString(key, value) }
+            plainPrefs.edit { putString(key, value) }
         }
     }
 
     private fun removeStored(domain: StorageDomain, key: String) {
         if (domain.encrypted) securePrefs.edit { remove(key) }
-        else persistentPrefs.edit { remove(key) }
-    }
-
-    private fun legacyPlaintextValue(domain: StorageDomain, key: String): String? =
-        if (domain == StorageDomain.SSH_TRUST) persistentPrefs.getString(key, null) else null
-
-    private fun removeLegacy(domain: StorageDomain, key: String) {
-        removeStored(domain, key)
-        if (domain == StorageDomain.SSH_TRUST) persistentPrefs.edit { remove(key) }
+        else plainPrefs.edit { remove(key) }
     }
 
     private fun scopedKey(domain: StorageDomain, key: String) = "${domain.keyPrefix}.$key"
@@ -109,7 +103,9 @@ internal class AppStorageImpl @Inject constructor(
     }
 
     private companion object {
-        const val PERSISTENT_PREFS = "cache_storage"
+        const val TRUE_VALUE = "true"
+        const val FALSE_VALUE = "false"
+        const val PLAIN_PREFS = "plain_storage"
         const val SECURE_PREFS = "secure_storage"
         const val ANDROID_KEYSTORE = "AndroidKeyStore"
         const val KEY_ALIAS = "app.nukemichi.core.storage.master"

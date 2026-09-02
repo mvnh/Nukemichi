@@ -152,7 +152,7 @@ private fun DeploymentErrorBanner(
             horizontalArrangement = Arrangement.spacedBy(dimens.m),
         ) {
             OutlinedButton(onClick = onBack, modifier = Modifier.weight(1f)) {
-                Text(text = stringResource(R.string.wizard_deployment_back))
+                Text(text = stringResource(R.string.back))
             }
             Button(onClick = onRetry, modifier = Modifier.weight(1f)) {
                 Text(text = stringResource(R.string.wizard_deployment_retry))

@@ -45,7 +45,7 @@ Whether REALITY itself is distinguishable on the wire is an open research questi
 
 **In scope**
 
-- bypassing `ShellSafe` or otherwise injecting into a script that runs as root on the user's server;
+- bypassing `ShellHost` or otherwise injecting into a script that runs as root on the user's server;
 - defeating host key verification, or weakening the trust-on-first-use flow;
 - leaking SSH credentials or profile material — through logs, Android backups, inter-process
   communication, or a generated `toString`;

@@ -20,7 +20,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-/** Read-only — this is the dashboard's "think" surface. Editing the server lives in Settings. */
+/** Read-only: this is the dashboard's "think" surface. Editing the server lives in Settings. */
 @Composable
 internal fun ServerInfoCard(
     state: DashboardContract.State,
@@ -30,7 +30,7 @@ internal fun ServerInfoCard(
 
     Card(
         modifier = modifier,
-        shape = RoundedCornerShape(dimens.slimL),
+        shape = RoundedCornerShape(dimens.cornerRadius),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow),
     ) {
         Column(

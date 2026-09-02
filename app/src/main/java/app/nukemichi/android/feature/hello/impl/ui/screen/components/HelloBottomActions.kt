@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import app.nukemichi.android.R
 
-// Advanced mode entry point is hidden for now — it's pre-MVP, not built out yet (see project
+// Advanced mode entry point is hidden for now: it's pre-MVP, not built out yet (see project
 // notes). Only the source-code link stays.
 @Composable
 internal fun HelloBottomActions(

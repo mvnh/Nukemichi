@@ -1,11 +1,11 @@
 package app.nukemichi.android.feature.wizard.impl.domain.ssh
 
-import app.nukemichi.android.core.ssh.ShellSafe
+import app.nukemichi.android.core.ssh.ShellHost
 import app.nukemichi.android.core.ssh.command.BashScriptCommand
 import app.nukemichi.android.core.ssh.model.CommandResult
 
 internal class VerifySniCandidateCommand(domain: String) : BashScriptCommand<Boolean> {
-    private val domain = ShellSafe.of(domain)
+    private val domain = ShellHost.of(domain)
 
     override val script: String = $$"""
         set -eu

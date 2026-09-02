@@ -12,7 +12,7 @@ import app.nukemichi.android.R
 import app.nukemichi.android.core.ui.util.UiText
 import app.nukemichi.android.core.ui.util.asString
 
-/** Like [MessageDialog] but with a real choice — a dismiss action alongside confirm, for anything
+/** Like [MessageDialog] but with a real choice: a dismiss action alongside confirm, for anything
  *  the user needs to actively accept or decline rather than just acknowledge. */
 @Composable
 fun ConfirmDialog(

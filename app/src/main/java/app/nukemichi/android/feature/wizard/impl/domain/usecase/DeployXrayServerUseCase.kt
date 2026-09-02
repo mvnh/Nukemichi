@@ -17,8 +17,10 @@ import app.nukemichi.android.feature.wizard.impl.domain.ssh.InstallXrayRuntimeCo
 import app.nukemichi.android.feature.wizard.impl.domain.ssh.ScanSniCommand
 import app.nukemichi.android.feature.wizard.impl.domain.ssh.StartXrayServiceCommand
 import app.nukemichi.android.feature.wizard.impl.domain.ssh.VerifySniCandidateCommand
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
@@ -27,55 +29,48 @@ internal class DeployXrayServerUseCase @Inject constructor() {
     operator fun invoke(connection: SshConnection, architecture: String): Flow<DeploymentEvent> =
         flow {
             val packageManager = runStep(DeploymentStep.INSTALL_RUNTIME) {
-                runCatching {
-                    val packageManager = connection.execute(DetectPackageManagerCommand()).getOrThrow()
-                    emit(DeploymentEvent.LogLine(DeploymentStep.INSTALL_RUNTIME, "Detected package manager: ${packageManager.token}"))
+                val detected = connection.execute(DetectPackageManagerCommand()).getOrThrow()
+                emit(DeploymentEvent.LogLine(DeploymentStep.INSTALL_RUNTIME, "Package manager: ${detected.token}"))
 
-                    connection.execute(
-                        InstallXrayRuntimeCommand(packageManager, InstallXrayRuntimeCommand.releaseAssetFor(architecture)),
-                        onOutputLine = { line -> emit(DeploymentEvent.LogLine(DeploymentStep.INSTALL_RUNTIME, line)) },
-                    ).getOrThrow()
-                    packageManager
-                }
-            } ?: return@flow
+                connection.execute(
+                    InstallXrayRuntimeCommand(detected, InstallXrayRuntimeCommand.releaseAssetFor(architecture)),
+                    onOutputLine = { line -> emit(DeploymentEvent.LogLine(DeploymentStep.INSTALL_RUNTIME, line)) },
+                ).getOrThrow()
+                detected
+            }
 
             val sni = runStep(DeploymentStep.FIND_SNI) {
-                runCatching {
-                    val candidates = connection.execute(ScanSniCommand(architecture)).getOrThrow()
-                    emit(DeploymentEvent.LogLine(DeploymentStep.FIND_SNI, "Found ${candidates.size} candidate(s) nearby"))
-                    findStableCandidate(connection, candidates)
-                        ?: error("No suitable REALITY SNI found near this VPS.")
-                }
-            } ?: return@flow
+                val candidates = connection.execute(ScanSniCommand(architecture)).getOrThrow()
+                emit(DeploymentEvent.LogLine(DeploymentStep.FIND_SNI, "Nearby candidates: ${candidates.size}"))
+                findStableCandidate(connection, candidates)
+                    ?: error("No suitable REALITY SNI found near this VPS.")
+            }
 
             val secrets = runStep(DeploymentStep.GENERATE_SECRETS) {
                 connection.execute(
                     GenerateXrayServerSecretsCommand(),
-                    // Redacted downstream in the UI reducer regardless — this just stops
-                    // suppressing the step's own output the way every other step's isn't.
+                    // Redacted downstream in the UI reducer regardless. This only stops the step
+                    // suppressing its own output the way no other step's is suppressed.
                     onOutputLine = { line -> emit(DeploymentEvent.LogLine(DeploymentStep.GENERATE_SECRETS, line)) },
-                )
-            } ?: return@flow
+                ).getOrThrow()
+            }
 
             val credentials = runStep(DeploymentStep.WRITE_CONFIGURATION) {
-                runCatching { uploadConfiguration(connection, secrets, sni, packageManager) }
-            } ?: return@flow
+                uploadConfiguration(connection, secrets, sni, packageManager)
+            }
 
             runStep(DeploymentStep.START_SERVICE) {
                 connection.execute(
                     StartXrayServiceCommand(packageManager),
-                    onOutputLine = { line ->
-                        emit(
-                            DeploymentEvent.LogLine(
-                                DeploymentStep.START_SERVICE,
-                                line
-                            )
-                        )
-                    },
-                )
-            } ?: return@flow
+                    onOutputLine = { line -> emit(DeploymentEvent.LogLine(DeploymentStep.START_SERVICE, line)) },
+                ).getOrThrow()
+            }
 
             emit(DeploymentEvent.Completed(credentials))
+        }.catch { error ->
+            // A failed step has already emitted StepFailed. Everything else, cancellation
+            // included, belongs to the caller.
+            if (error !is StepAborted) throw error
         }
 
     private suspend fun FlowCollector<DeploymentEvent>.findStableCandidate(
@@ -136,15 +131,26 @@ internal class DeployXrayServerUseCase @Inject constructor() {
         )
     }
 
+    /**
+     * Reports the step around [block] and, on failure, ends the deployment. Aborting by exception
+     * rather than by a null return keeps every caller a plain assignment: a step that returns
+     * normally has succeeded, so nothing downstream has to re-check it.
+     */
     private suspend fun <T> FlowCollector<DeploymentEvent>.runStep(
         step: DeploymentStep,
-        block: suspend () -> Result<T>,
-    ): T? {
+        block: suspend () -> T,
+    ): T {
         emit(DeploymentEvent.StepStarted(step))
-        return block().fold(
-            onSuccess = { value -> emit(DeploymentEvent.StepSucceeded(step)); value },
-            onFailure = { error -> emit(DeploymentEvent.StepFailed(step, error)); null },
-        )
+        val value = try {
+            block()
+        } catch (error: CancellationException) {
+            throw error
+        } catch (error: Throwable) {
+            emit(DeploymentEvent.StepFailed(step, error))
+            throw StepAborted(error)
+        }
+        emit(DeploymentEvent.StepSucceeded(step))
+        return value
     }
 
     private companion object {
@@ -156,3 +162,6 @@ internal class DeployXrayServerUseCase @Inject constructor() {
         const val MAX_SNI_VERIFICATION_ATTEMPTS = 5
     }
 }
+
+/** Ends the deployment flow after a step has reported its own failure. */
+private class StepAborted(cause: Throwable) : Exception(cause)

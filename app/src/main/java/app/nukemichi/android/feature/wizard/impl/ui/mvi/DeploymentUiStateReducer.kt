@@ -4,7 +4,6 @@ import app.nukemichi.android.core.ui.util.UiText
 import app.nukemichi.android.feature.wizard.impl.domain.model.DeploymentEvent
 import app.nukemichi.android.feature.wizard.impl.domain.model.DeploymentStep
 import app.nukemichi.android.feature.wizard.impl.domain.model.redactSecrets
-import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.mutate
 import kotlinx.collections.immutable.toPersistentList
 
@@ -14,11 +13,8 @@ internal fun DeploymentUiState.reduce(event: DeploymentEvent): DeploymentUiState
     is DeploymentEvent.StepStarted -> withStepStatus(event.step, StepStatus.Running)
         .copy(phase = DeploymentPhase.InProgress)
 
-    // logLines is always actually a PersistentList (it's only ever built by persistentListOf()/
-    // this same mutate) — cast to reach add()/removeAt() without copying the whole buffer, which
-    // ImmutableList's own declared type doesn't expose.
     is DeploymentEvent.LogLine -> copy(
-        logLines = (logLines as PersistentList<String>).mutate { lines ->
+        logLines = logLines.mutate { lines ->
             lines.add(redactSecrets(event.line))
             if (lines.size > MAX_LOG_LINES) lines.removeAt(0)
         }

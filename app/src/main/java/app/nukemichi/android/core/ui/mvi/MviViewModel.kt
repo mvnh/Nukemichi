@@ -47,8 +47,9 @@ abstract class MviViewModel<State, Intent, Effect>(
     }
 
     override fun sendEffect(effect: Effect) {
-        effects.trySend(effect).onFailure { error ->
-            Timber.w(error, "Dropped effect %s: channel full or closed", effect)
+        val result = effects.trySend(effect)
+        if (result.isFailure) {
+            Timber.w(result.exceptionOrNull(), "Dropped effect %s: the channel is full or closed", effect)
         }
     }
 

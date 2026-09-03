@@ -71,7 +71,13 @@
     <string name="wizard_deployment_terminal_hide">Hide install log</string>
     <string name="wizard_deployment_terminal_copy">Copy log</string>
     <string name="wizard_deployment_terminal_copied">Copied</string>
-    <string name="wizard_deployment_idle_message">Working on it…</string>
+    <string-array name="wizard_deployment_idle_messages">
+        <item>Working on it…</item>
+        <item>Building your tunnel…</item>
+        <item>Locking things down…</item>
+        <item>Making sure no one\'s watching…</item>
+        <item>Almost there…</item>
+    </string-array>
 
     <string name="wizard_deployment_error_title">Installation stopped</string>
     <string name="wizard_deployment_retry">Retry</string>

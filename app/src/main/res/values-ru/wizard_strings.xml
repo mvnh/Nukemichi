@@ -71,7 +71,13 @@
     <string name="wizard_deployment_terminal_hide">Скрыть журнал установки</string>
     <string name="wizard_deployment_terminal_copy">Скопировать лог</string>
     <string name="wizard_deployment_terminal_copied">Скопировано</string>
-    <string name="wizard_deployment_idle_message">Работаем над этим…</string>
+    <string-array name="wizard_deployment_idle_messages">
+        <item>Работаем над этим…</item>
+        <item>Строим тоннель…</item>
+        <item>Закрываем всё на замок…</item>
+        <item>Проверяем, что никто не подглядывает…</item>
+        <item>Почти готово…</item>
+    </string-array>
 
     <string name="wizard_deployment_error_title">Установка прервана</string>
     <string name="wizard_deployment_retry">Повторить</string>

@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -82,9 +84,6 @@ internal fun SettingsScreen(
         onAdvancedModeToggled = { enabled ->
             viewModel.processIntent(SettingsContract.Intent.AdvancedModeToggled(enabled))
         },
-        onRealityServerNameChanged = { value ->
-            viewModel.processIntent(SettingsContract.Intent.RealityServerNameChanged(value))
-        },
         onFingerprintChanged = { value ->
             viewModel.processIntent(SettingsContract.Intent.FingerprintChanged(value))
         },
@@ -107,7 +106,6 @@ private fun SettingsContent(
     onViewLogsClick: () -> Unit,
     onForgetServerClick: () -> Unit,
     onAdvancedModeToggled: (Boolean) -> Unit,
-    onRealityServerNameChanged: (String) -> Unit,
     onFingerprintChanged: (XrayFingerprint) -> Unit,
     onMuxEnabledChanged: (Boolean) -> Unit,
     onMuxConcurrencyChanged: (Int) -> Unit,
@@ -120,6 +118,7 @@ private fun SettingsContent(
         modifier = modifier
             .fillMaxSize()
             .windowInsetsPadding(WindowInsets.systemBars)
+            .verticalScroll(rememberScrollState())
             .padding(dimens.l),
         verticalArrangement = Arrangement.spacedBy(dimens.l),
     ) {
@@ -139,7 +138,6 @@ private fun SettingsContent(
             HorizontalDivider()
             SettingsAdvancedSection(
                 state = state,
-                onRealityServerNameChanged = onRealityServerNameChanged,
                 onFingerprintChanged = onFingerprintChanged,
                 onMuxEnabledChanged = onMuxEnabledChanged,
                 onMuxConcurrencyChanged = onMuxConcurrencyChanged,

@@ -23,8 +23,6 @@ internal fun HelloContent(
     onSetUpServerClick: () -> Unit,
     onConnectOrImportClick: () -> Unit,
     onLearnFirstClick: () -> Unit,
-    onSettingsClick: () -> Unit,
-    onViewAdvancedModeClick: () -> Unit,
     onViewSourceCodeClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -69,8 +67,6 @@ internal fun HelloContent(
         )
 
         HelloBottomActions(
-            onSettingsClick = onSettingsClick,
-            onViewAdvancedModeClick = onViewAdvancedModeClick,
             onViewSourceCodeClick = onViewSourceCodeClick,
         )
     }

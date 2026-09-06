@@ -10,8 +10,6 @@
     <string name="settings_forget_server_confirm_body">Сохранённое подключение удалится с этого устройства. Сам сервер продолжит работать, так что настроить его заново можно в любой момент.</string>
 
     <string name="settings_advanced_section_title">Расширенные</string>
-    <string name="settings_sni_override_title">Маскировочный домен (SNI)</string>
-    <string name="settings_sni_override_warning">Должен совпадать с доменом, с которым развёрнут сервер, иначе соединение не установится.</string>
     <string name="settings_utls_fingerprint_title">TLS-отпечаток</string>
     <string name="settings_mux_title">Мультиплексирование</string>
     <string name="settings_mux_description">Использовать одно соединение для нескольких потоков.</string>

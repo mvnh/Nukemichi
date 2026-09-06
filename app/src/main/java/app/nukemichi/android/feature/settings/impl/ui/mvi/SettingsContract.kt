@@ -9,7 +9,6 @@ internal object SettingsContract {
     data class State(
         val mode: AppMode = AppMode.NORMAL,
         val hasProfile: Boolean = false,
-        val realityServerName: String = "",
         val fingerprint: XrayFingerprint = XrayFingerprint.EDGE,
         val transport: XrayTransport = XrayTransport.Xhttp(),
         val muxEnabled: Boolean = false,
@@ -20,7 +19,6 @@ internal object SettingsContract {
         data class AdvancedModeToggled(val enabled: Boolean) : Intent
         data object ViewLogsRequested : Intent
         data object ForgetServerRequested : Intent
-        data class RealityServerNameChanged(val value: String) : Intent
         data class FingerprintChanged(val value: XrayFingerprint) : Intent
         data class TransportChanged(val value: XrayTransport) : Intent
         data class MuxEnabledChanged(val enabled: Boolean) : Intent

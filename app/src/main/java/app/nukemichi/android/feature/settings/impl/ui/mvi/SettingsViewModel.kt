@@ -47,11 +47,6 @@ internal class SettingsViewModel @Inject constructor(
                 sendEffect(SettingsContract.Effect.ServerForgotten)
             }
 
-            is SettingsContract.Intent.RealityServerNameChanged -> updateProfile {
-                val reality = security as? XraySecurity.Reality ?: return@updateProfile this
-                copy(security = reality.copy(serverName = intent.value))
-            }.also { reduce { copy(realityServerName = intent.value) } }
-
             is SettingsContract.Intent.FingerprintChanged -> updateProfile {
                 val reality = security as? XraySecurity.Reality ?: return@updateProfile this
                 copy(security = reality.copy(fingerprint = intent.value))
@@ -93,7 +88,6 @@ internal class SettingsViewModel @Inject constructor(
             return SettingsContract.State(
                 mode = appModeRepository.mode.value,
                 hasProfile = profile != null,
-                realityServerName = reality?.serverName.orEmpty(),
                 fingerprint = reality?.fingerprint ?: XrayFingerprint.EDGE,
                 transport = profile?.transport ?: XrayTransport.Xhttp(),
                 muxEnabled = profile?.muxEnabled ?: false,

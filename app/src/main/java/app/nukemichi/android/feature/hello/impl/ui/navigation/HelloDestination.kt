@@ -3,10 +3,8 @@ package app.nukemichi.android.feature.hello.impl.ui.navigation
 import androidx.compose.runtime.Composable
 import app.nukemichi.android.core.navigation.Destination
 import app.nukemichi.android.core.navigation.LocalAppNavigator
-import app.nukemichi.android.feature.hello.AdvancedModeIntroKey
 import app.nukemichi.android.feature.hello.HelloKey
 import app.nukemichi.android.feature.hello.impl.ui.screen.HelloScreen
-import app.nukemichi.android.feature.settings.SettingsKey
 import app.nukemichi.android.feature.wizard.WizardKey
 import javax.inject.Inject
 
@@ -18,8 +16,6 @@ class HelloDestination @Inject constructor() : Destination<HelloKey> {
 
         HelloScreen(
             onSetUpServerClick = { navigator.navigate(WizardKey) },
-            onSettingsClick = { navigator.navigate(SettingsKey) },
-            onViewAdvancedModeClick = { navigator.navigate(AdvancedModeIntroKey) },
         )
     }
 }

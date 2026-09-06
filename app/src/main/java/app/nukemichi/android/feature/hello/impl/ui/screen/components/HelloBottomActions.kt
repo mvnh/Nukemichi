@@ -9,26 +9,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import app.nukemichi.android.R
 
+// Settings (and Advanced mode inside it) is deliberately not linked from here: with no server
+// set up yet there's nothing in Settings for a new user to see, and surfacing "advanced mode"
+// before someone has even connected once risks looking like a hidden, more-powerful option
+// right when they walk in. Reachable from Dashboard once a server actually exists.
 @Composable
 internal fun HelloBottomActions(
-    onSettingsClick: () -> Unit,
-    onViewAdvancedModeClick: () -> Unit,
     onViewSourceCodeClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
-        TextButton(
-            onClick = onSettingsClick,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(stringResource(id = R.string.settings_title))
-        }
-        TextButton(
-            onClick = onViewAdvancedModeClick,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(stringResource(id = R.string.hello_view_advanced_mode))
-        }
         TextButton(
             onClick = onViewSourceCodeClick,
             modifier = Modifier.fillMaxWidth()

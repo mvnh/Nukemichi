@@ -10,14 +10,14 @@ import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
 @Suppress("CheckReturnValue")
-internal val _arrow_back: ImageVector
+internal val _shield_outlined: ImageVector
     get() {
-        if (__arrow_back != null) {
-            return __arrow_back!!
+        if (__shield_outlined != null) {
+            return __shield_outlined!!
         }
-        __arrow_back =
+        __shield_outlined =
             ImageVector.Builder(
-                name = "arrow_back",
+                name = "shield",
                 defaultWidth = 24.dp,
                 defaultHeight = 24.dp,
                 viewportWidth = 24f,
@@ -35,21 +35,32 @@ internal val _arrow_back: ImageVector
                         strokeLineMiter = 1f,
                         pathFillType = PathFillType.NonZero,
                     ) {
-                        moveTo(7.83f, 13f)
-                        lineToRelative(5.6f, 5.6f)
-                        lineTo(12f, 20f)
-                        lineTo(4f, 12f)
-                        lineTo(12f, 4f)
-                        lineToRelative(1.43f, 1.4f)
-                        lineTo(7.83f, 11f)
-                        horizontalLineTo(20f)
-                        verticalLineToRelative(2f)
-                        horizontalLineTo(7.83f)
+                        moveTo(12f, 22f)
+                        quadTo(8.53f, 21.13f, 6.26f, 18.01f)
+                        reflectiveQuadTo(4f, 11.1f)
+                        verticalLineTo(5f)
+                        lineTo(12f, 2f)
+                        lineToRelative(8f, 3f)
+                        verticalLineToRelative(6.1f)
+                        quadToRelative(0f, 3.8f, -2.26f, 6.91f)
+                        reflectiveQuadTo(12f, 22f)
+                        close()
+                        moveToRelative(0f, -2.1f)
+                        quadToRelative(2.6f, -0.82f, 4.3f, -3.3f)
+                        reflectiveQuadTo(18f, 11.1f)
+                        verticalLineTo(6.38f)
+                        lineTo(12f, 4.13f)
+                        lineTo(6f, 6.38f)
+                        verticalLineTo(11.1f)
+                        quadToRelative(0f, 3.03f, 1.7f, 5.5f)
+                        reflectiveQuadTo(12f, 19.9f)
+                        close()
+                        moveTo(12f, 12f)
                         close()
                     }
                 }
                 .build()
-        return __arrow_back!!
+        return __shield_outlined!!
     }
 
-private var __arrow_back: ImageVector? = null
+private var __shield_outlined: ImageVector? = null

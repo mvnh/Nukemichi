@@ -10,14 +10,14 @@ import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
 @Suppress("CheckReturnValue")
-internal val _arrow_drop_down: ImageVector
+internal val _close_outlined: ImageVector
     get() {
-        if (__arrow_drop_down != null) {
-            return __arrow_drop_down!!
+        if (__close_outlined != null) {
+            return __close_outlined!!
         }
-        __arrow_drop_down =
+        __close_outlined =
             ImageVector.Builder(
-                name = "arrow_drop_down",
+                name = "close",
                 defaultWidth = 24.dp,
                 defaultHeight = 24.dp,
                 viewportWidth = 24f,
@@ -33,17 +33,26 @@ internal val _arrow_drop_down: ImageVector
                         strokeLineCap = StrokeCap.Butt,
                         strokeLineJoin = StrokeJoin.Bevel,
                         strokeLineMiter = 1f,
-                        pathFillType = PathFillType.Companion.NonZero,
+                        pathFillType = PathFillType.NonZero,
                     ) {
-                        moveTo(12f, 15f)
-                        lineTo(7f, 10f)
-                        horizontalLineTo(17f)
-                        lineToRelative(-5f, 5f)
+                        moveTo(6.4f, 19f)
+                        lineTo(5f, 17.6f)
+                        lineTo(10.6f, 12f)
+                        lineTo(5f, 6.4f)
+                        lineTo(6.4f, 5f)
+                        lineTo(12f, 10.6f)
+                        lineTo(17.6f, 5f)
+                        lineTo(19f, 6.4f)
+                        lineTo(13.4f, 12f)
+                        lineTo(19f, 17.6f)
+                        lineTo(17.6f, 19f)
+                        lineTo(12f, 13.4f)
+                        lineTo(6.4f, 19f)
                         close()
                     }
                 }
                 .build()
-        return __arrow_drop_down!!
+        return __close_outlined!!
     }
 
-private var __arrow_drop_down: ImageVector? = null
+private var __close_outlined: ImageVector? = null

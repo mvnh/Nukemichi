@@ -154,7 +154,7 @@ private fun DashboardContent(
             if (state.profileName != null) {
                 TextButton(onClick = onExportVlessLinkClick) {
                     Icon(
-                        imageVector = NukemichiIcons.Navigation.Share,
+                        imageVector = NukemichiIcons.Filled.Share,
                         contentDescription = null,
                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.size(dimens.l),

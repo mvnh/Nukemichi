@@ -10,12 +10,12 @@ import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
 @Suppress("CheckReturnValue")
-internal val _visibility: ImageVector
+internal val _visibility_outlined: ImageVector
     get() {
-        if (__visibility != null) {
-            return __visibility!!
+        if (__visibility_outlined != null) {
+            return __visibility_outlined!!
         }
-        __visibility =
+        __visibility_outlined =
             ImageVector.Builder(
                 name = "visibility",
                 defaultWidth = 24.dp,
@@ -65,10 +65,22 @@ internal val _visibility: ImageVector
                         reflectiveQuadTo(12f, 19f)
                         reflectiveQuadTo(5.35f, 16.96f)
                         close()
+                        moveTo(12f, 11.5f)
+                        close()
+                        moveToRelative(5.19f, 4.01f)
+                        quadTo(19.55f, 14.02f, 20.8f, 11.5f)
+                        quadTo(19.55f, 8.98f, 17.19f, 7.49f)
+                        reflectiveQuadTo(12f, 6f)
+                        quadTo(9.18f, 6f, 6.81f, 7.49f)
+                        reflectiveQuadTo(3.2f, 11.5f)
+                        quadToRelative(1.25f, 2.52f, 3.61f, 4.01f)
+                        reflectiveQuadTo(12f, 17f)
+                        reflectiveQuadToRelative(5.19f, -1.49f)
+                        close()
                     }
                 }
                 .build()
-        return __visibility!!
+        return __visibility_outlined!!
     }
 
-private var __visibility: ImageVector? = null
+private var __visibility_outlined: ImageVector? = null

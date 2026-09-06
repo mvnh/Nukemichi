@@ -44,14 +44,14 @@ internal fun HelloContent(
         HelloActionCard(
             title = UiText.Resource(R.string.hello_setup_title),
             description = UiText.Resource(R.string.hello_setup_description),
-            icon = NukemichiIcons.Common.Dns,
+            icon = NukemichiIcons.Outlined.Dns,
             onClick = onSetUpServerClick,
         )
 
         HelloActionCard(
             title = UiText.Resource(R.string.hello_connect_title),
             description = UiText.Resource(R.string.hello_connect_description),
-            icon = NukemichiIcons.Common.Cable,
+            icon = NukemichiIcons.Outlined.Cable,
             onClick = onConnectOrImportClick,
             enabled = false,
             badgeText = UiText.Resource(R.string.badge_soon),
@@ -60,7 +60,7 @@ internal fun HelloContent(
         HelloActionCard(
             title = UiText.Resource(R.string.hello_learn_title),
             description = UiText.Resource(R.string.hello_learn_description),
-            icon = NukemichiIcons.Common.AutoStories,
+            icon = NukemichiIcons.Outlined.AutoStories,
             onClick = onLearnFirstClick,
             enabled = false,
             badgeText = UiText.Resource(R.string.badge_soon),

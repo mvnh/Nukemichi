@@ -10,12 +10,12 @@ import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
 @Suppress("CheckReturnValue")
-internal val _rocket_launch: ImageVector
+internal val _rocket_launch_outlined: ImageVector
     get() {
-        if (__rocket_launch != null) {
-            return __rocket_launch!!
+        if (__rocket_launch_outlined != null) {
+            return __rocket_launch_outlined!!
         }
-        __rocket_launch =
+        __rocket_launch_outlined =
             ImageVector.Builder(
                 name = "rocket_launch",
                 defaultWidth = 24.dp,
@@ -110,7 +110,7 @@ internal val _rocket_launch: ImageVector
                     }
                 }
                 .build()
-        return __rocket_launch!!
+        return __rocket_launch_outlined!!
     }
 
-private var __rocket_launch: ImageVector? = null
+private var __rocket_launch_outlined: ImageVector? = null

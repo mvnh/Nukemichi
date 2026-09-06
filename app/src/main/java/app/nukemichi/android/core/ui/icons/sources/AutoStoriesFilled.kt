@@ -10,12 +10,12 @@ import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
 @Suppress("CheckReturnValue")
-internal val _auto_stories: ImageVector
+internal val _auto_stories_filled: ImageVector
     get() {
-        if (__auto_stories != null) {
-            return __auto_stories!!
+        if (__auto_stories_filled != null) {
+            return __auto_stories_filled!!
         }
-        __auto_stories =
+        __auto_stories_filled =
             ImageVector.Builder(
                 name = "auto_stories",
                 defaultWidth = 24.dp,
@@ -73,26 +73,10 @@ internal val _auto_stories: ImageVector
                         verticalLineToRelative(10f)
                         lineTo(14f, 15f)
                         close()
-                        moveToRelative(-4f, 1.63f)
-                        verticalLineTo(6.72f)
-                        quadTo(9.18f, 6.38f, 8.29f, 6.19f)
-                        reflectiveQuadTo(6.5f, 6f)
-                        quadTo(5.58f, 6f, 4.7f, 6.18f)
-                        reflectiveQuadTo(3f, 6.7f)
-                        verticalLineToRelative(9.93f)
-                        quadTo(3.88f, 16.3f, 4.74f, 16.15f)
-                        reflectiveQuadTo(6.5f, 16f)
-                        reflectiveQuadToRelative(1.76f, 0.15f)
-                        reflectiveQuadTo(10f, 16.63f)
-                        close()
-                        moveToRelative(0f, 0f)
-                        verticalLineTo(6.72f)
-                        verticalLineToRelative(9.9f)
-                        close()
                     }
                 }
                 .build()
-        return __auto_stories!!
+        return __auto_stories_filled!!
     }
 
-private var __auto_stories: ImageVector? = null
+private var __auto_stories_filled: ImageVector? = null

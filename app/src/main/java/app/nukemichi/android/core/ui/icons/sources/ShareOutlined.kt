@@ -10,12 +10,12 @@ import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
 @Suppress("CheckReturnValue")
-internal val _share: ImageVector
+internal val _share_outlined: ImageVector
     get() {
-        if (__share != null) {
-            return __share!!
+        if (__share_outlined != null) {
+            return __share_outlined!!
         }
-        __share =
+        __share_outlined =
             ImageVector.Builder(
                 name = "share",
                 defaultWidth = 24.dp,
@@ -72,10 +72,46 @@ internal val _share: ImageVector
                         reflectiveQuadToRelative(-0.88f, 2.13f)
                         reflectiveQuadTo(17f, 22f)
                         close()
+                        moveToRelative(0f, -2f)
+                        quadToRelative(0.43f, 0f, 0.71f, -0.29f)
+                        quadTo(18f, 19.43f, 18f, 19f)
+                        reflectiveQuadTo(17.71f, 18.29f)
+                        reflectiveQuadTo(17f, 18f)
+                        reflectiveQuadToRelative(-0.71f, 0.29f)
+                        reflectiveQuadTo(16f, 19f)
+                        reflectiveQuadToRelative(0.29f, 0.71f)
+                        reflectiveQuadTo(17f, 20f)
+                        close()
+                        moveTo(5f, 13f)
+                        quadToRelative(0.43f, 0f, 0.71f, -0.29f)
+                        quadTo(6f, 12.43f, 6f, 12f)
+                        reflectiveQuadTo(5.71f, 11.29f)
+                        reflectiveQuadTo(5f, 11f)
+                        quadTo(4.58f, 11f, 4.29f, 11.29f)
+                        reflectiveQuadTo(4f, 12f)
+                        reflectiveQuadToRelative(0.29f, 0.71f)
+                        reflectiveQuadTo(5f, 13f)
+                        close()
+                        moveTo(17.71f, 5.71f)
+                        quadTo(18f, 5.43f, 18f, 5f)
+                        reflectiveQuadTo(17.71f, 4.29f)
+                        reflectiveQuadTo(17f, 4f)
+                        reflectiveQuadTo(16.29f, 4.29f)
+                        reflectiveQuadTo(16f, 5f)
+                        reflectiveQuadToRelative(0.29f, 0.71f)
+                        reflectiveQuadTo(17f, 6f)
+                        reflectiveQuadTo(17.71f, 5.71f)
+                        close()
+                        moveTo(17f, 19f)
+                        close()
+                        moveTo(5f, 12f)
+                        close()
+                        moveTo(17f, 5f)
+                        close()
                     }
                 }
                 .build()
-        return __share!!
+        return __share_outlined!!
     }
 
-private var __share: ImageVector? = null
+private var __share_outlined: ImageVector? = null

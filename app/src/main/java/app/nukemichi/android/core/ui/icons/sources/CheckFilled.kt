@@ -10,14 +10,14 @@ import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
 @Suppress("CheckReturnValue")
-internal val _shield: ImageVector
+internal val _check_filled: ImageVector
     get() {
-        if (__shield != null) {
-            return __shield!!
+        if (__check_filled != null) {
+            return __check_filled!!
         }
-        __shield =
+        __check_filled =
             ImageVector.Builder(
-                name = "shield",
+                name = "check",
                 defaultWidth = 24.dp,
                 defaultHeight = 24.dp,
                 viewportWidth = 24f,
@@ -35,32 +35,18 @@ internal val _shield: ImageVector
                         strokeLineMiter = 1f,
                         pathFillType = PathFillType.NonZero,
                     ) {
-                        moveTo(12f, 22f)
-                        quadTo(8.53f, 21.13f, 6.26f, 18.01f)
-                        reflectiveQuadTo(4f, 11.1f)
-                        verticalLineTo(5f)
-                        lineTo(12f, 2f)
-                        lineToRelative(8f, 3f)
-                        verticalLineToRelative(6.1f)
-                        quadToRelative(0f, 3.8f, -2.26f, 6.91f)
-                        reflectiveQuadTo(12f, 22f)
-                        close()
-                        moveToRelative(0f, -2.1f)
-                        quadToRelative(2.6f, -0.82f, 4.3f, -3.3f)
-                        reflectiveQuadTo(18f, 11.1f)
-                        verticalLineTo(6.38f)
-                        lineTo(12f, 4.13f)
-                        lineTo(6f, 6.38f)
-                        verticalLineTo(11.1f)
-                        quadToRelative(0f, 3.03f, 1.7f, 5.5f)
-                        reflectiveQuadTo(12f, 19.9f)
-                        close()
-                        moveTo(12f, 12f)
+                        moveTo(9.55f, 18f)
+                        lineTo(3.85f, 12.3f)
+                        lineTo(5.28f, 10.88f)
+                        lineToRelative(4.28f, 4.28f)
+                        lineTo(18.73f, 5.97f)
+                        lineTo(20.15f, 7.4f)
+                        lineTo(9.55f, 18f)
                         close()
                     }
                 }
                 .build()
-        return __shield!!
+        return __check_filled!!
     }
 
-private var __shield: ImageVector? = null
+private var __check_filled: ImageVector? = null

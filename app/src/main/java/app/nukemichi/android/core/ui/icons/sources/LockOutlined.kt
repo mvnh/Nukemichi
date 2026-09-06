@@ -10,12 +10,12 @@ import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
 @Suppress("CheckReturnValue")
-internal val _lock: ImageVector
+internal val _lock_outlined: ImageVector
     get() {
-        if (__lock != null) {
-            return __lock!!
+        if (__lock_outlined != null) {
+            return __lock_outlined!!
         }
-        __lock =
+        __lock_outlined =
             ImageVector.Builder(
                 name = "lock",
                 defaultWidth = 24.dp,
@@ -56,7 +56,13 @@ internal val _lock: ImageVector
                         reflectiveQuadTo(18f, 22f)
                         horizontalLineTo(6f)
                         close()
-                        moveToRelative(7.41f, -5.59f)
+                        moveTo(6f, 20f)
+                        horizontalLineTo(18f)
+                        verticalLineTo(10f)
+                        horizontalLineTo(6f)
+                        verticalLineTo(20f)
+                        close()
+                        moveToRelative(7.41f, -3.59f)
                         quadTo(14f, 15.83f, 14f, 15f)
                         reflectiveQuadTo(13.41f, 13.59f)
                         reflectiveQuadTo(12f, 13f)
@@ -75,10 +81,14 @@ internal val _lock: ImageVector
                         reflectiveQuadTo(9f, 6f)
                         verticalLineTo(8f)
                         close()
+                        moveTo(6f, 20f)
+                        verticalLineTo(10f)
+                        verticalLineTo(20f)
+                        close()
                     }
                 }
                 .build()
-        return __lock!!
+        return __lock_outlined!!
     }
 
-private var __lock: ImageVector? = null
+private var __lock_outlined: ImageVector? = null

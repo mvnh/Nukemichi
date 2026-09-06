@@ -10,12 +10,12 @@ import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
 @Suppress("CheckReturnValue")
-internal val _vpn_key: ImageVector
+internal val _vpn_key_filled: ImageVector
     get() {
-        if (__vpn_key != null) {
-            return __vpn_key!!
+        if (__vpn_key_filled != null) {
+            return __vpn_key_filled!!
         }
-        __vpn_key =
+        __vpn_key_filled =
             ImageVector.Builder(
                 name = "vpn_key",
                 defaultWidth = 24.dp,
@@ -65,7 +65,7 @@ internal val _vpn_key: ImageVector
                     }
                 }
                 .build()
-        return __vpn_key!!
+        return __vpn_key_filled!!
     }
 
-private var __vpn_key: ImageVector? = null
+private var __vpn_key_filled: ImageVector? = null

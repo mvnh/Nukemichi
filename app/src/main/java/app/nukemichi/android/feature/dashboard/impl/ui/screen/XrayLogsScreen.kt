@@ -52,7 +52,7 @@ internal fun XrayLogsScreen(
         ) {
             IconButton(onClick = onBackClick) {
                 Icon(
-                    imageVector = NukemichiIcons.Navigation.ArrowBack,
+                    imageVector = NukemichiIcons.Outlined.ArrowBack,
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.onSurface,
                 )

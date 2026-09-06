@@ -10,12 +10,12 @@ import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
 @Suppress("CheckReturnValue")
-internal val _dns: ImageVector
+internal val _dns_filled: ImageVector
     get() {
-        if (__dns != null) {
-            return __dns!!
+        if (__dns_filled != null) {
+            return __dns_filled!!
         }
-        __dns =
+        __dns_filled =
             ImageVector.Builder(
                 name = "dns",
                 defaultWidth = 24.dp,
@@ -69,12 +69,6 @@ internal val _dns: ImageVector
                         quadTo(3f, 3.57f, 3.29f, 3.29f)
                         reflectiveQuadTo(4f, 3f)
                         close()
-                        moveTo(5f, 5f)
-                        verticalLineToRelative(5f)
-                        horizontalLineTo(19f)
-                        verticalLineTo(5f)
-                        horizontalLineTo(5f)
-                        close()
                         moveTo(4f, 13f)
                         horizontalLineTo(20f)
                         quadToRelative(0.43f, 0f, 0.71f, 0.29f)
@@ -89,24 +83,10 @@ internal val _dns: ImageVector
                         quadTo(3f, 13.58f, 3.29f, 13.29f)
                         reflectiveQuadTo(4f, 13f)
                         close()
-                        moveToRelative(1f, 2f)
-                        verticalLineToRelative(5f)
-                        horizontalLineTo(19f)
-                        verticalLineTo(15f)
-                        horizontalLineTo(5f)
-                        close()
-                        moveTo(5f, 5f)
-                        verticalLineToRelative(5f)
-                        verticalLineTo(5f)
-                        close()
-                        moveTo(5f, 15f)
-                        verticalLineToRelative(5f)
-                        verticalLineTo(15f)
-                        close()
                     }
                 }
                 .build()
-        return __dns!!
+        return __dns_filled!!
     }
 
-private var __dns: ImageVector? = null
+private var __dns_filled: ImageVector? = null

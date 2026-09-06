@@ -177,7 +177,7 @@ internal fun WizardTopBar(
     navIconDescription: UiText = UiText.Empty,
 ) {
     val navIcon =
-        if (state.isFirstPage) NukemichiIcons.Navigation.ArrowBack else NukemichiIcons.Navigation.Close
+        if (state.isFirstPage) NukemichiIcons.Outlined.ArrowBack else NukemichiIcons.Outlined.Close
     val dimens = MaterialTheme.dimens
     val density = LocalDensity.current
     val slideOffsetPx = remember(density) { with(density) { dimens.xl.roundToPx() } }

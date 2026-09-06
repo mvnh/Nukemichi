@@ -73,7 +73,7 @@ internal fun LiveTerminalView(
         ) {
             TextButton(onClick = onToggleExpanded) {
                 Icon(
-                    imageVector = if (isExpanded) NukemichiIcons.Navigation.ArrowDropUp else NukemichiIcons.Navigation.ArrowDropDown,
+                    imageVector = if (isExpanded) NukemichiIcons.Outlined.ArrowDropUp else NukemichiIcons.Outlined.ArrowDropDown,
                     contentDescription = null,
                 )
                 Text(
@@ -91,7 +91,7 @@ internal fun LiveTerminalView(
                     }
                 ) {
                     if (justCopied) {
-                        Icon(imageVector = NukemichiIcons.Common.Check, contentDescription = null)
+                        Icon(imageVector = NukemichiIcons.Outlined.Check, contentDescription = null)
                     }
                     Text(
                         text = stringResource(

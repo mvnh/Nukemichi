@@ -10,14 +10,14 @@ import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
 @Suppress("CheckReturnValue")
-internal val _arrow_drop_up: ImageVector
+internal val _arrow_drop_down_filled: ImageVector
     get() {
-        if (__arrow_drop_up != null) {
-            return __arrow_drop_up!!
+        if (__arrow_drop_down_filled != null) {
+            return __arrow_drop_down_filled!!
         }
-        __arrow_drop_up =
+        __arrow_drop_down_filled =
             ImageVector.Builder(
-                name = "arrow_drop_up",
+                name = "arrow_drop_down",
                 defaultWidth = 24.dp,
                 defaultHeight = 24.dp,
                 viewportWidth = 24f,
@@ -33,17 +33,17 @@ internal val _arrow_drop_up: ImageVector
                         strokeLineCap = StrokeCap.Butt,
                         strokeLineJoin = StrokeJoin.Bevel,
                         strokeLineMiter = 1f,
-                        pathFillType = PathFillType.Companion.NonZero,
+                        pathFillType = PathFillType.NonZero,
                     ) {
-                        moveTo(7f, 14f)
-                        lineTo(12f, 9f)
-                        lineToRelative(5f, 5f)
-                        horizontalLineTo(7f)
+                        moveTo(12f, 15f)
+                        lineTo(7f, 10f)
+                        horizontalLineTo(17f)
+                        lineToRelative(-5f, 5f)
                         close()
                     }
                 }
                 .build()
-        return __arrow_drop_up!!
+        return __arrow_drop_down_filled!!
     }
 
-private var __arrow_drop_up: ImageVector? = null
+private var __arrow_drop_down_filled: ImageVector? = null

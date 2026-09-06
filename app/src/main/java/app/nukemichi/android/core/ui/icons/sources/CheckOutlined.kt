@@ -10,12 +10,12 @@ import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
 @Suppress("CheckReturnValue")
-internal val _check: ImageVector
+internal val _check_outlined: ImageVector
     get() {
-        if (__check != null) {
-            return __check!!
+        if (__check_outlined != null) {
+            return __check_outlined!!
         }
-        __check =
+        __check_outlined =
             ImageVector.Builder(
                 name = "check",
                 defaultWidth = 24.dp,
@@ -35,17 +35,18 @@ internal val _check: ImageVector
                         strokeLineMiter = 1f,
                         pathFillType = PathFillType.NonZero,
                     ) {
-                        moveTo(9f, 16.17f)
-                        lineTo(4.83f, 12f)
-                        lineTo(3.41f, 13.41f)
-                        lineTo(9f, 19f)
-                        lineTo(21f, 7f)
-                        lineTo(19.59f, 5.59f)
+                        moveTo(9.55f, 18f)
+                        lineTo(3.85f, 12.3f)
+                        lineTo(5.28f, 10.88f)
+                        lineToRelative(4.28f, 4.28f)
+                        lineTo(18.73f, 5.97f)
+                        lineTo(20.15f, 7.4f)
+                        lineTo(9.55f, 18f)
                         close()
                     }
                 }
                 .build()
-        return __check!!
+        return __check_outlined!!
     }
 
-private var __check: ImageVector? = null
+private var __check_outlined: ImageVector? = null

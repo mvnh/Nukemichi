@@ -8,6 +8,7 @@ import app.nukemichi.android.core.vpn.XrayMonitoring
 import app.nukemichi.android.core.vpn.XrayStatsSource
 import app.nukemichi.android.core.vpn.XrayTrafficStats
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
@@ -37,7 +38,15 @@ internal class XrayTelemetryMonitor @Inject constructor(
     private val statsSource: XrayStatsSource,
     @IoDispatcher ioDispatcher: CoroutineDispatcher,
 ) : XrayMonitoring, CoreCallbackHandler {
-    private val scope = CoroutineScope(SupervisorJob() + ioDispatcher)
+    // A SupervisorJob means a failing child (the stats poller, the logcat reader) never takes
+    // down its sibling, but it also means neither has anywhere to propagate an unexpected
+    // exception to - without this handler it would otherwise reach the JVM's uncaught-exception
+    // path instead of this monitor's own logs.
+    private val scope = CoroutineScope(
+        SupervisorJob() + ioDispatcher + CoroutineExceptionHandler { _, error ->
+            Timber.w(error, "XrayTelemetryMonitor: uncaught exception in a monitoring coroutine")
+        },
+    )
     private val _state = MutableStateFlow(XrayEngineState.IDLE)
 
     private val _stats = MutableSharedFlow<XrayTrafficStats>(

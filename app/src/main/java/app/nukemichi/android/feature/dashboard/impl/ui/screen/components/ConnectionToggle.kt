@@ -12,12 +12,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import app.nukemichi.android.core.ui.icons.NukemichiIcons
-import app.nukemichi.android.core.ui.theme.size.dimens
 import app.nukemichi.android.core.vpn.XrayEngineState
 import app.nukemichi.android.feature.dashboard.impl.ui.mvi.DashboardContract
 import app.nukemichi.android.feature.dashboard.impl.ui.mvi.isBusy
 import app.nukemichi.android.feature.dashboard.impl.ui.mvi.isConnected
+import app.nukemichi.android.platform.ui.icons.NukemichiIcons
+import app.nukemichi.android.platform.ui.theme.size.dimens
 
 @Composable
 internal fun ConnectionToggle(

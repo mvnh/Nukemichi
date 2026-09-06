@@ -1,9 +1,9 @@
 package app.nukemichi.android.feature.wizard.impl.ui.mvi
 
 import androidx.compose.runtime.Immutable
-import app.nukemichi.android.core.ui.util.UiText
 import app.nukemichi.android.feature.wizard.impl.domain.model.DeploymentStep
 import app.nukemichi.android.feature.wizard.impl.domain.model.XrayServerCredentials
+import app.nukemichi.android.platform.ui.util.UiText
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.PersistentList
 import kotlinx.collections.immutable.persistentListOf

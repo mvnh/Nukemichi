@@ -16,7 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import app.nukemichi.android.R
-import app.nukemichi.android.core.ui.theme.size.dimens
+import app.nukemichi.android.platform.ui.theme.size.dimens
 
 // Deliberately at the bottom, deliberately styled apart from every other row on this screen:
 // this switch is the only thing on the page that can turn Advanced mode ON. Turning it off

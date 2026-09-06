@@ -14,10 +14,12 @@ import android.os.SystemClock
 import androidx.core.app.NotificationCompat
 import app.nukemichi.android.MainActivity
 import app.nukemichi.android.R
-import app.nukemichi.android.core.di.IoDispatcher
 import app.nukemichi.android.core.vpn.XrayJson
 import app.nukemichi.android.core.vpn.XrayRuntimeConfig
+import app.nukemichi.android.platform.di.IoDispatcher
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.concurrent.atomic.AtomicBoolean
+import javax.inject.Inject
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -27,8 +29,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import timber.log.Timber
-import java.util.concurrent.atomic.AtomicBoolean
-import javax.inject.Inject
 
 @AndroidEntryPoint
 internal class NukemichiVpnService : VpnService() {

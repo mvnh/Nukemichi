@@ -1,8 +1,8 @@
 package app.nukemichi.android.feature.settings.impl.ui.mvi
 
-import app.nukemichi.android.core.mode.AppMode
 import app.nukemichi.android.core.vpn.spec.XrayFingerprint
 import app.nukemichi.android.core.vpn.spec.XrayTransport
+import app.nukemichi.android.platform.mode.AppMode
 
 internal object SettingsContract {
 

@@ -1,11 +1,11 @@
 package app.nukemichi.android.feature.hello.impl.ui.navigation.di
 
-import app.nukemichi.android.core.navigation.Destination
-import app.nukemichi.android.core.navigation.NavDestination
 import app.nukemichi.android.feature.hello.AdvancedModeIntroKey
 import app.nukemichi.android.feature.hello.HelloKey
 import app.nukemichi.android.feature.hello.impl.ui.navigation.AdvancedModeIntroDestination
 import app.nukemichi.android.feature.hello.impl.ui.navigation.HelloDestination
+import app.nukemichi.android.platform.navigation.Destination
+import app.nukemichi.android.platform.navigation.NavDestination
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

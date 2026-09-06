@@ -1,9 +1,9 @@
 package app.nukemichi.android.feature.wizard
 
-import app.nukemichi.android.core.ui.util.UiSecret
 import app.nukemichi.android.feature.wizard.impl.ui.mvi.WizardContract
 import app.nukemichi.android.feature.wizard.impl.ui.mvi.isConnectionProfileValid
 import app.nukemichi.android.feature.wizard.impl.ui.mvi.isSshValid
+import app.nukemichi.android.platform.ui.util.UiSecret
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test

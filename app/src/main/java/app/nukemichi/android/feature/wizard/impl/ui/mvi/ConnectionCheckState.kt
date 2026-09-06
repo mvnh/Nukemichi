@@ -1,7 +1,7 @@
 package app.nukemichi.android.feature.wizard.impl.ui.mvi
 
 import androidx.compose.runtime.Immutable
-import app.nukemichi.android.core.ui.util.UiText
+import app.nukemichi.android.platform.ui.util.UiText
 
 @Immutable
 internal sealed interface ConnectionCheckState {

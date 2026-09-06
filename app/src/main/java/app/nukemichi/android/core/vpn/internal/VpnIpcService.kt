@@ -9,9 +9,11 @@ import android.os.Message
 import android.os.Messenger
 import android.os.Process
 import android.os.RemoteException
-import app.nukemichi.android.core.di.MainDispatcher
 import app.nukemichi.android.core.vpn.XrayTrafficStats
+import app.nukemichi.android.platform.di.MainDispatcher
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.concurrent.CopyOnWriteArraySet
+import javax.inject.Inject
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
@@ -19,8 +21,6 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import timber.log.Timber
-import java.util.concurrent.CopyOnWriteArraySet
-import javax.inject.Inject
 
 @AndroidEntryPoint
 internal class VpnIpcService : Service() {

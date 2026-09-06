@@ -41,12 +41,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.nukemichi.android.R
-import app.nukemichi.android.core.ui.components.StatusBadge
-import app.nukemichi.android.core.ui.icons.NukemichiIcons
-import app.nukemichi.android.core.ui.theme.size.dimens
-import app.nukemichi.android.core.ui.util.CollectAsEffect
-import app.nukemichi.android.core.ui.util.UiText
-import app.nukemichi.android.core.ui.util.asString
 import app.nukemichi.android.core.vpn.XrayEngineState
 import app.nukemichi.android.feature.dashboard.impl.ui.mvi.DashboardContract
 import app.nukemichi.android.feature.dashboard.impl.ui.mvi.DashboardViewModel
@@ -54,6 +48,12 @@ import app.nukemichi.android.feature.dashboard.impl.ui.mvi.isConnected
 import app.nukemichi.android.feature.dashboard.impl.ui.screen.components.ConnectionToggle
 import app.nukemichi.android.feature.dashboard.impl.ui.screen.components.ServerInfoCard
 import app.nukemichi.android.feature.dashboard.impl.ui.screen.components.StatsRow
+import app.nukemichi.android.platform.ui.components.StatusBadge
+import app.nukemichi.android.platform.ui.icons.NukemichiIcons
+import app.nukemichi.android.platform.ui.theme.size.dimens
+import app.nukemichi.android.platform.ui.util.CollectAsEffect
+import app.nukemichi.android.platform.ui.util.UiText
+import app.nukemichi.android.platform.ui.util.asString
 import kotlinx.coroutines.delay
 
 private const val SLOW_TRANSITION_HINT_DELAY_MS = 5_000L

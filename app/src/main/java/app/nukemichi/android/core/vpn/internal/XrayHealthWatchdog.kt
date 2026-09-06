@@ -1,7 +1,13 @@
 package app.nukemichi.android.core.vpn.internal
 
-import app.nukemichi.android.core.di.IoDispatcher
 import app.nukemichi.android.core.vpn.SocksEndpoint
+import app.nukemichi.android.platform.di.IoDispatcher
+import java.io.IOException
+import java.net.InetSocketAddress
+import java.net.Socket
+import javax.inject.Inject
+import javax.inject.Singleton
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -9,12 +15,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.io.IOException
-import java.net.InetSocketAddress
-import java.net.Socket
-import javax.inject.Inject
-import javax.inject.Singleton
-import kotlin.time.Duration.Companion.milliseconds
 
 @Singleton
 internal class XrayHealthWatchdog @Inject constructor(

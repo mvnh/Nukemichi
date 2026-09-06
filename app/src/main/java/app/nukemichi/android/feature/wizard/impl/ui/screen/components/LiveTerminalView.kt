@@ -42,9 +42,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import app.nukemichi.android.R
-import app.nukemichi.android.core.ui.components.MonospaceLogList
-import app.nukemichi.android.core.ui.icons.NukemichiIcons
-import app.nukemichi.android.core.ui.theme.size.dimens
+import app.nukemichi.android.platform.ui.components.MonospaceLogList
+import app.nukemichi.android.platform.ui.icons.NukemichiIcons
+import app.nukemichi.android.platform.ui.theme.size.dimens
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.coroutines.delay
 

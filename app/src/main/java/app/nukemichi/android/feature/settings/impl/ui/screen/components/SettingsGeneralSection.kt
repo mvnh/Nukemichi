@@ -11,7 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import app.nukemichi.android.R
-import app.nukemichi.android.core.ui.theme.size.dimens
+import app.nukemichi.android.platform.ui.theme.size.dimens
 
 // Always visible regardless of AppMode: viewing logs or removing a saved server isn't an
 // expert-only action, it just used to live in the wrong place (a text button in Dashboard's

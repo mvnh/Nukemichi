@@ -1,11 +1,11 @@
 package app.nukemichi.android.feature.dashboard.impl.ui.navigation
 
 import androidx.compose.runtime.Composable
-import app.nukemichi.android.core.navigation.Destination
-import app.nukemichi.android.core.navigation.LocalAppNavigator
 import app.nukemichi.android.feature.dashboard.DashboardKey
 import app.nukemichi.android.feature.dashboard.impl.ui.screen.DashboardScreen
 import app.nukemichi.android.feature.settings.SettingsKey
+import app.nukemichi.android.platform.navigation.Destination
+import app.nukemichi.android.platform.navigation.LocalAppNavigator
 import javax.inject.Inject
 
 class DashboardDestination @Inject constructor() : Destination<DashboardKey> {

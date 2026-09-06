@@ -1,0 +1,36 @@
+package app.nukemichi.android.platform.ui.util
+
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.repeatOnLifecycle
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.withContext
+import timber.log.Timber
+
+@Composable
+fun <T> Flow<T>.CollectAsEffect(
+    vararg keys: Any?,
+    onEffect: (T) -> Unit
+) {
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    LaunchedEffect(this, lifecycleOwner, *keys) {
+        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            withContext(Dispatchers.Main.immediate) {
+                this@CollectAsEffect
+                    .catch { throwable ->
+                        if (throwable is CancellationException) throw throwable
+                        Timber.e(throwable, "Effect stream failed")
+                    }
+                    .collect { effect ->
+                        onEffect(effect)
+                    }
+            }
+        }
+    }
+}

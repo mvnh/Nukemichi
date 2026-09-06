@@ -15,9 +15,9 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import app.nukemichi.android.R
-import app.nukemichi.android.core.ui.theme.size.dimens
-import app.nukemichi.android.core.ui.util.UiText
-import app.nukemichi.android.core.ui.util.asString
+import app.nukemichi.android.platform.ui.theme.size.dimens
+import app.nukemichi.android.platform.ui.util.UiText
+import app.nukemichi.android.platform.ui.util.asString
 
 @Composable
 internal fun HelloHeader(subtitle: UiText) {

@@ -12,6 +12,8 @@ private const val SOURCE_CODE_URL = "https://github.com/mvnh/Nukemichi"
 @Composable
 internal fun HelloScreen(
     onSetUpServerClick: () -> Unit,
+    onSettingsClick: () -> Unit,
+    onViewAdvancedModeClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
@@ -21,6 +23,8 @@ internal fun HelloScreen(
         onSetUpServerClick = onSetUpServerClick,
         onConnectOrImportClick = {},
         onLearnFirstClick = {},
+        onSettingsClick = onSettingsClick,
+        onViewAdvancedModeClick = onViewAdvancedModeClick,
         onViewSourceCodeClick = {
             context.startActivity(Intent(Intent.ACTION_VIEW, SOURCE_CODE_URL.toUri()))
         },

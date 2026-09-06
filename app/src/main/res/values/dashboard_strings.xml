@@ -1,6 +1,5 @@
 <resources>
     <string name="dashboard_no_server_configured">No server configured</string>
-    <string name="dashboard_logs">Logs</string>
     <string name="dashboard_export_link_cd">Share VLESS connection link</string>
     <string name="dashboard_export_link_label">Share VLESS link</string>
     <string name="dashboard_connected_for">Connected for %1$s</string>

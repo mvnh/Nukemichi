@@ -9,14 +9,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import app.nukemichi.android.R
 
-// Advanced mode entry point is hidden for now: it's pre-MVP, not built out yet (see project
-// notes). Only the source-code link stays.
 @Composable
 internal fun HelloBottomActions(
+    onSettingsClick: () -> Unit,
+    onViewAdvancedModeClick: () -> Unit,
     onViewSourceCodeClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
+        TextButton(
+            onClick = onSettingsClick,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(stringResource(id = R.string.settings_title))
+        }
+        TextButton(
+            onClick = onViewAdvancedModeClick,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(stringResource(id = R.string.hello_view_advanced_mode))
+        }
         TextButton(
             onClick = onViewSourceCodeClick,
             modifier = Modifier.fillMaxWidth()

@@ -17,12 +17,13 @@
 
     <string name="advanced_mode_intro_title">Advanced mode</string>
     <string name="advanced_mode_intro_capabilities_title">What it unlocks</string>
-    <string name="advanced_mode_intro_capability_transport">Choose the transport protocol by hand instead of the automatic default</string>
-    <string name="advanced_mode_intro_capability_config">Edit the full Xray configuration, including a raw JSON editor</string>
-    <string name="advanced_mode_intro_capability_stats">See detailed, per-connection statistics</string>
-    <string name="advanced_mode_intro_capability_tty">Run commands on your server directly from the app</string>
+    <string name="advanced_mode_intro_capability_transport">Choose the transport and flow control by hand instead of the automatic default</string>
+    <string name="advanced_mode_intro_capability_camouflage">Reconfigure REALITY camouflage: the masking domain, TLS fingerprint, and short ID</string>
+    <string name="advanced_mode_intro_capability_mtu">Adjust the VPN tunnel\'s MTU</string>
+    <string name="advanced_mode_intro_capability_config">Edit the full Xray configuration yourself, including a raw JSON editor that gets checked before it runs</string>
+    <string name="advanced_mode_intro_capability_tunnel">Swap out the local tunnel Xray sends its traffic through</string>
     <string name="advanced_mode_intro_warning_title">This is not what most people need</string>
-    <string name="advanced_mode_intro_warning_body">Advanced mode assumes you understand REALITY, XHTTP, and the Xray config schema. Getting any of it wrong can make you easier to fingerprint, or break your connection outright. Nothing in the app stops you.</string>
+    <string name="advanced_mode_intro_warning_body">It\'s for people who already understand REALITY, XHTTP, and the Xray config, and have a real reason to change them by hand. Getting any of it wrong can make you easier to fingerprint, or break your connection outright. Nothing in the app stops you.</string>
     <string name="advanced_mode_intro_acknowledge">I understand the risks and want full control</string>
     <string name="advanced_mode_intro_enable">Enable advanced mode</string>
 </resources>

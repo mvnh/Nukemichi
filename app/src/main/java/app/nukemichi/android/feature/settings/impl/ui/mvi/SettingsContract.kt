@@ -17,7 +17,9 @@ internal object SettingsContract {
     )
 
     sealed interface Intent {
-        data class ModeChanged(val mode: AppMode) : Intent
+        data class AdvancedModeToggled(val enabled: Boolean) : Intent
+        data object ViewLogsRequested : Intent
+        data object ForgetServerRequested : Intent
         data class RealityServerNameChanged(val value: String) : Intent
         data class FingerprintChanged(val value: XrayFingerprint) : Intent
         data class TransportChanged(val value: XrayTransport) : Intent
@@ -28,6 +30,9 @@ internal object SettingsContract {
 
     sealed interface Effect {
         data class ShareVlessLink(val uri: String) : Effect
+        data object NavigateToAdvancedModeIntro : Effect
+        data object NavigateToLogs : Effect
+        data object ServerForgotten : Effect
     }
 }
 

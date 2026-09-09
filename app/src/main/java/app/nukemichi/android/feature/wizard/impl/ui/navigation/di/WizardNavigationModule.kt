@@ -1,9 +1,9 @@
 package app.nukemichi.android.feature.wizard.impl.ui.navigation.di
 
-import app.nukemichi.android.core.navigation.Destination
-import app.nukemichi.android.core.navigation.NavDestination
 import app.nukemichi.android.feature.wizard.WizardKey
 import app.nukemichi.android.feature.wizard.impl.ui.navigation.WizardDestination
+import app.nukemichi.android.platform.navigation.Destination
+import app.nukemichi.android.platform.navigation.NavDestination
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

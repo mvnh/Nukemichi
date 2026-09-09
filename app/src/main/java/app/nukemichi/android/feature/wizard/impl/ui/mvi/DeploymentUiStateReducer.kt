@@ -1,9 +1,9 @@
 package app.nukemichi.android.feature.wizard.impl.ui.mvi
 
-import app.nukemichi.android.core.ui.util.UiText
 import app.nukemichi.android.feature.wizard.impl.domain.model.DeploymentEvent
 import app.nukemichi.android.feature.wizard.impl.domain.model.DeploymentStep
 import app.nukemichi.android.feature.wizard.impl.domain.model.redactSecrets
+import app.nukemichi.android.platform.ui.util.UiText
 import kotlinx.collections.immutable.mutate
 import kotlinx.collections.immutable.toPersistentList
 

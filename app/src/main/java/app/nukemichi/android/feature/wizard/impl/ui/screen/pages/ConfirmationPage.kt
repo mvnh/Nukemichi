@@ -15,10 +15,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import app.nukemichi.android.R
-import app.nukemichi.android.core.ui.theme.size.dimens
 import app.nukemichi.android.feature.wizard.impl.ui.mvi.WizardContract.ServerAuthMethod
 import app.nukemichi.android.feature.wizard.impl.ui.mvi.WizardContract.SetupStrategy
 import app.nukemichi.android.feature.wizard.impl.ui.screen.components.WizardPage
+import app.nukemichi.android.platform.ui.theme.size.dimens
 
 @Composable
 internal fun ConfirmationPage(

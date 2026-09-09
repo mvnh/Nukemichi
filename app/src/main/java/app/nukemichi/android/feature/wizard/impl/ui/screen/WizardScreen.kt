@@ -15,17 +15,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.nukemichi.android.R
-import app.nukemichi.android.core.mode.AppMode
-import app.nukemichi.android.core.navigation.LocalAppNavigator
-import app.nukemichi.android.core.ui.components.ConfirmDialog
-import app.nukemichi.android.core.ui.components.LoadingDialog
-import app.nukemichi.android.core.ui.components.MessageDialog
-import app.nukemichi.android.core.ui.util.CollectAsEffect
-import app.nukemichi.android.core.ui.util.UiSecret
-import app.nukemichi.android.core.ui.util.UiText
-import app.nukemichi.android.core.ui.util.asString
-import app.nukemichi.android.feature.wizard.impl.ui.screen.components.WizardContainer
-import app.nukemichi.android.feature.wizard.impl.ui.screen.components.WizardTopBar
 import app.nukemichi.android.feature.wizard.impl.ui.model.WizardStep
 import app.nukemichi.android.feature.wizard.impl.ui.model.rememberWizardState
 import app.nukemichi.android.feature.wizard.impl.ui.mvi.ConnectionCheckState
@@ -36,10 +25,21 @@ import app.nukemichi.android.feature.wizard.impl.ui.mvi.WizardContract.Intent.Se
 import app.nukemichi.android.feature.wizard.impl.ui.mvi.WizardViewModel
 import app.nukemichi.android.feature.wizard.impl.ui.mvi.isInProgress
 import app.nukemichi.android.feature.wizard.impl.ui.mvi.isSshValid
+import app.nukemichi.android.feature.wizard.impl.ui.screen.components.WizardContainer
+import app.nukemichi.android.feature.wizard.impl.ui.screen.components.WizardTopBar
 import app.nukemichi.android.feature.wizard.impl.ui.screen.pages.ConfirmationPage
 import app.nukemichi.android.feature.wizard.impl.ui.screen.pages.DeploymentProgressPage
 import app.nukemichi.android.feature.wizard.impl.ui.screen.pages.ServerDataEntryPage
 import app.nukemichi.android.feature.wizard.impl.ui.screen.pages.StrategyChoicePage
+import app.nukemichi.android.platform.mode.AppMode
+import app.nukemichi.android.platform.navigation.LocalAppNavigator
+import app.nukemichi.android.platform.ui.components.ConfirmDialog
+import app.nukemichi.android.platform.ui.components.LoadingDialog
+import app.nukemichi.android.platform.ui.components.MessageDialog
+import app.nukemichi.android.platform.ui.util.CollectAsEffect
+import app.nukemichi.android.platform.ui.util.UiSecret
+import app.nukemichi.android.platform.ui.util.UiText
+import app.nukemichi.android.platform.ui.util.asString
 import kotlinx.collections.immutable.persistentListOf
 
 private const val PAGE_STRATEGY = 0

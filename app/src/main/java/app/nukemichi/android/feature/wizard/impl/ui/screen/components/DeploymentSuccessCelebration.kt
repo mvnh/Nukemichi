@@ -25,8 +25,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import app.nukemichi.android.R
-import app.nukemichi.android.core.ui.icons.NukemichiIcons
-import app.nukemichi.android.core.ui.theme.size.dimens
+import app.nukemichi.android.platform.ui.icons.NukemichiIcons
+import app.nukemichi.android.platform.ui.theme.size.dimens
 
 @Composable
 internal fun DeploymentSuccessCelebration(

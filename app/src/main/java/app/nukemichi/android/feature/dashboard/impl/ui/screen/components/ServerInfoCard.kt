@@ -14,8 +14,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import app.nukemichi.android.R
-import app.nukemichi.android.core.ui.theme.size.dimens
 import app.nukemichi.android.feature.dashboard.impl.ui.mvi.DashboardContract
+import app.nukemichi.android.platform.ui.theme.size.dimens
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale

@@ -2,8 +2,8 @@ package app.nukemichi.android.feature.hello.impl.ui.mvi
 
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
-import app.nukemichi.android.core.mode.AppMode
-import app.nukemichi.android.core.mode.AppModeRepository
+import app.nukemichi.android.platform.mode.AppMode
+import app.nukemichi.android.platform.mode.AppModeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

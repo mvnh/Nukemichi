@@ -24,10 +24,10 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.nukemichi.android.R
-import app.nukemichi.android.core.ui.components.MonospaceLogList
-import app.nukemichi.android.core.ui.icons.NukemichiIcons
-import app.nukemichi.android.core.ui.theme.size.dimens
 import app.nukemichi.android.feature.dashboard.impl.ui.mvi.XrayLogsViewModel
+import app.nukemichi.android.platform.ui.components.MonospaceLogList
+import app.nukemichi.android.platform.ui.icons.NukemichiIcons
+import app.nukemichi.android.platform.ui.theme.size.dimens
 
 @Composable
 internal fun XrayLogsScreen(

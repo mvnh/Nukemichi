@@ -24,11 +24,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.nukemichi.android.R
-import app.nukemichi.android.core.mode.AppMode
-import app.nukemichi.android.core.ui.components.ConfirmDialog
-import app.nukemichi.android.core.ui.theme.size.dimens
-import app.nukemichi.android.core.ui.util.CollectAsEffect
-import app.nukemichi.android.core.ui.util.UiText
 import app.nukemichi.android.core.vpn.spec.XrayFingerprint
 import app.nukemichi.android.feature.settings.impl.ui.mvi.SettingsContract
 import app.nukemichi.android.feature.settings.impl.ui.mvi.SettingsViewModel
@@ -36,6 +31,11 @@ import app.nukemichi.android.feature.settings.impl.ui.mvi.isAdvanced
 import app.nukemichi.android.feature.settings.impl.ui.screen.components.SettingsAdvancedSection
 import app.nukemichi.android.feature.settings.impl.ui.screen.components.SettingsDangerZoneSection
 import app.nukemichi.android.feature.settings.impl.ui.screen.components.SettingsGeneralSection
+import app.nukemichi.android.platform.mode.AppMode
+import app.nukemichi.android.platform.ui.components.ConfirmDialog
+import app.nukemichi.android.platform.ui.theme.size.dimens
+import app.nukemichi.android.platform.ui.util.CollectAsEffect
+import app.nukemichi.android.platform.ui.util.UiText
 
 @Composable
 internal fun SettingsScreen(

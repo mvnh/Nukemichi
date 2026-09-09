@@ -1,12 +1,16 @@
 package app.nukemichi.android.core.vpn.internal
 
-import app.nukemichi.android.core.di.IoDispatcher
 import app.nukemichi.android.core.vpn.XrayEngineState
 import app.nukemichi.android.core.vpn.XrayLogLevel
 import app.nukemichi.android.core.vpn.XrayLogMessage
 import app.nukemichi.android.core.vpn.XrayMonitoring
 import app.nukemichi.android.core.vpn.XrayStatsSource
 import app.nukemichi.android.core.vpn.XrayTrafficStats
+import app.nukemichi.android.platform.di.IoDispatcher
+import java.util.concurrent.atomic.AtomicLong
+import javax.inject.Inject
+import javax.inject.Singleton
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
@@ -28,10 +32,6 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import libv2ray.CoreCallbackHandler
 import timber.log.Timber
-import java.util.concurrent.atomic.AtomicLong
-import javax.inject.Inject
-import javax.inject.Singleton
-import kotlin.time.Duration.Companion.milliseconds
 
 @Singleton
 internal class XrayTelemetryMonitor @Inject constructor(

@@ -12,8 +12,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
@@ -35,13 +35,13 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import app.nukemichi.android.R
-import app.nukemichi.android.core.ui.components.NukemichiTextField
-import app.nukemichi.android.core.ui.icons.NukemichiIcons
-import app.nukemichi.android.core.ui.theme.size.dimens
-import app.nukemichi.android.core.ui.util.UiText
-import app.nukemichi.android.core.ui.util.asString
-import app.nukemichi.android.feature.wizard.impl.ui.screen.components.WizardPage
 import app.nukemichi.android.feature.wizard.impl.ui.mvi.WizardContract.ServerAuthMethod
+import app.nukemichi.android.feature.wizard.impl.ui.screen.components.WizardPage
+import app.nukemichi.android.platform.ui.components.NukemichiTextField
+import app.nukemichi.android.platform.ui.icons.NukemichiIcons
+import app.nukemichi.android.platform.ui.theme.size.dimens
+import app.nukemichi.android.platform.ui.util.UiText
+import app.nukemichi.android.platform.ui.util.asString
 
 @Composable
 internal fun ServerDataEntryPage(

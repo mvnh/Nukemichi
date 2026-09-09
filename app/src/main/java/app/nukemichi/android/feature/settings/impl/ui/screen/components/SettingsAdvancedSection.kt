@@ -17,9 +17,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import app.nukemichi.android.R
-import app.nukemichi.android.core.ui.theme.size.dimens
 import app.nukemichi.android.core.vpn.spec.XrayFingerprint
 import app.nukemichi.android.feature.settings.impl.ui.mvi.SettingsContract
+import app.nukemichi.android.platform.ui.theme.size.dimens
 
 private const val MIN_MUX_CONCURRENCY = 1
 private const val MAX_MUX_CONCURRENCY = 128

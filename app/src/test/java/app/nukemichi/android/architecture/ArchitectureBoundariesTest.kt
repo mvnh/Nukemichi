@@ -3,14 +3,20 @@ package app.nukemichi.android.architecture
 import com.lemonappdev.konsist.api.Konsist
 import com.lemonappdev.konsist.api.declaration.KoClassDeclaration
 import com.lemonappdev.konsist.api.declaration.KoFileDeclaration
+import java.io.File
 import org.junit.Assert.fail
 import org.junit.Test
-import java.io.File
 
 /**
  * The whole app lives in one Gradle module, so `internal` only blocks access from *outside the
  * module* - there is no outside, so it currently enforces nothing. These tests are the substitute
- * for the module boundaries these packages are already written as if they had:
+ * for the module boundaries these packages are already written as if they had.
+ *
+ * `core` and `platform` are a deliberate split: `core.<module>` (vpn, ssh, security, storage) is
+ * the data layer - only a feature's `domain` touches it. `platform.<module>` (ui, navigation,
+ * mode, di) is cross-cutting infrastructure with no data-layer content of its own - `platform.ui`
+ * and `platform.navigation` are inherently Compose-shaped and could not live in `domain` even in
+ * principle, so any layer may use `platform.*` directly.
  *
  *  1. core.<module> exposes only abstractions (interfaces, abstract/sealed classes, plain data
  *     types) outside its own .internal/.di - concrete behavior lives in .internal.
@@ -22,8 +28,8 @@ import java.io.File
  *     module (core.<module>.di is the one sanctioned exception, since binding an interface to its
  *     impl requires naming the impl).
  *  5. clean architecture inside a feature: domain never depends on UI structures (Compose,
- *     core.ui), ui never reaches past domain straight into core.*.internal, and core never
- *     depends on feature at all.
+ *     platform.ui, platform.navigation), ui never reaches past domain straight into
+ *     core.*.internal, and core never depends on feature at all.
  */
 class ArchitectureBoundariesTest {
 
@@ -139,7 +145,11 @@ class ArchitectureBoundariesTest {
     @Test
     fun `feature domain layers do not depend on UI structures`() {
         val domainPackage = Regex("""^app\.nukemichi\.android\.feature\.[a-zA-Z0-9]+\.impl\.domain(\.|$)""")
-        val bannedImportPrefixes = listOf("androidx.compose.", "app.nukemichi.android.core.ui.")
+        val bannedImportPrefixes = listOf(
+            "androidx.compose.",
+            "app.nukemichi.android.platform.ui.",
+            "app.nukemichi.android.platform.navigation.",
+        )
         val violations = mutableListOf<String>()
 
         projectFiles.filter { domainPackage.containsMatchIn(it.packagee?.name.orEmpty()) }
@@ -153,7 +163,7 @@ class ArchitectureBoundariesTest {
 
         if (violations.isNotEmpty()) {
             fail(
-                "domain must not depend on UI structures (Compose, core.ui) - that dependency " +
+                "domain must not depend on UI structures (Compose, platform.ui, platform.navigation) - that dependency " +
                     "belongs in the ui layer:\n" + violations.joinToString("\n") { " - $it" }
             )
         }

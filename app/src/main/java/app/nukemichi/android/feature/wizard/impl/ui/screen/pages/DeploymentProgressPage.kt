@@ -32,14 +32,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import app.nukemichi.android.R
-import app.nukemichi.android.core.ui.theme.size.dimens
-import app.nukemichi.android.core.ui.util.UiText
-import app.nukemichi.android.core.ui.util.asString
+import app.nukemichi.android.feature.wizard.impl.ui.mvi.DeploymentPhase
+import app.nukemichi.android.feature.wizard.impl.ui.mvi.DeploymentUiState
 import app.nukemichi.android.feature.wizard.impl.ui.screen.components.DeploymentStepRow
 import app.nukemichi.android.feature.wizard.impl.ui.screen.components.DeploymentSuccessCelebration
 import app.nukemichi.android.feature.wizard.impl.ui.screen.components.LiveTerminalView
-import app.nukemichi.android.feature.wizard.impl.ui.mvi.DeploymentPhase
-import app.nukemichi.android.feature.wizard.impl.ui.mvi.DeploymentUiState
+import app.nukemichi.android.platform.ui.theme.size.dimens
+import app.nukemichi.android.platform.ui.util.UiText
+import app.nukemichi.android.platform.ui.util.asString
 
 @Composable
 internal fun DeploymentProgressPage(

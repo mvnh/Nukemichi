@@ -1,6 +1,7 @@
 package app.nukemichi.android.feature.settings.impl.ui.mvi
 
 import androidx.compose.runtime.Stable
+import app.nukemichi.android.core.mode.AppMode
 import app.nukemichi.android.core.mode.AppModeRepository
 import app.nukemichi.android.core.ui.mvi.MviViewModel
 import app.nukemichi.android.core.vpn.XrayProfileStore
@@ -33,12 +34,18 @@ internal class SettingsViewModel @Inject constructor(
 
     override suspend fun onIntent(intent: SettingsContract.Intent) {
         when (intent) {
-            is SettingsContract.Intent.ModeChanged -> appModeRepository.setMode(intent.mode)
+            is SettingsContract.Intent.AdvancedModeToggled -> if (intent.enabled) {
+                sendEffect(SettingsContract.Effect.NavigateToAdvancedModeIntro)
+            } else {
+                appModeRepository.setMode(AppMode.NORMAL)
+            }
 
-            is SettingsContract.Intent.RealityServerNameChanged -> updateProfile {
-                val reality = security as? XraySecurity.Reality ?: return@updateProfile this
-                copy(security = reality.copy(serverName = intent.value))
-            }.also { reduce { copy(realityServerName = intent.value) } }
+            SettingsContract.Intent.ViewLogsRequested -> sendEffect(SettingsContract.Effect.NavigateToLogs)
+
+            SettingsContract.Intent.ForgetServerRequested -> {
+                profileStore.clearActiveProfile()
+                sendEffect(SettingsContract.Effect.ServerForgotten)
+            }
 
             is SettingsContract.Intent.FingerprintChanged -> updateProfile {
                 val reality = security as? XraySecurity.Reality ?: return@updateProfile this
@@ -81,7 +88,6 @@ internal class SettingsViewModel @Inject constructor(
             return SettingsContract.State(
                 mode = appModeRepository.mode.value,
                 hasProfile = profile != null,
-                realityServerName = reality?.serverName.orEmpty(),
                 fingerprint = reality?.fingerprint ?: XrayFingerprint.EDGE,
                 transport = profile?.transport ?: XrayTransport.Xhttp(),
                 muxEnabled = profile?.muxEnabled ?: false,

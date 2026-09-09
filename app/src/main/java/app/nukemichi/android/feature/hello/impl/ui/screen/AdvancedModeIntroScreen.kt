@@ -114,9 +114,10 @@ private fun AdvancedModeIntroContent(
                     )
                     Spacer(modifier = Modifier.height(dimens.m))
                     BulletPoint(stringResource(id = R.string.advanced_mode_intro_capability_transport))
+                    BulletPoint(stringResource(id = R.string.advanced_mode_intro_capability_camouflage))
+                    BulletPoint(stringResource(id = R.string.advanced_mode_intro_capability_mtu))
                     BulletPoint(stringResource(id = R.string.advanced_mode_intro_capability_config))
-                    BulletPoint(stringResource(id = R.string.advanced_mode_intro_capability_stats))
-                    BulletPoint(stringResource(id = R.string.advanced_mode_intro_capability_tty))
+                    BulletPoint(stringResource(id = R.string.advanced_mode_intro_capability_tunnel))
                 }
             }
 

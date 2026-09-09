@@ -10,14 +10,14 @@ import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
 @Suppress("CheckReturnValue")
-internal val _check: ImageVector
+internal val _arrow_back_filled: ImageVector
     get() {
-        if (__check != null) {
-            return __check!!
+        if (__arrow_back_filled != null) {
+            return __arrow_back_filled!!
         }
-        __check =
+        __arrow_back_filled =
             ImageVector.Builder(
-                name = "check",
+                name = "arrow_back",
                 defaultWidth = 24.dp,
                 defaultHeight = 24.dp,
                 viewportWidth = 24f,
@@ -35,17 +35,21 @@ internal val _check: ImageVector
                         strokeLineMiter = 1f,
                         pathFillType = PathFillType.NonZero,
                     ) {
-                        moveTo(9f, 16.17f)
-                        lineTo(4.83f, 12f)
-                        lineTo(3.41f, 13.41f)
-                        lineTo(9f, 19f)
-                        lineTo(21f, 7f)
-                        lineTo(19.59f, 5.59f)
+                        moveTo(7.83f, 13f)
+                        lineToRelative(5.6f, 5.6f)
+                        lineTo(12f, 20f)
+                        lineTo(4f, 12f)
+                        lineTo(12f, 4f)
+                        lineToRelative(1.43f, 1.4f)
+                        lineTo(7.83f, 11f)
+                        horizontalLineTo(20f)
+                        verticalLineToRelative(2f)
+                        horizontalLineTo(7.83f)
                         close()
                     }
                 }
                 .build()
-        return __check!!
+        return __arrow_back_filled!!
     }
 
-private var __check: ImageVector? = null
+private var __arrow_back_filled: ImageVector? = null

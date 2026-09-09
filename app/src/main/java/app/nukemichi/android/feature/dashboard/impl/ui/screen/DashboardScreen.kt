@@ -120,7 +120,7 @@ internal fun DashboardScreen(
         ) {
             IconButton(onClick = onSettingsClick) {
                 Icon(
-                    imageVector = NukemichiIcons.Navigation.Settings,
+                    imageVector = NukemichiIcons.Outlined.Settings,
                     contentDescription = stringResource(R.string.settings_title),
                 )
             }
@@ -158,7 +158,7 @@ private fun DashboardContent(
             if (state.profileName != null) {
                 TextButton(onClick = onExportVlessLinkClick) {
                     Icon(
-                        imageVector = NukemichiIcons.Navigation.Share,
+                        imageVector = NukemichiIcons.Filled.Share,
                         contentDescription = null,
                         tint = MaterialTheme.colorScheme.onSurfaceVariant,
                         modifier = Modifier.size(dimens.l),

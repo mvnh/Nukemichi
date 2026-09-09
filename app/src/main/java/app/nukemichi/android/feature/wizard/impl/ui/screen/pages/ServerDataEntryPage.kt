@@ -77,7 +77,7 @@ internal fun ServerDataEntryPage(
         Spacer(modifier = Modifier.height(dimens.l))
 
         SectionHeader(
-            icon = NukemichiIcons.Common.Dns,
+            icon = NukemichiIcons.Outlined.Dns,
             title = UiText.Resource(R.string.wizard_server_data_connection_title)
         )
 
@@ -98,7 +98,7 @@ internal fun ServerDataEntryPage(
         Spacer(modifier = Modifier.height(dimens.l))
 
         SectionHeader(
-            icon = NukemichiIcons.Common.Lock,
+            icon = NukemichiIcons.Filled.Lock,
             title = UiText.Resource(R.string.wizard_server_data_authentication)
         )
 
@@ -142,9 +142,9 @@ internal fun ServerDataEntryPage(
                             IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
                                 Icon(
                                     imageVector = if (isPasswordVisible) {
-                                        NukemichiIcons.Common.VisibilityOff
+                                        NukemichiIcons.Filled.VisibilityOff
                                     } else {
-                                        NukemichiIcons.Common.Visibility
+                                        NukemichiIcons.Filled.Visibility
                                     },
                                     contentDescription = null,
                                 )

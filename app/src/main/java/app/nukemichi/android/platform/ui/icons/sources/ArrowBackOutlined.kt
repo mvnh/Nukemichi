@@ -10,14 +10,14 @@ import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
 @Suppress("CheckReturnValue")
-internal val _arrow_drop_up: ImageVector
+internal val _arrow_back_outlined: ImageVector
     get() {
-        if (__arrow_drop_up != null) {
-            return __arrow_drop_up!!
+        if (__arrow_back_outlined != null) {
+            return __arrow_back_outlined!!
         }
-        __arrow_drop_up =
+        __arrow_back_outlined =
             ImageVector.Builder(
-                name = "arrow_drop_up",
+                name = "arrow_back",
                 defaultWidth = 24.dp,
                 defaultHeight = 24.dp,
                 viewportWidth = 24f,
@@ -33,17 +33,23 @@ internal val _arrow_drop_up: ImageVector
                         strokeLineCap = StrokeCap.Butt,
                         strokeLineJoin = StrokeJoin.Bevel,
                         strokeLineMiter = 1f,
-                        pathFillType = PathFillType.Companion.NonZero,
+                        pathFillType = PathFillType.NonZero,
                     ) {
-                        moveTo(7f, 14f)
-                        lineTo(12f, 9f)
-                        lineToRelative(5f, 5f)
-                        horizontalLineTo(7f)
+                        moveTo(7.83f, 13f)
+                        lineToRelative(5.6f, 5.6f)
+                        lineTo(12f, 20f)
+                        lineTo(4f, 12f)
+                        lineTo(12f, 4f)
+                        lineToRelative(1.43f, 1.4f)
+                        lineTo(7.83f, 11f)
+                        horizontalLineTo(20f)
+                        verticalLineToRelative(2f)
+                        horizontalLineTo(7.83f)
                         close()
                     }
                 }
                 .build()
-        return __arrow_drop_up!!
+        return __arrow_back_outlined!!
     }
 
-private var __arrow_drop_up: ImageVector? = null
+private var __arrow_back_outlined: ImageVector? = null

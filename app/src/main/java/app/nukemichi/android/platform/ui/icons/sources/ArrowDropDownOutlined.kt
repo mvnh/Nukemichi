@@ -10,12 +10,12 @@ import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
 @Suppress("CheckReturnValue")
-internal val _arrow_drop_down: ImageVector
+internal val _arrow_drop_down_outlined: ImageVector
     get() {
-        if (__arrow_drop_down != null) {
-            return __arrow_drop_down!!
+        if (__arrow_drop_down_outlined != null) {
+            return __arrow_drop_down_outlined!!
         }
-        __arrow_drop_down =
+        __arrow_drop_down_outlined =
             ImageVector.Builder(
                 name = "arrow_drop_down",
                 defaultWidth = 24.dp,
@@ -33,7 +33,7 @@ internal val _arrow_drop_down: ImageVector
                         strokeLineCap = StrokeCap.Butt,
                         strokeLineJoin = StrokeJoin.Bevel,
                         strokeLineMiter = 1f,
-                        pathFillType = PathFillType.Companion.NonZero,
+                        pathFillType = PathFillType.NonZero,
                     ) {
                         moveTo(12f, 15f)
                         lineTo(7f, 10f)
@@ -43,7 +43,7 @@ internal val _arrow_drop_down: ImageVector
                     }
                 }
                 .build()
-        return __arrow_drop_down!!
+        return __arrow_drop_down_outlined!!
     }
 
-private var __arrow_drop_down: ImageVector? = null
+private var __arrow_drop_down_outlined: ImageVector? = null

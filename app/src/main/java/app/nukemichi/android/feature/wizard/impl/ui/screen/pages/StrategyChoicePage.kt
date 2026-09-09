@@ -57,7 +57,7 @@ internal fun StrategyChoicePage(
         StrategyCard(
             title = UiText.Resource(R.string.wizard_strategy_fast_start_title),
             description = UiText.Resource(R.string.wizard_strategy_fast_start_desc),
-            icon = NukemichiIcons.Common.RocketLaunch,
+            icon = NukemichiIcons.Outlined.RocketLaunch,
             requirement = UiText.Resource(R.string.wizard_requirement_fast_start),
             badgeText = UiText.Resource(R.string.wizard_tag_recommended),
             techStack = persistentListOf(
@@ -77,7 +77,7 @@ internal fun StrategyChoicePage(
         StrategyCard(
             title = UiText.Resource(R.string.wizard_strategy_resilience_title),
             description = UiText.Resource(R.string.wizard_strategy_resilience_desc),
-            icon = NukemichiIcons.Common.Shield,
+            icon = NukemichiIcons.Outlined.Shield,
             requirement = UiText.Resource(R.string.wizard_requirement_resilience),
             badgeText = UiText.Resource(R.string.badge_soon),
             techStack = persistentListOf(
@@ -224,7 +224,7 @@ internal fun StrategyRequirement(
         horizontalArrangement = Arrangement.spacedBy(dimens.s)
     ) {
         Icon(
-            imageVector = NukemichiIcons.Common.Dns,
+            imageVector = NukemichiIcons.Outlined.Dns,
             contentDescription = null,
             modifier = Modifier.size(dimens.l),
             tint = MaterialTheme.colorScheme.onSurfaceVariant
@@ -256,7 +256,7 @@ internal fun TechStackRow(
                 horizontalArrangement = Arrangement.spacedBy(dimens.xs)
             ) {
                 Icon(
-                    imageVector = NukemichiIcons.Common.Cable,
+                    imageVector = NukemichiIcons.Outlined.Cable,
                     contentDescription = null,
                     modifier = Modifier.size(dimens.m),
                     tint = MaterialTheme.colorScheme.onSurfaceVariant

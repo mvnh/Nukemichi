@@ -10,12 +10,12 @@ import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
 @Suppress("CheckReturnValue")
-internal val _cable: ImageVector
+internal val _cable_outlined: ImageVector
     get() {
-        if (__cable != null) {
-            return __cable!!
+        if (__cable_outlined != null) {
+            return __cable_outlined!!
         }
-        __cable =
+        __cable_outlined =
             ImageVector.Builder(
                 name = "cable",
                 defaultWidth = 24.dp,
@@ -96,7 +96,7 @@ internal val _cable: ImageVector
                     }
                 }
                 .build()
-        return __cable!!
+        return __cable_outlined!!
     }
 
-private var __cable: ImageVector? = null
+private var __cable_outlined: ImageVector? = null

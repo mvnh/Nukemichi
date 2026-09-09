@@ -10,12 +10,12 @@ import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
 @Suppress("CheckReturnValue")
-internal val _lock: ImageVector
+internal val _lock_filled: ImageVector
     get() {
-        if (__lock != null) {
-            return __lock!!
+        if (__lock_filled != null) {
+            return __lock_filled!!
         }
-        __lock =
+        __lock_filled =
             ImageVector.Builder(
                 name = "lock",
                 defaultWidth = 24.dp,
@@ -78,7 +78,7 @@ internal val _lock: ImageVector
                     }
                 }
                 .build()
-        return __lock!!
+        return __lock_filled!!
     }
 
-private var __lock: ImageVector? = null
+private var __lock_filled: ImageVector? = null

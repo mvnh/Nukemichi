@@ -10,14 +10,14 @@ import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
 @Suppress("CheckReturnValue")
-internal val _close: ImageVector
+internal val _check_filled: ImageVector
     get() {
-        if (__close != null) {
-            return __close!!
+        if (__check_filled != null) {
+            return __check_filled!!
         }
-        __close =
+        __check_filled =
             ImageVector.Builder(
-                name = "close",
+                name = "check",
                 defaultWidth = 24.dp,
                 defaultHeight = 24.dp,
                 viewportWidth = 24f,
@@ -35,24 +35,18 @@ internal val _close: ImageVector
                         strokeLineMiter = 1f,
                         pathFillType = PathFillType.NonZero,
                     ) {
-                        moveTo(6.4f, 19f)
-                        lineTo(5f, 17.6f)
-                        lineTo(10.6f, 12f)
-                        lineTo(5f, 6.4f)
-                        lineTo(6.4f, 5f)
-                        lineTo(12f, 10.6f)
-                        lineTo(17.6f, 5f)
-                        lineTo(19f, 6.4f)
-                        lineTo(13.4f, 12f)
-                        lineTo(19f, 17.6f)
-                        lineTo(17.6f, 19f)
-                        lineTo(12f, 13.4f)
-                        lineTo(6.4f, 19f)
+                        moveTo(9.55f, 18f)
+                        lineTo(3.85f, 12.3f)
+                        lineTo(5.28f, 10.88f)
+                        lineToRelative(4.28f, 4.28f)
+                        lineTo(18.73f, 5.97f)
+                        lineTo(20.15f, 7.4f)
+                        lineTo(9.55f, 18f)
                         close()
                     }
                 }
                 .build()
-        return __close!!
+        return __check_filled!!
     }
 
-private var __close: ImageVector? = null
+private var __check_filled: ImageVector? = null

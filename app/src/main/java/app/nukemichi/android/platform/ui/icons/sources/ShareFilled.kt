@@ -10,12 +10,12 @@ import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
 @Suppress("CheckReturnValue")
-internal val _share: ImageVector
+internal val _share_filled: ImageVector
     get() {
-        if (__share != null) {
-            return __share!!
+        if (__share_filled != null) {
+            return __share_filled!!
         }
-        __share =
+        __share_filled =
             ImageVector.Builder(
                 name = "share",
                 defaultWidth = 24.dp,
@@ -75,7 +75,7 @@ internal val _share: ImageVector
                     }
                 }
                 .build()
-        return __share!!
+        return __share_filled!!
     }
 
-private var __share: ImageVector? = null
+private var __share_filled: ImageVector? = null

@@ -10,12 +10,12 @@ import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
 @Suppress("CheckReturnValue")
-internal val _vpn_key: ImageVector
+internal val _vpn_key_outlined: ImageVector
     get() {
-        if (__vpn_key != null) {
-            return __vpn_key!!
+        if (__vpn_key_outlined != null) {
+            return __vpn_key_outlined!!
         }
-        __vpn_key =
+        __vpn_key_outlined =
             ImageVector.Builder(
                 name = "vpn_key",
                 defaultWidth = 24.dp,
@@ -40,17 +40,34 @@ internal val _vpn_key: ImageVector
                         reflectiveQuadTo(1f, 12f)
                         reflectiveQuadTo(2.75f, 7.75f)
                         reflectiveQuadTo(7f, 6f)
-                        quadToRelative(2.03f, 0f, 3.54f, 1.14f)
-                        reflectiveQuadTo(12.65f, 10f)
+                        quadToRelative(1.65f, 0f, 3.03f, 0.82f)
+                        reflectiveQuadTo(12.2f, 9f)
                         horizontalLineTo(23f)
-                        verticalLineToRelative(4f)
+                        verticalLineToRelative(6f)
                         horizontalLineTo(21f)
-                        verticalLineToRelative(4f)
-                        horizontalLineTo(17f)
-                        verticalLineTo(14f)
-                        horizontalLineTo(12.65f)
-                        quadToRelative(-0.6f, 1.72f, -2.11f, 2.86f)
+                        verticalLineToRelative(3f)
+                        horizontalLineTo(15f)
+                        verticalLineTo(15f)
+                        horizontalLineTo(12.2f)
+                        quadToRelative(-0.8f, 1.35f, -2.18f, 2.18f)
                         reflectiveQuadTo(7f, 18f)
+                        close()
+                        moveTo(7f, 16f)
+                        quadToRelative(1.65f, 0f, 2.65f, -1.01f)
+                        quadToRelative(1f, -1.01f, 1.2f, -1.99f)
+                        horizontalLineTo(17f)
+                        verticalLineToRelative(3f)
+                        horizontalLineToRelative(2f)
+                        verticalLineTo(13f)
+                        horizontalLineToRelative(2f)
+                        verticalLineTo(11f)
+                        horizontalLineTo(10.85f)
+                        quadTo(10.65f, 10.02f, 9.65f, 9.01f)
+                        reflectiveQuadTo(7f, 8f)
+                        reflectiveQuadTo(4.18f, 9.17f)
+                        reflectiveQuadTo(3f, 12f)
+                        reflectiveQuadToRelative(1.17f, 2.82f)
+                        reflectiveQuadTo(7f, 16f)
                         close()
                         moveTo(7f, 14f)
                         quadToRelative(0.83f, 0f, 1.41f, -0.59f)
@@ -62,10 +79,12 @@ internal val _vpn_key: ImageVector
                         reflectiveQuadToRelative(0.59f, 1.41f)
                         reflectiveQuadTo(7f, 14f)
                         close()
+                        moveTo(7f, 12f)
+                        close()
                     }
                 }
                 .build()
-        return __vpn_key!!
+        return __vpn_key_outlined!!
     }
 
-private var __vpn_key: ImageVector? = null
+private var __vpn_key_outlined: ImageVector? = null

@@ -45,7 +45,7 @@ internal fun ConnectionToggle(
             CircularProgressIndicator(color = iconColor)
         } else {
             Icon(
-                imageVector = if (state.isConnected) NukemichiIcons.Common.Shield else NukemichiIcons.Common.Cable,
+                imageVector = if (state.isConnected) NukemichiIcons.Outlined.Shield else NukemichiIcons.Outlined.Cable,
                 contentDescription = null,
                 tint = iconColor,
                 modifier = Modifier.size(dimens.xxl),

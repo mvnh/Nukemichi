@@ -70,7 +70,7 @@ private fun StepIndicator(status: StepStatus, modifier: Modifier = Modifier) {
             contentAlignment = Alignment.Center,
         ) {
             Icon(
-                imageVector = NukemichiIcons.Common.Check,
+                imageVector = NukemichiIcons.Outlined.Check,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onPrimary,
                 modifier = Modifier.size(dimens.l),
@@ -84,7 +84,7 @@ private fun StepIndicator(status: StepStatus, modifier: Modifier = Modifier) {
             contentAlignment = Alignment.Center,
         ) {
             Icon(
-                imageVector = NukemichiIcons.Navigation.Close,
+                imageVector = NukemichiIcons.Outlined.Close,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onError,
                 modifier = Modifier.size(dimens.l),

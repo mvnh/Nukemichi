@@ -10,14 +10,14 @@ import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
 @Suppress("CheckReturnValue")
-internal val _shield: ImageVector
+internal val _close_outlined: ImageVector
     get() {
-        if (__shield != null) {
-            return __shield!!
+        if (__close_outlined != null) {
+            return __close_outlined!!
         }
-        __shield =
+        __close_outlined =
             ImageVector.Builder(
-                name = "shield",
+                name = "close",
                 defaultWidth = 24.dp,
                 defaultHeight = 24.dp,
                 viewportWidth = 24f,
@@ -35,32 +35,24 @@ internal val _shield: ImageVector
                         strokeLineMiter = 1f,
                         pathFillType = PathFillType.NonZero,
                     ) {
-                        moveTo(12f, 22f)
-                        quadTo(8.53f, 21.13f, 6.26f, 18.01f)
-                        reflectiveQuadTo(4f, 11.1f)
-                        verticalLineTo(5f)
-                        lineTo(12f, 2f)
-                        lineToRelative(8f, 3f)
-                        verticalLineToRelative(6.1f)
-                        quadToRelative(0f, 3.8f, -2.26f, 6.91f)
-                        reflectiveQuadTo(12f, 22f)
-                        close()
-                        moveToRelative(0f, -2.1f)
-                        quadToRelative(2.6f, -0.82f, 4.3f, -3.3f)
-                        reflectiveQuadTo(18f, 11.1f)
-                        verticalLineTo(6.38f)
-                        lineTo(12f, 4.13f)
-                        lineTo(6f, 6.38f)
-                        verticalLineTo(11.1f)
-                        quadToRelative(0f, 3.03f, 1.7f, 5.5f)
-                        reflectiveQuadTo(12f, 19.9f)
-                        close()
-                        moveTo(12f, 12f)
+                        moveTo(6.4f, 19f)
+                        lineTo(5f, 17.6f)
+                        lineTo(10.6f, 12f)
+                        lineTo(5f, 6.4f)
+                        lineTo(6.4f, 5f)
+                        lineTo(12f, 10.6f)
+                        lineTo(17.6f, 5f)
+                        lineTo(19f, 6.4f)
+                        lineTo(13.4f, 12f)
+                        lineTo(19f, 17.6f)
+                        lineTo(17.6f, 19f)
+                        lineTo(12f, 13.4f)
+                        lineTo(6.4f, 19f)
                         close()
                     }
                 }
                 .build()
-        return __shield!!
+        return __close_outlined!!
     }
 
-private var __shield: ImageVector? = null
+private var __close_outlined: ImageVector? = null

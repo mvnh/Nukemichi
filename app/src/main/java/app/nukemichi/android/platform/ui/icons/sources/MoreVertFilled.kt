@@ -10,12 +10,12 @@ import androidx.compose.ui.graphics.vector.path
 import androidx.compose.ui.unit.dp
 
 @Suppress("CheckReturnValue")
-internal val _more_vert: ImageVector
+internal val _more_vert_filled: ImageVector
     get() {
-        if (__more_vert != null) {
-            return __more_vert!!
+        if (__more_vert_filled != null) {
+            return __more_vert_filled!!
         }
-        __more_vert =
+        __more_vert_filled =
             ImageVector.Builder(
                 name = "more_vert",
                 defaultWidth = 24.dp,
@@ -68,7 +68,7 @@ internal val _more_vert: ImageVector
                     }
                 }
                 .build()
-        return __more_vert!!
+        return __more_vert_filled!!
     }
 
-private var __more_vert: ImageVector? = null
+private var __more_vert_filled: ImageVector? = null

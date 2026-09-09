@@ -68,7 +68,7 @@ internal fun DeploymentSuccessCelebration(
             contentAlignment = Alignment.Center,
         ) {
             Icon(
-                imageVector = NukemichiIcons.Common.Check,
+                imageVector = NukemichiIcons.Outlined.Check,
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.onPrimary,
                 modifier = Modifier.size(dimens.xl),

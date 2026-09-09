@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -59,7 +60,7 @@ private const val SLOW_TRANSITION_HINT_DELAY_MS = 5_000L
 
 @Composable
 internal fun DashboardScreen(
-    onNavigateToLogs: () -> Unit,
+    onSettingsClick: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: DashboardViewModel = hiltViewModel(),
 ) {
@@ -117,8 +118,11 @@ internal fun DashboardScreen(
                 .padding(MaterialTheme.dimens.m),
             horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.s),
         ) {
-            TextButton(onClick = onNavigateToLogs) {
-                Text(text = stringResource(R.string.dashboard_logs))
+            IconButton(onClick = onSettingsClick) {
+                Icon(
+                    imageVector = NukemichiIcons.Navigation.Settings,
+                    contentDescription = stringResource(R.string.settings_title),
+                )
             }
         }
         SnackbarHost(hostState = snackbarHostState, modifier = Modifier.align(Alignment.BottomCenter))

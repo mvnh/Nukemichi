@@ -12,6 +12,7 @@ import app.nukemichi.android.core.ui.icons.sources._dns
 import app.nukemichi.android.core.ui.icons.sources._lock
 import app.nukemichi.android.core.ui.icons.sources._more_vert
 import app.nukemichi.android.core.ui.icons.sources._rocket_launch
+import app.nukemichi.android.core.ui.icons.sources._settings
 import app.nukemichi.android.core.ui.icons.sources._share
 import app.nukemichi.android.core.ui.icons.sources._shield
 import app.nukemichi.android.core.ui.icons.sources._visibility
@@ -40,5 +41,6 @@ object NukemichiIcons {
         val Close: ImageVector get() = _close
         val MoreVert: ImageVector get() = _more_vert
         val Share: ImageVector get() = _share
+        val Settings: ImageVector get() = _settings
     }
 }

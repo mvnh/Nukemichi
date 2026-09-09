@@ -1,17 +1,22 @@
 <resources>
     <string name="settings_title">Settings</string>
-    <string name="settings_mode_section_title">Mode</string>
-    <string name="settings_mode_normal_title">Normal</string>
-    <string name="settings_mode_normal_description">Connect with one tap. Everything else is automatic.</string>
-    <string name="settings_mode_advanced_title">Advanced</string>
-    <string name="settings_mode_advanced_description">Pick the transport, edit the config, see per-connection stats.</string>
+
+    <string name="settings_general_section_title">General</string>
+    <string name="settings_view_logs_title">View logs</string>
+    <string name="settings_view_logs_description">See what Xray has been doing.</string>
+    <string name="settings_forget_server_title">Forget this server</string>
+    <string name="settings_forget_server_description">Remove the saved connection and start over.</string>
+    <string name="settings_forget_server_confirm_title">Forget this server?</string>
+    <string name="settings_forget_server_confirm_body">This removes the saved connection from this device. Your server keeps running, so you can set it up again anytime.</string>
 
     <string name="settings_advanced_section_title">Advanced</string>
-    <string name="settings_sni_override_title">Masking domain (SNI)</string>
-    <string name="settings_sni_override_warning">Must match the domain your server was deployed with, or the connection will fail.</string>
     <string name="settings_utls_fingerprint_title">TLS fingerprint</string>
     <string name="settings_mux_title">Multiplexing</string>
     <string name="settings_mux_description">Share one connection across multiple streams.</string>
     <string name="settings_mux_concurrency">Concurrency: %1$d</string>
     <string name="settings_export_vless_link">Export as vless:// link</string>
+
+    <string name="settings_danger_zone_title">Danger zone</string>
+    <string name="settings_advanced_mode_toggle_title">Advanced mode</string>
+    <string name="settings_advanced_mode_toggle_description">Manual transport, camouflage, and config tuning. Most people don\'t need this.</string>
 </resources>

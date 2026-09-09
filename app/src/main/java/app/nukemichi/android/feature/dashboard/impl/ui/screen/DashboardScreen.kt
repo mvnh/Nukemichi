@@ -120,7 +120,7 @@ internal fun DashboardScreen(
         ) {
             IconButton(onClick = onSettingsClick) {
                 Icon(
-                    imageVector = NukemichiIcons.Navigation.Settings,
+                    imageVector = NukemichiIcons.Outlined.Settings,
                     contentDescription = stringResource(R.string.settings_title),
                 )
             }

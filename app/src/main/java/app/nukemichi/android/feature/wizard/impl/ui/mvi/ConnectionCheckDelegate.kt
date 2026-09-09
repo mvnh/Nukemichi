@@ -2,14 +2,14 @@ package app.nukemichi.android.feature.wizard.impl.ui.mvi
 
 import app.nukemichi.android.R
 import app.nukemichi.android.core.ssh.model.SshUntrustedHostException
-import app.nukemichi.android.core.ui.mvi.ViewModelDelegate
-import app.nukemichi.android.core.ui.util.UiText
 import app.nukemichi.android.feature.wizard.impl.domain.WizardSetupCoordinator
+import app.nukemichi.android.platform.ui.mvi.ViewModelDelegate
+import app.nukemichi.android.platform.ui.util.UiText
+import javax.inject.Inject
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import javax.inject.Inject
-import kotlin.time.Duration.Companion.milliseconds
 
 internal class ConnectionCheckDelegate @Inject constructor(
     private val coordinator: WizardSetupCoordinator,

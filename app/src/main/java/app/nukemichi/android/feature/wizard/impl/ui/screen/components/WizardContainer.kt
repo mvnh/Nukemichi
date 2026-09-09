@@ -53,13 +53,13 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.IntOffset
 import app.nukemichi.android.R
-import app.nukemichi.android.core.ui.icons.NukemichiIcons
-import app.nukemichi.android.core.ui.theme.size.dimens
-import app.nukemichi.android.core.ui.util.UiText
-import app.nukemichi.android.core.ui.util.asString
 import app.nukemichi.android.feature.wizard.impl.ui.model.WizardScopeImpl
 import app.nukemichi.android.feature.wizard.impl.ui.model.WizardState
 import app.nukemichi.android.feature.wizard.impl.ui.model.WizardStep
+import app.nukemichi.android.platform.ui.icons.NukemichiIcons
+import app.nukemichi.android.platform.ui.theme.size.dimens
+import app.nukemichi.android.platform.ui.util.UiText
+import app.nukemichi.android.platform.ui.util.asString
 import kotlinx.collections.immutable.ImmutableList
 
 private const val WIZARD_ANIMATION_DURATION = 350

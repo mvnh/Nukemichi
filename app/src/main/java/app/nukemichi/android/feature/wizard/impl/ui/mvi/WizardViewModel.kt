@@ -2,12 +2,9 @@ package app.nukemichi.android.feature.wizard.impl.ui.mvi
 
 import androidx.compose.runtime.Stable
 import app.nukemichi.android.R
-import app.nukemichi.android.core.mode.AppModeRepository
 import app.nukemichi.android.core.storage.AppStorage
 import app.nukemichi.android.core.storage.ExperienceKeys
 import app.nukemichi.android.core.storage.StorageDomain
-import app.nukemichi.android.core.ui.mvi.MviViewModel
-import app.nukemichi.android.core.ui.util.UiText
 import app.nukemichi.android.core.vpn.XrayControl
 import app.nukemichi.android.core.vpn.XrayVpnProfile
 import app.nukemichi.android.core.vpn.configfactory.XrayClientConfigFactory
@@ -15,6 +12,9 @@ import app.nukemichi.android.feature.wizard.impl.domain.WizardSetupCoordinator
 import app.nukemichi.android.feature.wizard.impl.ui.mvi.WizardContract.Effect
 import app.nukemichi.android.feature.wizard.impl.ui.mvi.WizardContract.Intent
 import app.nukemichi.android.feature.wizard.impl.ui.mvi.WizardContract.State
+import app.nukemichi.android.platform.mode.AppModeRepository
+import app.nukemichi.android.platform.ui.mvi.MviViewModel
+import app.nukemichi.android.platform.ui.util.UiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.launchIn

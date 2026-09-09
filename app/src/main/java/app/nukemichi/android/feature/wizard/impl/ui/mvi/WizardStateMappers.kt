@@ -3,8 +3,8 @@ package app.nukemichi.android.feature.wizard.impl.ui.mvi
 import app.nukemichi.android.core.security.Secret
 import app.nukemichi.android.core.ssh.model.SshAuth
 import app.nukemichi.android.core.ssh.model.SshConfig
-import app.nukemichi.android.core.ui.util.UiSecret
 import app.nukemichi.android.feature.wizard.impl.domain.model.WizardProfileDraft
+import app.nukemichi.android.platform.ui.util.UiSecret
 
 internal fun WizardContract.State.toSshConfigOrNull(): SshConfig? =
     sshPort.toIntOrNull()?.takeIf { it in 1..65_535 }?.let { port ->

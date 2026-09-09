@@ -1,15 +1,14 @@
 package app.nukemichi.android.feature.settings.impl.ui.mvi
 
-import app.nukemichi.android.core.mode.AppMode
 import app.nukemichi.android.core.vpn.spec.XrayFingerprint
 import app.nukemichi.android.core.vpn.spec.XrayTransport
+import app.nukemichi.android.platform.mode.AppMode
 
 internal object SettingsContract {
 
     data class State(
         val mode: AppMode = AppMode.NORMAL,
         val hasProfile: Boolean = false,
-        val realityServerName: String = "",
         val fingerprint: XrayFingerprint = XrayFingerprint.EDGE,
         val transport: XrayTransport = XrayTransport.Xhttp(),
         val muxEnabled: Boolean = false,
@@ -17,8 +16,9 @@ internal object SettingsContract {
     )
 
     sealed interface Intent {
-        data class ModeChanged(val mode: AppMode) : Intent
-        data class RealityServerNameChanged(val value: String) : Intent
+        data class AdvancedModeToggled(val enabled: Boolean) : Intent
+        data object ViewLogsRequested : Intent
+        data object ForgetServerRequested : Intent
         data class FingerprintChanged(val value: XrayFingerprint) : Intent
         data class TransportChanged(val value: XrayTransport) : Intent
         data class MuxEnabledChanged(val enabled: Boolean) : Intent
@@ -28,6 +28,9 @@ internal object SettingsContract {
 
     sealed interface Effect {
         data class ShareVlessLink(val uri: String) : Effect
+        data object NavigateToAdvancedModeIntro : Effect
+        data object NavigateToLogs : Effect
+        data object ServerForgotten : Effect
     }
 }
 

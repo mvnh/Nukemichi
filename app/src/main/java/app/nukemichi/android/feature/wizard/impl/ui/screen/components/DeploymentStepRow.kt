@@ -17,11 +17,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import app.nukemichi.android.R
-import app.nukemichi.android.core.ui.icons.NukemichiIcons
-import app.nukemichi.android.core.ui.theme.size.dimens
 import app.nukemichi.android.feature.wizard.impl.domain.model.DeploymentStep
 import app.nukemichi.android.feature.wizard.impl.ui.mvi.DeploymentStepUi
 import app.nukemichi.android.feature.wizard.impl.ui.mvi.StepStatus
+import app.nukemichi.android.platform.ui.icons.NukemichiIcons
+import app.nukemichi.android.platform.ui.theme.size.dimens
 
 @Composable
 internal fun DeploymentStepRow(step: DeploymentStepUi, modifier: Modifier = Modifier) {

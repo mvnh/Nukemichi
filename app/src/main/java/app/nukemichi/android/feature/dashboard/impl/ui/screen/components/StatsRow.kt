@@ -14,8 +14,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import app.nukemichi.android.R
-import app.nukemichi.android.core.ui.theme.size.dimens
 import app.nukemichi.android.core.vpn.XrayTrafficStats
+import app.nukemichi.android.platform.ui.theme.size.dimens
 
 @Composable
 internal fun StatsRow(

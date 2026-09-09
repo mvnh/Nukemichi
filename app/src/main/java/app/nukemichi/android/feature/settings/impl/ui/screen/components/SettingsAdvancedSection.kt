@@ -2,13 +2,14 @@ package app.nukemichi.android.feature.settings.impl.ui.screen.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,17 +17,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import app.nukemichi.android.R
-import app.nukemichi.android.core.ui.theme.size.dimens
 import app.nukemichi.android.core.vpn.spec.XrayFingerprint
 import app.nukemichi.android.feature.settings.impl.ui.mvi.SettingsContract
+import app.nukemichi.android.platform.ui.theme.size.dimens
 
 private const val MIN_MUX_CONCURRENCY = 1
 private const val MAX_MUX_CONCURRENCY = 128
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 internal fun SettingsAdvancedSection(
     state: SettingsContract.State,
-    onRealityServerNameChanged: (String) -> Unit,
     onFingerprintChanged: (XrayFingerprint) -> Unit,
     onMuxEnabledChanged: (Boolean) -> Unit,
     onMuxConcurrencyChanged: (Int) -> Unit,
@@ -43,27 +44,15 @@ internal fun SettingsAdvancedSection(
         )
 
         Column(verticalArrangement = Arrangement.spacedBy(dimens.s)) {
-            OutlinedTextField(
-                value = state.realityServerName,
-                onValueChange = onRealityServerNameChanged,
-                label = { Text(stringResource(id = R.string.settings_sni_override_title)) },
-                singleLine = true,
-                modifier = Modifier.fillMaxWidth(),
-            )
-            Text(
-                text = stringResource(id = R.string.settings_sni_override_warning),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.error,
-            )
-        }
-
-        Column(verticalArrangement = Arrangement.spacedBy(dimens.s)) {
             Text(
                 text = stringResource(id = R.string.settings_utls_fingerprint_title),
                 style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.onSurface,
             )
-            Row(horizontalArrangement = Arrangement.spacedBy(dimens.s)) {
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(dimens.s),
+                verticalArrangement = Arrangement.spacedBy(dimens.s),
+            ) {
                 XrayFingerprint.entries.forEach { fingerprint ->
                     FilterChip(
                         selected = state.fingerprint == fingerprint,

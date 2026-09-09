@@ -35,9 +35,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import app.nukemichi.android.R
-import app.nukemichi.android.core.ui.icons.NukemichiIcons
-import app.nukemichi.android.core.ui.theme.size.dimens
 import app.nukemichi.android.feature.hello.impl.ui.mvi.AdvancedModeIntroViewModel
+import app.nukemichi.android.platform.ui.icons.NukemichiIcons
+import app.nukemichi.android.platform.ui.theme.size.dimens
 
 @Composable
 internal fun AdvancedModeIntroScreen(
@@ -114,9 +114,10 @@ private fun AdvancedModeIntroContent(
                     )
                     Spacer(modifier = Modifier.height(dimens.m))
                     BulletPoint(stringResource(id = R.string.advanced_mode_intro_capability_transport))
+                    BulletPoint(stringResource(id = R.string.advanced_mode_intro_capability_camouflage))
+                    BulletPoint(stringResource(id = R.string.advanced_mode_intro_capability_mtu))
                     BulletPoint(stringResource(id = R.string.advanced_mode_intro_capability_config))
-                    BulletPoint(stringResource(id = R.string.advanced_mode_intro_capability_stats))
-                    BulletPoint(stringResource(id = R.string.advanced_mode_intro_capability_tty))
+                    BulletPoint(stringResource(id = R.string.advanced_mode_intro_capability_tunnel))
                 }
             }
 

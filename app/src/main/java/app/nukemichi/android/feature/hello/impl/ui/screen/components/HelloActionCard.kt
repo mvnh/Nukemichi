@@ -20,11 +20,11 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import app.nukemichi.android.core.ui.components.StatusBadge
-import app.nukemichi.android.core.ui.theme.size.dimens
-import app.nukemichi.android.core.ui.util.UiText
-import app.nukemichi.android.core.ui.util.asString
-import app.nukemichi.android.core.ui.util.dashedBorder
+import app.nukemichi.android.platform.ui.components.StatusBadge
+import app.nukemichi.android.platform.ui.theme.size.dimens
+import app.nukemichi.android.platform.ui.util.UiText
+import app.nukemichi.android.platform.ui.util.asString
+import app.nukemichi.android.platform.ui.util.dashedBorder
 
 @Composable
 internal fun HelloActionCard(

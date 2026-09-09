@@ -28,6 +28,12 @@ internal class GoLogcatReader(
                 throw cancellation
             } catch (error: IOException) {
                 Timber.d(error, "GoLogcatReader: stream closed")
+            } catch (error: Exception) {
+                // Anything else - e.g. the logcat binary missing, or the pid lookup itself
+                // failing - is just as non-fatal to xray-core's own operation as a closed
+                // stream: logs are best-effort, so degrade to "no logs" instead of leaving this
+                // scope's coroutine to fail uncaught.
+                Timber.w(error, "GoLogcatReader: unable to read xray-core's logcat stream")
             }
         }
     }

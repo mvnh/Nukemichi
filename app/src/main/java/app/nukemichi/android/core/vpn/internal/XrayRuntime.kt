@@ -1,10 +1,12 @@
 package app.nukemichi.android.core.vpn.internal
 
 import android.content.Context
-import app.nukemichi.android.core.di.IoDispatcher
 import app.nukemichi.android.core.vpn.XrayRuntimeConfig
 import app.nukemichi.android.core.vpn.XrayStatsSource
+import app.nukemichi.android.platform.di.IoDispatcher
 import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
+import javax.inject.Singleton
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -16,8 +18,6 @@ import kotlinx.coroutines.withTimeoutOrNull
 import libv2ray.CoreCallbackHandler
 import libv2ray.CoreController
 import libv2ray.Libv2ray
-import javax.inject.Inject
-import javax.inject.Singleton
 
 @Singleton
 internal class XrayRuntime @Inject constructor(

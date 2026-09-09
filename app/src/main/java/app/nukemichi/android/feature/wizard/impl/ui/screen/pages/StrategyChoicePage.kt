@@ -25,14 +25,14 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import app.nukemichi.android.R
-import app.nukemichi.android.core.ui.components.StatusBadge
-import app.nukemichi.android.core.ui.icons.NukemichiIcons
-import app.nukemichi.android.core.ui.theme.size.dimens
-import app.nukemichi.android.core.ui.util.UiText
-import app.nukemichi.android.core.ui.util.asString
-import app.nukemichi.android.core.ui.util.dashedBorder
-import app.nukemichi.android.feature.wizard.impl.ui.screen.components.WizardPage
 import app.nukemichi.android.feature.wizard.impl.ui.mvi.WizardContract.SetupStrategy
+import app.nukemichi.android.feature.wizard.impl.ui.screen.components.WizardPage
+import app.nukemichi.android.platform.ui.components.StatusBadge
+import app.nukemichi.android.platform.ui.icons.NukemichiIcons
+import app.nukemichi.android.platform.ui.theme.size.dimens
+import app.nukemichi.android.platform.ui.util.UiText
+import app.nukemichi.android.platform.ui.util.asString
+import app.nukemichi.android.platform.ui.util.dashedBorder
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.persistentListOf
 

@@ -1,15 +1,15 @@
 package app.nukemichi.android.core.ssh.di
 
-import app.nukemichi.android.core.di.IoDispatcher
 import app.nukemichi.android.core.ssh.SshManager
 import app.nukemichi.android.core.ssh.internal.SshjManager
 import app.nukemichi.android.core.storage.AppStorage
+import app.nukemichi.android.platform.di.IoDispatcher
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import kotlinx.coroutines.CoroutineDispatcher
 import javax.inject.Singleton
+import kotlinx.coroutines.CoroutineDispatcher
 
 @Module
 @InstallIn(SingletonComponent::class)

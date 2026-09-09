@@ -1,17 +1,22 @@
 <resources>
     <string name="settings_title">Настройки</string>
-    <string name="settings_mode_section_title">Режим</string>
-    <string name="settings_mode_normal_title">Обычный</string>
-    <string name="settings_mode_normal_description">Подключение в один тап. Всё остальное автоматически.</string>
-    <string name="settings_mode_advanced_title">Расширенный</string>
-    <string name="settings_mode_advanced_description">Выбор транспорта, редактирование конфига, статистика по соединениям.</string>
+
+    <string name="settings_general_section_title">Основное</string>
+    <string name="settings_view_logs_title">Просмотреть журнал</string>
+    <string name="settings_view_logs_description">Что делал Xray за последнее время.</string>
+    <string name="settings_forget_server_title">Забыть этот сервер</string>
+    <string name="settings_forget_server_description">Удалить сохранённое подключение и начать заново.</string>
+    <string name="settings_forget_server_confirm_title">Забыть этот сервер?</string>
+    <string name="settings_forget_server_confirm_body">Сохранённое подключение удалится с этого устройства. Сам сервер продолжит работать, так что настроить его заново можно в любой момент.</string>
 
     <string name="settings_advanced_section_title">Расширенные</string>
-    <string name="settings_sni_override_title">Маскировочный домен (SNI)</string>
-    <string name="settings_sni_override_warning">Должен совпадать с доменом, с которым развёрнут сервер, иначе соединение не установится.</string>
     <string name="settings_utls_fingerprint_title">TLS-отпечаток</string>
     <string name="settings_mux_title">Мультиплексирование</string>
     <string name="settings_mux_description">Использовать одно соединение для нескольких потоков.</string>
     <string name="settings_mux_concurrency">Конкурентность: %1$d</string>
     <string name="settings_export_vless_link">Экспортировать как vless://-ссылку</string>
+
+    <string name="settings_danger_zone_title">Опасная зона</string>
+    <string name="settings_advanced_mode_toggle_title">Расширенный режим</string>
+    <string name="settings_advanced_mode_toggle_description">Ручная настройка транспорта, маскировки и конфига. Обычно это не нужно.</string>
 </resources>

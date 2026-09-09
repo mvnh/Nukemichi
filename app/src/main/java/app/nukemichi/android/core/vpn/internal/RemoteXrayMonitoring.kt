@@ -9,13 +9,15 @@ import android.os.IBinder
 import android.os.Looper
 import android.os.Message
 import android.os.Messenger
-import app.nukemichi.android.core.di.MainDispatcher
 import app.nukemichi.android.core.vpn.XrayEngineState
 import app.nukemichi.android.core.vpn.XrayLogLevel
 import app.nukemichi.android.core.vpn.XrayLogMessage
 import app.nukemichi.android.core.vpn.XrayMonitoring
 import app.nukemichi.android.core.vpn.XrayTrafficStats
+import app.nukemichi.android.platform.di.MainDispatcher
 import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
+import javax.inject.Singleton
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
@@ -30,8 +32,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.shareIn
 import kotlinx.coroutines.flow.stateIn
 import timber.log.Timber
-import javax.inject.Inject
-import javax.inject.Singleton
 
 @Singleton
 internal class RemoteXrayMonitoring @Inject constructor(

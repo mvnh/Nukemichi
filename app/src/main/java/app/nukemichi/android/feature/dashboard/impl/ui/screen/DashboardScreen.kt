@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -40,12 +41,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import app.nukemichi.android.R
-import app.nukemichi.android.core.ui.components.StatusBadge
-import app.nukemichi.android.core.ui.icons.NukemichiIcons
-import app.nukemichi.android.core.ui.theme.size.dimens
-import app.nukemichi.android.core.ui.util.CollectAsEffect
-import app.nukemichi.android.core.ui.util.UiText
-import app.nukemichi.android.core.ui.util.asString
 import app.nukemichi.android.core.vpn.XrayEngineState
 import app.nukemichi.android.feature.dashboard.impl.ui.mvi.DashboardContract
 import app.nukemichi.android.feature.dashboard.impl.ui.mvi.DashboardViewModel
@@ -53,13 +48,19 @@ import app.nukemichi.android.feature.dashboard.impl.ui.mvi.isConnected
 import app.nukemichi.android.feature.dashboard.impl.ui.screen.components.ConnectionToggle
 import app.nukemichi.android.feature.dashboard.impl.ui.screen.components.ServerInfoCard
 import app.nukemichi.android.feature.dashboard.impl.ui.screen.components.StatsRow
+import app.nukemichi.android.platform.ui.components.StatusBadge
+import app.nukemichi.android.platform.ui.icons.NukemichiIcons
+import app.nukemichi.android.platform.ui.theme.size.dimens
+import app.nukemichi.android.platform.ui.util.CollectAsEffect
+import app.nukemichi.android.platform.ui.util.UiText
+import app.nukemichi.android.platform.ui.util.asString
 import kotlinx.coroutines.delay
 
 private const val SLOW_TRANSITION_HINT_DELAY_MS = 5_000L
 
 @Composable
 internal fun DashboardScreen(
-    onNavigateToLogs: () -> Unit,
+    onSettingsClick: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: DashboardViewModel = hiltViewModel(),
 ) {
@@ -117,8 +118,11 @@ internal fun DashboardScreen(
                 .padding(MaterialTheme.dimens.m),
             horizontalArrangement = Arrangement.spacedBy(MaterialTheme.dimens.s),
         ) {
-            TextButton(onClick = onNavigateToLogs) {
-                Text(text = stringResource(R.string.dashboard_logs))
+            IconButton(onClick = onSettingsClick) {
+                Icon(
+                    imageVector = NukemichiIcons.Navigation.Settings,
+                    contentDescription = stringResource(R.string.settings_title),
+                )
             }
         }
         SnackbarHost(hostState = snackbarHostState, modifier = Modifier.align(Alignment.BottomCenter))

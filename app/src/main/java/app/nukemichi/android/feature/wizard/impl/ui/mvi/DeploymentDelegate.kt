@@ -1,12 +1,12 @@
 package app.nukemichi.android.feature.wizard.impl.ui.mvi
 
-import app.nukemichi.android.core.ui.mvi.ViewModelDelegate
 import app.nukemichi.android.feature.wizard.impl.domain.WizardSetupCoordinator
 import app.nukemichi.android.feature.wizard.impl.domain.model.DeploymentEvent
+import app.nukemichi.android.platform.ui.mvi.ViewModelDelegate
+import javax.inject.Inject
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 internal class DeploymentDelegate @Inject constructor(
     private val coordinator: WizardSetupCoordinator,

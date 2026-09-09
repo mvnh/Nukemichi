@@ -1,9 +1,9 @@
 package app.nukemichi.android.feature.dashboard.impl.ui.mvi
 
 import android.content.Intent as SystemIntent
-import app.nukemichi.android.core.ui.util.UiText
 import app.nukemichi.android.core.vpn.XrayEngineState
 import app.nukemichi.android.core.vpn.XrayTrafficStats
+import app.nukemichi.android.platform.ui.util.UiText
 
 internal object DashboardContract {
 

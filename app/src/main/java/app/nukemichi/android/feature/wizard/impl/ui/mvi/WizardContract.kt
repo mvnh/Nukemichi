@@ -1,9 +1,9 @@
 package app.nukemichi.android.feature.wizard.impl.ui.mvi
 
 import androidx.compose.runtime.Immutable
-import app.nukemichi.android.core.mode.AppMode
-import app.nukemichi.android.core.ui.util.UiSecret
-import app.nukemichi.android.core.ui.util.UiText
+import app.nukemichi.android.platform.mode.AppMode
+import app.nukemichi.android.platform.ui.util.UiSecret
+import app.nukemichi.android.platform.ui.util.UiText
 
 object WizardContract {
 

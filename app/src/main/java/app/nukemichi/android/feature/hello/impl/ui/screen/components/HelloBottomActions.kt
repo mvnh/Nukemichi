@@ -9,8 +9,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import app.nukemichi.android.R
 
-// Advanced mode entry point is hidden for now: it's pre-MVP, not built out yet (see project
-// notes). Only the source-code link stays.
+// Settings (and Advanced mode inside it) is deliberately not linked from here: with no server
+// set up yet there's nothing in Settings for a new user to see, and surfacing "advanced mode"
+// before someone has even connected once risks looking like a hidden, more-powerful option
+// right when they walk in. Reachable from Dashboard once a server actually exists.
 @Composable
 internal fun HelloBottomActions(
     onViewSourceCodeClick: () -> Unit,

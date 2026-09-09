@@ -1,11 +1,11 @@
 package app.nukemichi.android.feature.dashboard.impl.ui.navigation.di
 
-import app.nukemichi.android.core.navigation.Destination
-import app.nukemichi.android.core.navigation.NavDestination
 import app.nukemichi.android.feature.dashboard.DashboardKey
 import app.nukemichi.android.feature.dashboard.XrayLogsKey
 import app.nukemichi.android.feature.dashboard.impl.ui.navigation.DashboardDestination
 import app.nukemichi.android.feature.dashboard.impl.ui.navigation.XrayLogsDestination
+import app.nukemichi.android.platform.navigation.Destination
+import app.nukemichi.android.platform.navigation.NavDestination
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

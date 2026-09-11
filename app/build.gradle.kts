@@ -16,7 +16,19 @@ abstract class DownloadLibV2rayTask : DefaultTask() {
     @TaskAction
     fun download() {
         val target = outputFile.get().asFile
-        if (target.exists()) return
+
+        // Re-verified rather than trusted for existing: this path is restored from the Actions
+        // cache before the task runs, so skipping straight past an already-present file meant the
+        // pinned digest was never checked on any CI build, release-build included. A local
+        // build/ directory is no more trustworthy - it just fails less interestingly.
+        if (target.exists()) {
+            if (digestOf(target) == sha256.get()) {
+                logger.info("libv2ray.aar already staged and matches the pinned SHA-256")
+                return
+            }
+            logger.warn("Staged libv2ray.aar does not match the pinned SHA-256 - discarding it and downloading again.")
+            target.delete()
+        }
 
         val url = "https://github.com/2dust/AndroidLibXrayLite/releases/download/${version.get()}/libv2ray.aar"
         val tempFile = File(temporaryDir, "libv2ray.aar")
@@ -31,8 +43,7 @@ abstract class DownloadLibV2rayTask : DefaultTask() {
         logger.lifecycle("libv2ray.aar staged at ${target.path}")
     }
 
-    private fun verifyChecksum(archive: File) {
-        val expected = sha256.get()
+    private fun digestOf(archive: File): String {
         val digest = MessageDigest.getInstance("SHA-256")
         archive.inputStream().use { input ->
             val buffer = ByteArray(64 * 1024)
@@ -42,7 +53,12 @@ abstract class DownloadLibV2rayTask : DefaultTask() {
                 digest.update(buffer, 0, read)
             }
         }
-        val actual = digest.digest().joinToString("") { "%02x".format(it) }
+        return digest.digest().joinToString("") { "%02x".format(it) }
+    }
+
+    private fun verifyChecksum(archive: File) {
+        val expected = sha256.get()
+        val actual = digestOf(archive)
 
         if (actual != expected) {
             archive.delete()

@@ -25,12 +25,19 @@ internal class XrayRuntime @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
 ) : XrayStatsSource {
     private val mutex = Mutex()
+
+    // Volatile because stopWithoutWaiting() writes both fields without taking the mutex (see its
+    // own comment for why) while start()/stop() read them under it, and queryAllOutboundTrafficStats()
+    // reads from the telemetry poller - all of them different threads of the IO pool. Without it
+    // start()'s "is one already running" check can be answered from a stale cache.
+    @Volatile
     private var controller: CoreController? = null
     private val detachedScope = CoroutineScope(SupervisorJob() + ioDispatcher)
 
     // Set by stopWithoutWaiting(), cleared once start() has waited on it (or given up). Lets a
     // fast disconnect-then-reconnect avoid racing the old CoreController for its inbound port,
     // without going back to blocking every plain disconnect on the native stopLoop() call.
+    @Volatile
     private var pendingStop: Job? = null
 
     init {

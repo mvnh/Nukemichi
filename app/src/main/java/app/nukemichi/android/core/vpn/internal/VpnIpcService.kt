@@ -48,6 +48,13 @@ internal class VpnIpcService : Service() {
         Timber.i("VpnIpcService: created in pid=%d", Process.myPid())
         scope = CoroutineScope(SupervisorJob() + mainDispatcher)
 
+        // Collected ahead of state, so the server a new session runs on reaches clients before RUNNING does.
+        telemetry.sessionServerId.onEach { serverId ->
+            broadcast(
+                Message.obtain(null, VpnIpcProtocol.MSG_SESSION_SERVER_CHANGED)
+                    .apply { data = sessionServerBundle(serverId) }
+            )
+        }.launchIn(scope)
         telemetry.state.onEach { state ->
             broadcast(Message.obtain(null, VpnIpcProtocol.MSG_STATE_CHANGED, state.ordinal, 0))
         }.launchIn(scope)
@@ -86,6 +93,10 @@ internal class VpnIpcService : Service() {
      * until something happened to change, which on an idle-but-connected tunnel may be a while.
      */
     private fun replayCurrentState(client: Messenger) {
+        client.trySend(
+            Message.obtain(null, VpnIpcProtocol.MSG_SESSION_SERVER_CHANGED)
+                .apply { data = sessionServerBundle(telemetry.sessionServerId.value) }
+        )
         client.trySend(
             Message.obtain(
                 null,

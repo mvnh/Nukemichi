@@ -52,10 +52,7 @@ internal class DashboardViewModel @AssistedInject constructor(
             Intent.SubscriptionEditorDismissed -> libraryDelegate.dismissSubscriptionEditor()
             is Intent.SubscriptionRenamed -> libraryDelegate.renameSubscription(intent.subscriptionId, intent.name)
             is Intent.SubscriptionDeleted -> {
-                connectionDelegate.stopIfRunningOn(
-                    removedServerIds = libraryDelegate.serverIdsOf(intent.subscriptionId),
-                    selectedServerId = libraryDelegate.selectedServerId,
-                )
+                connectionDelegate.stopIfRunningOn(libraryDelegate.serverIdsOf(intent.subscriptionId))
                 libraryDelegate.deleteSubscription(intent.subscriptionId)
             }
 
@@ -63,10 +60,7 @@ internal class DashboardViewModel @AssistedInject constructor(
             Intent.ServerDetailsDismissed -> libraryDelegate.dismissServerDetails()
             is Intent.ShareServerRequested -> libraryDelegate.shareServer(intent.serverId)
             is Intent.ServerForgotten -> {
-                connectionDelegate.stopIfRunningOn(
-                    removedServerIds = setOf(intent.serverId),
-                    selectedServerId = libraryDelegate.selectedServerId,
-                )
+                connectionDelegate.stopIfRunningOn(setOf(intent.serverId))
                 libraryDelegate.forgetServer(intent.serverId)
             }
             is Intent.FingerprintChanged -> coordinator.setFingerprint(intent.serverId, intent.value)

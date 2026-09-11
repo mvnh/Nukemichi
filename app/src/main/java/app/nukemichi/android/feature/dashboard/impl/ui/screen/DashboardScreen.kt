@@ -9,9 +9,15 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -30,6 +36,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -106,9 +113,12 @@ internal fun DashboardScreen(
 
     Scaffold(
         modifier = modifier,
+        // Unlike the default system bars, safeDrawing also keeps the list clear of a display cutout.
+        contentWindowInsets = WindowInsets.safeDrawing,
         topBar = {
             TopAppBar(
                 title = { Text(text = stringResource(R.string.app_name)) },
+                windowInsets = WindowInsets.safeDrawing.only(WindowInsetsSides.Horizontal + WindowInsetsSides.Top),
                 actions = {
                     IconButton(onClick = onSettingsClick) {
                         Icon(
@@ -179,13 +189,14 @@ private fun DashboardContent(
     onIntent: (DashboardContract.Intent) -> Unit,
 ) {
     val dimens = MaterialTheme.dimens
+    val layoutDirection = LocalLayoutDirection.current
 
     LazyColumn(
         state = listState,
         modifier = Modifier.fillMaxSize(),
         contentPadding = PaddingValues(
-            start = dimens.l,
-            end = dimens.l,
+            start = innerPadding.calculateStartPadding(layoutDirection) + dimens.l,
+            end = innerPadding.calculateEndPadding(layoutDirection) + dimens.l,
             top = innerPadding.calculateTopPadding(),
             // Room for the FAB, so the last row can scroll clear of it.
             bottom = innerPadding.calculateBottomPadding() + connectFabClearance,

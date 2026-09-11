@@ -45,6 +45,7 @@ object XrayClientConfigFactory {
         return XrayRuntimeConfig(
             rawJson = build(profile, socksCredential).toJson(),
             socksEndpoint = SocksEndpoint(LOOPBACK, SOCKS_PORT, socksCredential.user, socksCredential.pass),
+            serverId = profile.id,
         )
     }
 

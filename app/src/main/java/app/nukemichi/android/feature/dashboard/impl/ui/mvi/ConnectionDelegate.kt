@@ -29,11 +29,19 @@ internal class ConnectionDelegate @Inject constructor(
     // STOPPING/STOPPED/IDLE states as a manual disconnect, with nothing else to tell them apart.
     private var autoReconnecting = false
 
-    // Null for a session that was already running when the dashboard opened; callers attribute that
-    // one to the selected server.
+    // From :vpn rather than remembered here: a UI process recreated underneath a live tunnel would forget it.
     private var sessionServerId: String? = null
 
     fun observe() {
+        // Subscribed alongside state, before the IPC bind completes, so the replay a new client gets on
+        // registering reaches both.
+        serviceProvider.monitoring.sessionServerId
+            .onEach { serverId ->
+                sessionServerId = serverId
+                // A highlight that disagrees with where traffic actually goes is worse than one the user did not pick.
+                serverId?.let(coordinator::select)
+            }
+            .launchIn(scope)
         serviceProvider.monitoring.healthDegraded
             .onEach { handleHealthDegraded() }
             .launchIn(scope)
@@ -90,15 +98,14 @@ internal class ConnectionDelegate @Inject constructor(
         val server = coordinator.selectedServer() ?: return
         if (server.id == sessionServerId) return
         reduce { copy(engineState = XrayEngineState.STARTING, errorMessage = null) }
-        // The service tears the old session down only once it has the new config, so a failed
-        // dispatch leaves the old session running.
-        start(server, stateOnDispatchFailure = XrayEngineState.RUNNING)
+        val dispatched = start(server, stateOnDispatchFailure = XrayEngineState.RUNNING)
+        // Nothing reached the service, so the old session keeps running: put the selection back on it.
+        if (!dispatched) sessionServerId?.let(coordinator::select)
     }
 
-    suspend fun stopIfRunningOn(removedServerIds: Set<String>, selectedServerId: String?) {
+    suspend fun stopIfRunningOn(removedServerIds: Set<String>) {
         if (currentState.engineState != XrayEngineState.RUNNING) return
-        val sessionServer = sessionServerId ?: selectedServerId ?: return
-        if (sessionServer in removedServerIds) stop()
+        if (sessionServerId?.let(removedServerIds::contains) == true) stop()
     }
 
     private suspend fun stop() {
@@ -132,9 +139,9 @@ internal class ConnectionDelegate @Inject constructor(
         start(server, stateOnDispatchFailure = XrayEngineState.IDLE)
     }
 
-    private suspend fun start(server: XrayVpnProfile, stateOnDispatchFailure: XrayEngineState) {
+    /** Only whether the start reached the service; the session itself is confirmed later over IPC. */
+    private suspend fun start(server: XrayVpnProfile, stateOnDispatchFailure: XrayEngineState): Boolean =
         serviceProvider.control.start(XrayClientConfigFactory.createRuntimeConfig(server))
-            .onSuccess { sessionServerId = server.id }
             .onFailure { error ->
                 Timber.e(error, "start() dispatch failed")
                 reduce {
@@ -144,7 +151,7 @@ internal class ConnectionDelegate @Inject constructor(
                     )
                 }
             }
-    }
+            .isSuccess
 
     /**
      * The `:vpn` process has already stopped itself and is about to be killed and respawned (see

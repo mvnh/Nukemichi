@@ -65,6 +65,8 @@
     <!-- Errors -->
     <string name="wizard_error_vpn_permission_required">Nukemichi нужно разрешение на VPN, чтобы запустить соединение.</string>
     <string name="wizard_error_incomplete_ssh_details">Сначала заполните данные для подключения к серверу.</string>
+    <string name="wizard_error_strategy_unsupported">Этот способ настройки пока недоступен. Вернитесь назад и выберите другой.</string>
+    <string name="wizard_error_architecture_unknown">Архитектура сервера неизвестна. Вернитесь назад и повторите проверку подключения.</string>
     <string name="wizard_error_unknown">Неизвестная ошибка</string>
     <string name="wizard_error_save_failed">Не удалось сохранить данные сервера.</string>
     <string name="wizard_error_start_failed">Не удалось запустить VPN.</string>

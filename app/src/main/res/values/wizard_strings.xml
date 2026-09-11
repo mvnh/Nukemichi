@@ -65,6 +65,8 @@
     <!-- Errors -->
     <string name="wizard_error_vpn_permission_required">Nukemichi needs VPN permission to start the connection.</string>
     <string name="wizard_error_incomplete_ssh_details">Fill in your server connection details first.</string>
+    <string name="wizard_error_strategy_unsupported">This setup method isn\'t available yet. Go back and pick another one.</string>
+    <string name="wizard_error_architecture_unknown">The server\'s architecture is unknown. Go back and check the connection again.</string>
     <string name="wizard_error_unknown">Unknown error</string>
     <string name="wizard_error_save_failed">Couldn\'t save the server details.</string>
     <string name="wizard_error_start_failed">Couldn\'t start the VPN.</string>

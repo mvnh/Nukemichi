@@ -3,6 +3,7 @@ package app.nukemichi.android.platform.ui.mvi
 import androidx.compose.runtime.Stable
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -31,7 +32,18 @@ abstract class MviViewModel<State, Intent, Effect>(
     init {
         viewModelScope.launch {
             for (intent in intents) {
-                onIntent(intent)
+                // One coroutine drains the channel, so an exception escaping a handler would end
+                // the loop for the rest of the view model's life: every later intent would go
+                // into a channel nothing reads, and the screen would stop responding with no
+                // crash to point at. Cancellation still propagates - that is the scope shutting
+                // this down on purpose.
+                try {
+                    onIntent(intent)
+                } catch (cancellation: CancellationException) {
+                    throw cancellation
+                } catch (error: Throwable) {
+                    Timber.e(error, "Unhandled failure while processing %s", intent)
+                }
             }
         }
     }

@@ -109,6 +109,23 @@ class MviViewModelTest {
         assertEquals(1, viewModel.state.value.counter)
     }
 
+    /**
+     * The intent loop is a single coroutine draining a channel, so an exception escaping one
+     * handler used to end it for good: every later tap on the screen would go into a channel
+     * nothing reads, with no crash to show for it.
+     */
+    @Test
+    fun `a handler that throws does not take the intent loop down with it`() = runTest(dispatcher) {
+        val viewModel = TestViewModel()
+
+        viewModel.processIntent(TestIntent.Boom)
+        advanceUntilIdle()
+        viewModel.processIntent(TestIntent.Increment)
+        advanceUntilIdle()
+
+        assertEquals(1, viewModel.state.value.counter)
+    }
+
     @Test
     fun `an unattached delegate fails with a usable message rather than an NPE`() {
         val error = assertThrows(IllegalStateException::class.java) { CountingDelegate().bump() }
@@ -123,6 +140,7 @@ private sealed interface TestIntent {
     data class Append(val value: Int) : TestIntent
     data object Increment : TestIntent
     data class EmitEffect(val label: String) : TestIntent
+    data object Boom : TestIntent
 }
 
 private data class TestEffect(val label: String)
@@ -146,6 +164,7 @@ private class TestViewModel(
 
             TestIntent.Increment -> reduce { copy(counter = counter + 1) }
             is TestIntent.EmitEffect -> sendEffect(TestEffect(intent.label))
+            TestIntent.Boom -> error("handler blew up")
         }
     }
 }

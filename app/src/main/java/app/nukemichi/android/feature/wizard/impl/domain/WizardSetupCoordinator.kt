@@ -40,9 +40,8 @@ internal class WizardSetupCoordinator @Inject constructor(
     }
 
     /**
-     * Stores the deployed server in [targetSubscriptionId], or in a new randomly named subscription, and
-     * returns the stored entry. A redeploy to a known address keeps that entry's id, so callers must use
-     * the returned profile rather than anything derived from the draft.
+     * A redeploy to a known address keeps the stored entry's id, so callers must use the returned
+     * profile rather than anything derived from the draft.
      */
     suspend fun saveProfile(draft: WizardProfileDraft, targetSubscriptionId: String?): Result<XrayVpnProfile> {
         if (!draft.isDeployable) return Result.failure(IllegalArgumentException("Server-side Xray credentials are missing."))

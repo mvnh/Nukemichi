@@ -61,7 +61,6 @@ private fun XrayVpnProfile.stackLabel(): String = listOfNotNull(
     },
 ).joinToString(separator = " · ")
 
-/** Each letter maps onto its regional indicator symbol, and a pair of those renders as the country's flag. */
 private fun String.toFlagEmoji(): String? {
     if (length != 2 || any { it !in 'A'..'Z' }) return null
     return buildString { this@toFlagEmoji.forEach { appendCodePoint(REGIONAL_INDICATOR_A + (it - 'A')) } }

@@ -1,8 +1,6 @@
 package app.nukemichi.android.core.vpn
 
-// Neither a server nor a group should show up as a bare IP or UUID. Deterministic per [seed]: a server
-// seeded by its address keeps its name across redeploys (the wizard's idempotent-by-design contract),
-// while a group seeded by its random id gets a random name.
+// Deterministic per [seed], so redeploying to the same address keeps the same name.
 fun generateNickname(seed: String): String {
     val hash = seed.hashCode()
     val adjective = ADJECTIVES[Math.floorMod(hash, ADJECTIVES.size)]

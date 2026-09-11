@@ -15,7 +15,6 @@ import androidx.compose.ui.graphics.Color
 import app.nukemichi.android.platform.ui.icons.NukemichiIcons
 import app.nukemichi.android.platform.ui.theme.size.dimens
 
-/** The VPS region's flag on a neutral circle, or a server glyph when the region is unknown. */
 @Composable
 internal fun ServerFlag(
     flag: String?,

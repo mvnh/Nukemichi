@@ -26,7 +26,6 @@ import timber.log.Timber
 @Stable
 @HiltViewModel(assistedFactory = WizardViewModel.Factory::class)
 internal class WizardViewModel @AssistedInject constructor(
-    // The subscription a deployed server joins; null puts it in a new one.
     @Assisted private val targetSubscriptionId: String?,
     private val coordinator: WizardSetupCoordinator,
     private val xrayControl: XrayControl,

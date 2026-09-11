@@ -98,8 +98,8 @@ class MainActivity : ComponentActivity() {
                         NavDisplay(
                             backStack = backStack,
                             onBack = navigator::back,
-                            // Scopes ViewModels to their back-stack entry: a screen opened again (the
-                            // wizard via "Add server") starts fresh, and popping an entry clears its ViewModel.
+                            // NavDisplay would otherwise leave every ViewModel on the Activity's store,
+                            // so reopening the wizard would resume the previous deployment.
                             entryDecorators = listOf(
                                 rememberSaveableStateHolderNavEntryDecorator(),
                                 rememberViewModelStoreNavEntryDecorator(),

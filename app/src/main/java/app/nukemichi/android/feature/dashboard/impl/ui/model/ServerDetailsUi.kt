@@ -12,7 +12,6 @@ internal data class ServerDetailsUi(
     val address: String,
     val maskingAs: String?,
     val deployedAtMillis: Long,
-    // Null when the server does not use REALITY, which is the only security that takes a fingerprint.
     val fingerprint: XrayFingerprint?,
     val muxEnabled: Boolean,
     val muxConcurrency: Int,

@@ -17,7 +17,6 @@ import androidx.compose.ui.Modifier
 import app.nukemichi.android.feature.dashboard.impl.ui.model.SubscriptionUi
 import app.nukemichi.android.platform.ui.theme.size.dimens
 
-/** A subscription as one connected run: its header, then its servers folding open and shut beneath it. */
 @Composable
 internal fun SubscriptionGroup(
     subscription: SubscriptionUi,
@@ -50,7 +49,6 @@ internal fun SubscriptionGroup(
             val segmentCount = subscription.servers.size + 1
             Column(
                 modifier = Modifier
-                    // A server forgotten from its sheet shrinks the run instead of snapping it shorter.
                     .animateContentSize(animationSpec = dashboardSpatialSpec())
                     .padding(top = dimens.xs),
                 verticalArrangement = Arrangement.spacedBy(dimens.xs),

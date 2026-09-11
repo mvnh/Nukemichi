@@ -13,9 +13,7 @@ import androidx.compose.ui.res.stringResource
 import app.nukemichi.android.R
 import app.nukemichi.android.platform.ui.theme.size.dimens
 
-// Always visible regardless of AppMode: viewing logs isn't an expert-only action, it just used to
-// live in the wrong place (a text button in Dashboard's top bar). Everything about a single server
-// lives in that server's details sheet on the dashboard.
+// Visible in every AppMode: viewing logs isn't an expert-only action.
 @Composable
 internal fun SettingsGeneralSection(
     onViewLogsClick: () -> Unit,

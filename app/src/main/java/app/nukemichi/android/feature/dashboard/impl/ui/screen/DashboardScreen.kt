@@ -41,6 +41,7 @@ import app.nukemichi.android.feature.dashboard.impl.ui.screen.components.Connect
 import app.nukemichi.android.feature.dashboard.impl.ui.screen.components.DeployServerButton
 import app.nukemichi.android.feature.dashboard.impl.ui.screen.components.ServerDetailsSheet
 import app.nukemichi.android.feature.dashboard.impl.ui.screen.components.SubscriptionEditorSheet
+import app.nukemichi.android.feature.dashboard.impl.ui.screen.components.connectFabClearance
 import app.nukemichi.android.feature.dashboard.impl.ui.screen.components.rememberIsConnectionToggleScrolledAway
 import app.nukemichi.android.feature.dashboard.impl.ui.screen.components.subscriptionItems
 import app.nukemichi.android.platform.ui.icons.NukemichiIcons
@@ -186,8 +187,8 @@ private fun DashboardContent(
             start = dimens.l,
             end = dimens.l,
             top = innerPadding.calculateTopPadding(),
-            // Room for the extended FAB and its margin, so the last row can scroll clear of it.
-            bottom = innerPadding.calculateBottomPadding() + dimens.xxl + dimens.l + dimens.m,
+            // Room for the FAB, so the last row can scroll clear of it.
+            bottom = innerPadding.calculateBottomPadding() + connectFabClearance,
         ),
     ) {
         item(key = CONNECTION_ITEM_KEY) {

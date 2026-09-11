@@ -14,10 +14,8 @@ fun List<XraySubscription>.findSubscription(subscriptionId: String): XraySubscri
     firstOrNull { it.id == subscriptionId }
 
 /**
- * Stores a freshly deployed [server]. A redeploy to an address that is already stored replaces that
- * entry in place, keeping its id, name and group, so running the wizard twice stays idempotent.
- * Otherwise the server joins [targetSubscriptionId], or [newSubscription] when that is null or has
- * been deleted in the meantime.
+ * A redeploy to an address that is already stored replaces that entry in place, keeping its id, name
+ * and group, so running the wizard twice stays idempotent.
  */
 fun List<XraySubscription>.withDeployedServer(
     server: XrayVpnProfile,

@@ -12,6 +12,7 @@ import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Dp
 import app.nukemichi.android.R
 import app.nukemichi.android.feature.dashboard.impl.ui.mvi.DashboardContract
 import app.nukemichi.android.feature.dashboard.impl.ui.mvi.isBusy
@@ -19,7 +20,10 @@ import app.nukemichi.android.feature.dashboard.impl.ui.mvi.isConnected
 import app.nukemichi.android.platform.ui.icons.NukemichiIcons
 import app.nukemichi.android.platform.ui.theme.size.dimens
 
-/** Stands in for [ConnectionToggle] while that is scrolled out of view: same action, icons and busy guard. */
+/** Height of [ConnectFab] plus the margin the Scaffold leaves around it. */
+internal val connectFabClearance: Dp
+    @Composable get() = with(MaterialTheme.dimens) { xxl + l + m }
+
 @Composable
 internal fun ConnectFab(
     state: DashboardContract.State,
@@ -27,8 +31,7 @@ internal fun ConnectFab(
     modifier: Modifier = Modifier,
 ) {
     val dimens = MaterialTheme.dimens
-    // Primary while connected, like the toggle. Otherwise the regular FAB container: the toggle's
-    // surfaceContainerHigh would barely separate from the list rows scrolling underneath.
+    // The toggle's surfaceContainerHigh would barely separate from the rows scrolling underneath.
     val containerColor = if (state.isConnected) {
         MaterialTheme.colorScheme.primary
     } else {
@@ -37,7 +40,6 @@ internal fun ConnectFab(
 
     ExtendedFloatingActionButton(
         onClick = { if (!state.isBusy) onClick() },
-        // "Connect" and "Disconnect" differ in width; ease between them instead of snapping.
         modifier = modifier.animateContentSize(animationSpec = dashboardSpatialSpec()),
         containerColor = containerColor,
         contentColor = contentColorFor(containerColor),

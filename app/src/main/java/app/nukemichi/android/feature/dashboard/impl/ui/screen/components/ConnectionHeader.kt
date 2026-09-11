@@ -40,10 +40,6 @@ import kotlinx.coroutines.delay
 
 private const val SLOW_TRANSITION_HINT_DELAY_MS = 5_000L
 
-/**
- * The top of the server list: the connection toggle, its status and, while connected, the traffic stats.
- * Whatever comes and goes here changes the header's real height, so the list below slides rather than jumps.
- */
 @Composable
 internal fun ConnectionHeader(
     state: DashboardContract.State,
@@ -82,7 +78,6 @@ internal fun ConnectionHeader(
     }
 }
 
-/** True once the list has scrolled the connection toggle fully out of view, which is when the FAB takes over. */
 @Composable
 internal fun rememberIsConnectionToggleScrolledAway(listState: LazyListState): State<Boolean> {
     val dimens = MaterialTheme.dimens
@@ -122,7 +117,6 @@ private fun ColumnScope.SlowTransitionHint(state: DashboardContract.State) {
     }
 }
 
-// Connected folds the timer into the badge itself: "Connected for 1h 25m" rather than a status and a separate timer.
 @Composable
 private fun DashboardContract.State.statusText(): UiText {
     val since = connectedSinceRealtime

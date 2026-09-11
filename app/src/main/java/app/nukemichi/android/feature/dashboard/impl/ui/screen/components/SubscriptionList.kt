@@ -12,10 +12,7 @@ import kotlinx.collections.immutable.ImmutableList
 
 private const val SUBSCRIPTION_CONTENT_TYPE = "subscription"
 
-/**
- * One lazy item per subscription, servers included. Expanding then changes that item's real height, and the
- * list reflows everything below it frame by frame. Per-server items would instead pop in and out whole.
- */
+/** One lazy item per subscription: per-server items would pop in and out whole instead of reflowing. */
 internal fun LazyListScope.subscriptionItems(
     subscriptions: ImmutableList<SubscriptionUi>,
     onToggleExpanded: (subscriptionId: String) -> Unit,

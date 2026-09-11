@@ -47,7 +47,6 @@ internal fun ServerRow(
         animationSpec = dashboardEffectsSpec(),
         label = "serverRowContent",
     )
-    // Neutral on a plain row; lifted to the surface on a selected one so it still reads as a separate circle.
     val flagContainerColor by animateColorAsState(
         targetValue = if (server.isSelected) colors.surface else colors.surfaceContainerHighest,
         animationSpec = dashboardEffectsSpec(),

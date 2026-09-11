@@ -39,7 +39,6 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-/** Everything about one server that is not the list row itself: what it is, sharing it, tuning it, forgetting it. */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 internal fun ServerDetailsSheet(
@@ -148,8 +147,7 @@ internal fun ServerDetailsSheet(
     }
 }
 
-// Plain String, not UiText: private helper always fed already-resolved stringResource(...)/
-// formatted values inline, no reuse outside this file, no MVI-state boundary to cross.
+// Plain String, not UiText: nothing here crosses the MVI-state boundary.
 @Composable
 private fun InfoRow(label: String, value: String) {
     Row(

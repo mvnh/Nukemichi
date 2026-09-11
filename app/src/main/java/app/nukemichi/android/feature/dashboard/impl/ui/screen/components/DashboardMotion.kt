@@ -3,10 +3,8 @@ package app.nukemichi.android.feature.dashboard.impl.ui.screen.components
 import androidx.compose.animation.core.FiniteAnimationSpec
 import androidx.compose.animation.core.spring
 
-// One motion vocabulary for the dashboard: Material 3's standard motion scheme, spelled out because material3
-// 1.4 keeps MotionScheme internal. Anything that moves or resizes uses the spatial spec, so a group unfolding
-// and the rows it pushes travel on the same curve; colour and opacity use the effects spec. Springs rather than
-// tweens, so tapping a group again mid-animation retargets smoothly instead of restarting.
+// Material 3's standard motion scheme, spelled out because material3 1.4 keeps MotionScheme internal:
+// spatial for anything that moves or resizes, effects for colour and opacity.
 
 private const val SPATIAL_DAMPING_RATIO = 0.9f
 private const val SPATIAL_STIFFNESS = 700f

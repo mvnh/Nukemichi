@@ -44,8 +44,6 @@ internal fun SubscriptionHeaderRow(
     val colors = MaterialTheme.colorScheme
     val isHighlighted = !subscription.isExpanded && subscription.containsSelectedServer
 
-    // Everything that differs between the expanded and collapsed header eases across on the same
-    // clock as the servers folding beneath it, instead of snapping ahead of the press ripple.
     val containerColor by animateColorAsState(
         targetValue = if (isHighlighted) colors.primaryContainer else colors.surfaceContainerLow,
         animationSpec = dashboardEffectsSpec(),

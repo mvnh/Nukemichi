@@ -8,7 +8,6 @@ internal data class SubscriptionUi(
     val id: String,
     val name: String,
     val isExpanded: Boolean,
-    // A collapsed group carries the selection highlight for the server it hides.
     val containsSelectedServer: Boolean,
     val servers: ImmutableList<ServerUi>,
 )

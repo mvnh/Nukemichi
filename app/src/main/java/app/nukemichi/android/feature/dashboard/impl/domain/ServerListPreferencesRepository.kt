@@ -12,9 +12,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.updateAndGet
 
 /**
- * How the user left the server list: which server connections use and which groups are folded away.
- * Neither is subscription data, so both stay with the dashboard in plain experience storage. The ids are
- * random UUIDs and say nothing about the servers behind them.
+ * Presentation state, not subscription data, so it stays out of `core` and out of encrypted storage:
+ * the ids are random UUIDs and say nothing about the servers behind them.
  */
 @Singleton
 internal class ServerListPreferencesRepository @Inject constructor(

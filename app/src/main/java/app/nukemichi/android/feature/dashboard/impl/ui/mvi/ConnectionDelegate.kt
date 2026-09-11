@@ -29,8 +29,8 @@ internal class ConnectionDelegate @Inject constructor(
     // STOPPING/STOPPED/IDLE states as a manual disconnect, with nothing else to tell them apart.
     private var autoReconnecting = false
 
-    // The server this delegate last started a session on. Null for a session that was already running
-    // when the dashboard opened; callers attribute that one to the selected server.
+    // Null for a session that was already running when the dashboard opened; callers attribute that
+    // one to the selected server.
     private var sessionServerId: String? = null
 
     fun observe() {
@@ -84,7 +84,7 @@ internal class ConnectionDelegate @Inject constructor(
         reduce { copy(errorMessage = UiText.Resource(R.string.dashboard_error_vpn_permission_denied)) }
     }
 
-    /** Moves a running session onto the newly selected server. A stopped engine picks the selection up on its next start. */
+    /** A stopped engine picks the selection up on its next start instead. */
     suspend fun followSelection() {
         if (currentState.engineState != XrayEngineState.RUNNING) return
         val server = coordinator.selectedServer() ?: return
@@ -95,7 +95,6 @@ internal class ConnectionDelegate @Inject constructor(
         start(server, stateOnDispatchFailure = XrayEngineState.RUNNING)
     }
 
-    /** Ends a running session before the server it runs on is removed. */
     suspend fun stopIfRunningOn(removedServerIds: Set<String>, selectedServerId: String?) {
         if (currentState.engineState != XrayEngineState.RUNNING) return
         val sessionServer = sessionServerId ?: selectedServerId ?: return

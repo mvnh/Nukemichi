@@ -25,7 +25,6 @@ import app.nukemichi.android.R
 import app.nukemichi.android.platform.ui.icons.NukemichiIcons
 import app.nukemichi.android.platform.ui.theme.size.dimens
 
-/** Closes the server list: deploying a server here puts it in a new subscription. */
 @Composable
 internal fun DeployServerButton(
     showEmptyHint: Boolean,

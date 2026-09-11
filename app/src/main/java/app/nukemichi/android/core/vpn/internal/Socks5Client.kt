@@ -11,8 +11,13 @@ internal object Socks5Client {
     private const val USERNAME_PASSWORD_AUTH: Byte = 0x02
     private const val AUTH_SUBNEGOTIATION_VERSION: Byte = 0x01
     private const val COMMAND_CONNECT: Byte = 0x01
+    private const val ADDRESS_TYPE_IPV4: Byte = 0x01
     private const val ADDRESS_TYPE_DOMAIN: Byte = 0x03
+    private const val ADDRESS_TYPE_IPV6: Byte = 0x04
     private const val REPLY_SUCCEEDED: Byte = 0x00
+    private const val IPV4_BYTES = 4
+    private const val IPV6_BYTES = 16
+    private const val PORT_BYTES = 2
 
     fun connect(socket: Socket, username: String?, password: String?, host: String, port: Int) {
         val out = socket.getOutputStream()
@@ -50,11 +55,14 @@ internal object Socks5Client {
 
         val reply = ByteArray(2)
         input.readFully(reply)
+        check(reply[0] == AUTH_SUBNEGOTIATION_VERSION) { "SOCKS5 auth reply has version ${reply[0]}" }
         check(reply[1] == REPLY_SUCCEEDED) { "SOCKS5 auth rejected" }
     }
 
     /** Step 3, CONNECT: version, command, reserved byte, then a length-prefixed hostname and the
-     *  port. Only checks for success, not which failure; the caller just needs reachable/not. */
+     *  port. Only checks for success, not which failure; the caller just needs reachable/not.
+     *  The bound address in the reply is read past rather than ignored, so the socket is left at a
+     *  message boundary and whatever the caller does with it next starts on the tunnelled stream. */
     private fun sendConnectRequest(out: OutputStream, input: DataInputStream, host: String, port: Int) {
         val hostBytes = host.toByteArray(Charsets.US_ASCII)
         val request = ByteArray(7 + hostBytes.size)
@@ -71,6 +79,26 @@ internal object Socks5Client {
 
         val reply = ByteArray(4)
         input.readFully(reply)
+        check(reply[0] == VERSION) { "SOCKS5 CONNECT reply has version ${reply[0]}" }
         check(reply[1] == REPLY_SUCCEEDED) { "SOCKS5 CONNECT failed, reply code ${reply[1]}" }
+        input.skipFully(boundAddressLength(input, addressType = reply[3]) + PORT_BYTES)
+    }
+
+    /** Length of BND.ADDR for the reply's ATYP, having already consumed a domain's length byte. */
+    private fun boundAddressLength(input: DataInputStream, addressType: Byte): Int = when (addressType) {
+        ADDRESS_TYPE_IPV4 -> IPV4_BYTES
+        ADDRESS_TYPE_IPV6 -> IPV6_BYTES
+        ADDRESS_TYPE_DOMAIN -> input.readUnsignedByte()
+        else -> error("SOCKS5 CONNECT reply has unknown address type $addressType")
+    }
+
+    /** DataInputStream.skipBytes may stop short; a short skip here desynchronises the stream. */
+    private fun DataInputStream.skipFully(count: Int) {
+        var remaining = count
+        while (remaining > 0) {
+            val skipped = skipBytes(remaining)
+            check(skipped > 0) { "SOCKS5 CONNECT reply ended mid bound-address" }
+            remaining -= skipped
+        }
     }
 }

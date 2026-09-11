@@ -24,7 +24,10 @@ abstract class MviViewModel<State, Intent, Effect>(
 
     override val scope: CoroutineScope = viewModelScope
 
-    private val effects = Channel<Effect>(Channel.BUFFERED)
+    // UNLIMITED, matching intents: a bounded channel drops once its 64 slots fill, and nothing
+    // that would fill them is worth losing - navigation, a permission request, a share sheet. The
+    // collector is gated on STARTED, so a backgrounded screen legitimately accumulates a backlog.
+    private val effects = Channel<Effect>(Channel.UNLIMITED)
     val effect: Flow<Effect> = effects.receiveAsFlow()
 
     private val intents = Channel<Intent>(Channel.UNLIMITED)

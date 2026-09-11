@@ -12,6 +12,10 @@ import app.nukemichi.android.core.vpn.spec.toJsonObject
 object XrayServerConfigFactory {
     const val DEFAULT_SERVER_PORT = 443
 
+    // The port REALITY dials on the site it impersonates. Not serverPort: that is where our own
+    // inbound listens, and the masking host answers TLS on 443 regardless of what we picked.
+    private const val REALITY_TARGET_PORT = 443
+
     fun build(
         uuid: String,
         privateKey: String,
@@ -32,7 +36,7 @@ object XrayServerConfigFactory {
                 streamSettings = XrayTransportFactory.serverXhttpRealityStreamSettings(
                     RealityObject(
                         show = false,
-                        target = "$realityServerName:$serverPort",
+                        target = "$realityServerName:$REALITY_TARGET_PORT",
                         xver = 0,
                         serverNames = listOf(realityServerName),
                         privateKey = privateKey,

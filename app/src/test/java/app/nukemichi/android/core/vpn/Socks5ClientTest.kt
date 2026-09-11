@@ -116,6 +116,45 @@ class Socks5ClientTest {
         }
     }
 
+    @Test
+    fun `fails when the auth reply carries the wrong subnegotiation version`() {
+        val socks = start(RecordingSocksServer(authReplyVersion = 0x05))
+
+        assertThrows(IllegalStateException::class.java) {
+            socks.connectClient(username = "u", password = "p", host = "a.io", port = 80)
+        }
+    }
+
+    /**
+     * BND.ADDR and BND.PORT follow the four bytes the client checks. Leaving them buffered puts
+     * the socket a few bytes off the message boundary, so the first thing read from the tunnel
+     * afterwards is the tail of the handshake instead of the peer's data.
+     */
+    @Test
+    fun `consumes the bound address so the stream is left at a message boundary`() {
+        val socks = start(RecordingSocksServer(trailingByte = TUNNELLED))
+
+        assertEquals(TUNNELLED, socks.connectClientThenReadOneByte(host = "a.io", port = 80))
+    }
+
+    @Test
+    fun `consumes a bound address returned as a domain name`() {
+        val socks = start(
+            RecordingSocksServer(boundAddress = DOMAIN_BOUND_ADDRESS, trailingByte = TUNNELLED),
+        )
+
+        assertEquals(TUNNELLED, socks.connectClientThenReadOneByte(host = "a.io", port = 80))
+    }
+
+    @Test
+    fun `consumes a bound address returned as IPv6`() {
+        val socks = start(
+            RecordingSocksServer(boundAddress = IPV6_BOUND_ADDRESS, trailingByte = TUNNELLED),
+        )
+
+        assertEquals(TUNNELLED, socks.connectClientThenReadOneByte(host = "a.io", port = 80))
+    }
+
     /** EOF on the read or a reset on the write, depending on who wins the race, so pin the supertype. */
     @Test
     fun `fails with an IOException when the server hangs up mid-handshake`() {
@@ -128,14 +167,31 @@ class Socks5ClientTest {
 
     private fun start(socksServer: RecordingSocksServer): RecordingSocksServer =
         socksServer.also { server = it }
+
+    private companion object {
+        const val TUNNELLED: Int = 0x2A
+
+        /** ATYP 0x01 (IPv4) with a four-byte address, the shape xray itself replies with. */
+        val IPV4_BOUND_ADDRESS = byteArrayOf(0x01, 0, 0, 0, 0)
+
+        /** ATYP 0x03, length-prefixed. */
+        val DOMAIN_BOUND_ADDRESS = byteArrayOf(0x03, 4) + "a.io".toByteArray()
+
+        /** ATYP 0x04 with a sixteen-byte address. */
+        val IPV6_BOUND_ADDRESS = byteArrayOf(0x04) + ByteArray(16)
+    }
 }
 
 /** Records what the client sent rather than validating it, so each test asserts what it cares about. */
 private class RecordingSocksServer(
     private val methodReply: Byte? = null,
     private val authStatus: Byte = 0x00,
+    private val authReplyVersion: Byte = 0x01,
     private val connectStatus: Byte = 0x00,
     private val hangUpImmediately: Boolean = false,
+    private val boundAddress: ByteArray = byteArrayOf(0x01, 0, 0, 0, 0),
+    /** Written straight after the reply, standing in for the first byte off the tunnel. */
+    private val trailingByte: Int? = null,
 ) {
     private val serverSocket = ServerSocket(0, 50, InetAddress.getLoopbackAddress())
     private val greetings = ArrayBlockingQueue<ByteArray>(1)
@@ -171,7 +227,7 @@ private class RecordingSocksServer(
             authRequests.put(
                 byteArrayOf(version, user.size.toByte()) + user + byteArrayOf(pass.size.toByte()) + pass
             )
-            output.write(byteArrayOf(0x01, authStatus))
+            output.write(byteArrayOf(authReplyVersion, authStatus))
             output.flush()
             if (authStatus != 0x00.toByte()) return
         } else {
@@ -184,7 +240,8 @@ private class RecordingSocksServer(
         val port = ByteArray(2).also(input::readFully)
         connectRequests.put(header + byteArrayOf(hostLength.toByte()) + host + port)
 
-        output.write(byteArrayOf(0x05, connectStatus, 0x00, 0x01, 0, 0, 0, 0, 0, 0))
+        output.write(byteArrayOf(0x05, connectStatus, 0x00) + boundAddress + byteArrayOf(0, 0))
+        trailingByte?.let(output::write)
         output.flush()
     }
 
@@ -195,6 +252,15 @@ private class RecordingSocksServer(
             Socks5Client.connect(socket, username, password, host, port)
         }
     }
+
+    /** @return the first byte readable after the handshake, which must be the tunnel's own. */
+    fun connectClientThenReadOneByte(host: String, port: Int): Int =
+        Socket().use { socket ->
+            socket.connect(java.net.InetSocketAddress(serverSocket.inetAddress, serverSocket.localPort), TIMEOUT_MS)
+            socket.soTimeout = TIMEOUT_MS
+            Socks5Client.connect(socket, null, null, host, port)
+            socket.getInputStream().read()
+        }
 
     fun greeting(): ByteArray = take(greetings, "greeting")
 

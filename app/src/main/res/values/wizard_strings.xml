@@ -50,6 +50,10 @@
     <string name="wizard_host_key_changed_replace">I rebuilt it, replace the key</string>
     <string name="wizard_host_key_changed_stop">Stop</string>
 
+    <string name="wizard_host_key_unverifiable_title">Can\'t check this server\'s identity</string>
+    <string name="wizard_host_key_unverifiable_body">This server was confirmed before, but the saved fingerprint can no longer be read. That normally means the screen lock changed, or this is a restore onto a different device — not that anything is wrong with the server.\n\nConfirm the fingerprint against your hosting panel before continuing, and it will be saved again.\n\nHost key fingerprint: %1$s</string>
+    <string name="wizard_host_key_unverifiable_confirm">Confirm and save again</string>
+
     <!-- Confirmation Page -->
     <string name="wizard_confirmation_summary_title">Summary</string>
     <string name="wizard_confirmation_server_label">Server</string>

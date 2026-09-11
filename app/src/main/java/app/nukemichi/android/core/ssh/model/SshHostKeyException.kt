@@ -26,3 +26,15 @@ class SshHostKeyChangedException(
 ) : SshHostKeyException(
     "Host key changed. Expected: $expectedFingerprint, got: $fingerprint"
 )
+
+/**
+ * A pin exists for this host but can no longer be decrypted, so there is nothing to compare
+ * against — see [SecureStorageUnreadableException][app.nukemichi.android.core.storage.SecureStorageUnreadableException].
+ * Not the same as having no pin: the user verified this host once, and saying otherwise would
+ * hand them the prompt they are likeliest to wave through.
+ */
+class SshHostKeyUnverifiableException(
+    override val fingerprint: String,
+) : SshHostKeyException(
+    "The saved fingerprint for this host can no longer be read. Host is presenting: $fingerprint"
+)

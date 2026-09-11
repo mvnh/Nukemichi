@@ -7,6 +7,7 @@ import app.nukemichi.android.core.ssh.internal.model.SharedConnection
 import app.nukemichi.android.core.ssh.model.SshAuth
 import app.nukemichi.android.core.ssh.model.SshConfig
 import app.nukemichi.android.core.storage.AppStorage
+import app.nukemichi.android.core.storage.SecureStorageUnreadableException
 import app.nukemichi.android.core.storage.StorageDomain
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
@@ -117,16 +118,11 @@ internal class SshjManager(
         runCatching {
             val trustedHostKey = trustedHostKey(config.host, config.port)
             val explicitFingerprint = normalizeFingerprint(config.expectedFingerprint)
-            val cachedFingerprint = normalizeFingerprint(
-                appStorage.getString(StorageDomain.SSH_TRUST, trustedHostKey)
-            )
+            val pin = readPin(trustedHostKey)
             // Both, not one falling back to the other: the verifier has to know a pin exists even
             // when the user has accepted a different fingerprint, or a changed key is
             // indistinguishable from a first connection.
-            val verifier = PinnedHostKeyVerifier(
-                pinnedFingerprint = cachedFingerprint,
-                acceptedFingerprint = explicitFingerprint,
-            )
+            val verifier = PinnedHostKeyVerifier(pin = pin, acceptedFingerprint = explicitFingerprint)
 
             val client = SSHClient()
             client.addHostKeyVerifier(verifier)
@@ -144,7 +140,7 @@ internal class SshjManager(
             }
 
             verifier.verifiedFingerprint?.let { verified ->
-                if (cachedFingerprint != verified) {
+                if (pin != HostKeyPin.Known(verified)) {
                     appStorage.putString(StorageDomain.SSH_TRUST, trustedHostKey, verified)
                     Timber.i("Stored trusted fingerprint for %s:%d", config.host, config.port)
                 }
@@ -161,6 +157,22 @@ internal class SshjManager(
                 config.port
             )
         }
+    }
+
+    /**
+     * An undecryptable pin becomes [HostKeyPin.Unreadable] rather than propagating: the Keystore
+     * key backing it is gone (a lock-screen change, a restore onto another device), which is not
+     * the host's fault and used to fail every subsequent connection to it with no way back. The
+     * user gets asked to confirm the fingerprint again instead, and confirming replaces the
+     * ciphertext nothing can read.
+     */
+    private fun readPin(trustedHostKey: String): HostKeyPin = try {
+        normalizeFingerprint(appStorage.getString(StorageDomain.SSH_TRUST, trustedHostKey))
+            ?.let(HostKeyPin::Known)
+            ?: HostKeyPin.None
+    } catch (error: SecureStorageUnreadableException) {
+        Timber.w(error, "Pinned host key for %s can no longer be decrypted", trustedHostKey)
+        HostKeyPin.Unreadable
     }
 
     private fun normalizeFingerprint(value: String?): String? {

@@ -2,22 +2,23 @@ package app.nukemichi.android.core.ssh.internal
 
 import app.nukemichi.android.core.ssh.internal.util.SecurityUtils
 import app.nukemichi.android.core.ssh.model.SshHostKeyChangedException
+import app.nukemichi.android.core.ssh.model.SshHostKeyUnverifiableException
 import app.nukemichi.android.core.ssh.model.SshUntrustedHostException
 import net.schmizz.sshj.transport.verification.HostKeyVerifier
 import timber.log.Timber
 import java.security.PublicKey
 
 /**
- * Decides whether a host key may be used, and which of the two rejections the caller has to
+ * Decides whether a host key may be used, and which of the three rejections the caller has to
  * explain.
  *
- * [pinnedFingerprint] is what trust-on-first-use stored for this host; [acceptedFingerprint] is
- * what the user approved for this one attempt. Accepting is checked first so a genuinely rotated
- * key can be adopted, but only ever through a decision the user made against a prompt that told
- * them the old key existed — a stale pin alone never yields to a new key.
+ * [pin] is what trust-on-first-use knows about this host; [acceptedFingerprint] is what the user
+ * approved for this one attempt. Accepting is checked first so a genuinely rotated key can be
+ * adopted, but only ever through a decision the user made against a prompt that told them what
+ * the old state was — a pin on its own never yields to a new key.
  */
 internal class PinnedHostKeyVerifier(
-    private val pinnedFingerprint: String?,
+    private val pin: HostKeyPin,
     private val acceptedFingerprint: String?,
 ) : HostKeyVerifier {
 
@@ -28,24 +29,29 @@ internal class PinnedHostKeyVerifier(
     override fun verify(hostname: String, port: Int, key: PublicKey): Boolean {
         val actualFingerprint = SecurityUtils.getFingerprint(key)
 
-        return when {
-            actualFingerprint == acceptedFingerprint || actualFingerprint == pinnedFingerprint -> {
-                verifiedFingerprint = actualFingerprint
-                true
-            }
+        if (actualFingerprint == acceptedFingerprint || pin.matches(actualFingerprint)) {
+            verifiedFingerprint = actualFingerprint
+            return true
+        }
 
-            pinnedFingerprint != null -> {
+        when (pin) {
+            is HostKeyPin.Known -> {
                 Timber.w(
                     "Host key changed: %s:%d expected=%s actual=%s",
                     hostname,
                     port,
-                    pinnedFingerprint,
+                    pin.fingerprint,
                     actualFingerprint,
                 )
-                throw SshHostKeyChangedException(actualFingerprint, pinnedFingerprint)
+                throw SshHostKeyChangedException(actualFingerprint, pin.fingerprint)
             }
 
-            else -> {
+            HostKeyPin.Unreadable -> {
+                Timber.w("Pinned host key is undecryptable: %s:%d actual=%s", hostname, port, actualFingerprint)
+                throw SshHostKeyUnverifiableException(actualFingerprint)
+            }
+
+            HostKeyPin.None -> {
                 Timber.w("Untrusted host key: %s:%d fingerprint=%s", hostname, port, actualFingerprint)
                 throw SshUntrustedHostException(actualFingerprint)
             }
@@ -53,4 +59,7 @@ internal class PinnedHostKeyVerifier(
     }
 
     override fun findExistingAlgorithms(hostname: String, port: Int): List<String?>? = null
+
+    private fun HostKeyPin.matches(fingerprint: String): Boolean =
+        this is HostKeyPin.Known && this.fingerprint == fingerprint
 }

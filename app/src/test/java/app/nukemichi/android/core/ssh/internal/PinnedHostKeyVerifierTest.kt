@@ -2,6 +2,7 @@ package app.nukemichi.android.core.ssh.internal
 
 import app.nukemichi.android.core.ssh.internal.util.SecurityUtils
 import app.nukemichi.android.core.ssh.model.SshHostKeyChangedException
+import app.nukemichi.android.core.ssh.model.SshHostKeyUnverifiableException
 import app.nukemichi.android.core.ssh.model.SshUntrustedHostException
 import net.schmizz.sshj.common.Buffer
 import org.junit.Assert.assertEquals
@@ -20,8 +21,32 @@ import java.util.Base64
 class PinnedHostKeyVerifierTest {
 
     @Test
+    fun `an unreadable pin is reported as neither a first connection nor a changed key`() {
+        val verifier = PinnedHostKeyVerifier(HostKeyPin.Unreadable, acceptedFingerprint = null)
+
+        val error = runCatching { verifier.verify(HOST, PORT, publicKey(ED25519_WIRE_BLOB)) }.exceptionOrNull()
+
+        assertTrue(
+            "treating it as first contact would hide that this host was pinned once",
+            error is SshHostKeyUnverifiableException,
+        )
+        assertEquals(ED25519_FINGERPRINT, (error as SshHostKeyUnverifiableException).fingerprint)
+    }
+
+    @Test
+    fun `an unreadable pin still yields to a fingerprint the user accepted`() {
+        val verifier = PinnedHostKeyVerifier(HostKeyPin.Unreadable, acceptedFingerprint = ED25519_FINGERPRINT)
+
+        assertTrue(
+            "without this, an invalidated Keystore key locks the user out of their own server",
+            verifier.verify(HOST, PORT, publicKey(ED25519_WIRE_BLOB)),
+        )
+        assertEquals(ED25519_FINGERPRINT, verifier.verifiedFingerprint)
+    }
+
+    @Test
     fun `an unknown host with no pin is reported as a first connection`() {
-        val verifier = PinnedHostKeyVerifier(pinnedFingerprint = null, acceptedFingerprint = null)
+        val verifier = PinnedHostKeyVerifier(HostKeyPin.None, acceptedFingerprint = null)
 
         val error = runCatching { verifier.verify(HOST, PORT, publicKey(ED25519_WIRE_BLOB)) }.exceptionOrNull()
 
@@ -31,7 +56,7 @@ class PinnedHostKeyVerifierTest {
 
     @Test
     fun `a key that disagrees with the pin is reported as changed, not as first contact`() {
-        val verifier = PinnedHostKeyVerifier(pinnedFingerprint = RSA_FINGERPRINT, acceptedFingerprint = null)
+        val verifier = PinnedHostKeyVerifier(HostKeyPin.Known(RSA_FINGERPRINT), acceptedFingerprint = null)
 
         val error = runCatching { verifier.verify(HOST, PORT, publicKey(ED25519_WIRE_BLOB)) }.exceptionOrNull()
 
@@ -46,7 +71,7 @@ class PinnedHostKeyVerifierTest {
 
     @Test
     fun `a key matching the pin verifies`() {
-        val verifier = PinnedHostKeyVerifier(pinnedFingerprint = ED25519_FINGERPRINT, acceptedFingerprint = null)
+        val verifier = PinnedHostKeyVerifier(HostKeyPin.Known(ED25519_FINGERPRINT), acceptedFingerprint = null)
 
         assertTrue(verifier.verify(HOST, PORT, publicKey(ED25519_WIRE_BLOB)))
         assertEquals(ED25519_FINGERPRINT, verifier.verifiedFingerprint)
@@ -54,10 +79,7 @@ class PinnedHostKeyVerifierTest {
 
     @Test
     fun `a fingerprint the user accepted verifies even against a stale pin`() {
-        val verifier = PinnedHostKeyVerifier(
-            pinnedFingerprint = RSA_FINGERPRINT,
-            acceptedFingerprint = ED25519_FINGERPRINT,
-        )
+        val verifier = PinnedHostKeyVerifier(HostKeyPin.Known(RSA_FINGERPRINT), ED25519_FINGERPRINT)
 
         assertTrue("accepting a rotated key is the whole point of the changed-key prompt", verifier.verify(HOST, PORT, publicKey(ED25519_WIRE_BLOB)))
         assertEquals(ED25519_FINGERPRINT, verifier.verifiedFingerprint)
@@ -65,10 +87,7 @@ class PinnedHostKeyVerifierTest {
 
     @Test
     fun `an accepted fingerprint that does not match the key still fails`() {
-        val verifier = PinnedHostKeyVerifier(
-            pinnedFingerprint = null,
-            acceptedFingerprint = RSA_FINGERPRINT,
-        )
+        val verifier = PinnedHostKeyVerifier(HostKeyPin.None, acceptedFingerprint = RSA_FINGERPRINT)
 
         val error = runCatching { verifier.verify(HOST, PORT, publicKey(ED25519_WIRE_BLOB)) }.exceptionOrNull()
 
@@ -77,7 +96,7 @@ class PinnedHostKeyVerifierTest {
 
     @Test
     fun `no fingerprint is published for a key that never verified`() {
-        val verifier = PinnedHostKeyVerifier(pinnedFingerprint = RSA_FINGERPRINT, acceptedFingerprint = null)
+        val verifier = PinnedHostKeyVerifier(HostKeyPin.Known(RSA_FINGERPRINT), acceptedFingerprint = null)
 
         runCatching { verifier.verify(HOST, PORT, publicKey(ED25519_WIRE_BLOB)) }
 

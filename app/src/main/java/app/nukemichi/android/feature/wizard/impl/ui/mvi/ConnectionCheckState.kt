@@ -28,6 +28,10 @@ internal sealed interface ConnectionCheckState {
         val fingerprint: String,
         val expectedFingerprint: String,
     ) : ConnectionCheckState
+
+    /** This host was pinned once, but the pin can no longer be decrypted, so there is nothing to
+     *  compare the key against. Re-confirming replaces it. */
+    data class HostKeyUnverifiable(val fingerprint: String) : ConnectionCheckState
 }
 
 internal val ConnectionCheckState.isInProgress: Boolean

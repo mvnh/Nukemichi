@@ -50,6 +50,10 @@
     <string name="wizard_host_key_changed_replace">Я пересоздал сервер, заменить ключ</string>
     <string name="wizard_host_key_changed_stop">Остановиться</string>
 
+    <string name="wizard_host_key_unverifiable_title">Не удаётся сверить сервер</string>
+    <string name="wizard_host_key_unverifiable_body">Этот сервер уже подтверждали, но сохранённый отпечаток больше не читается. Обычно так бывает после смены блокировки экрана или восстановления на другом устройстве — с самим сервером это не связано.\n\nСверьте отпечаток с панелью хостинга, прежде чем продолжать: он будет сохранён заново.\n\nОтпечаток ключа хоста: %1$s</string>
+    <string name="wizard_host_key_unverifiable_confirm">Сверил, сохранить заново</string>
+
     <!-- Confirmation Page -->
     <string name="wizard_confirmation_summary_title">Сводка</string>
     <string name="wizard_confirmation_server_label">Сервер</string>

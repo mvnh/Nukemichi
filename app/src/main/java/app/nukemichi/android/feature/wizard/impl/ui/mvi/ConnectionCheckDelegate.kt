@@ -3,6 +3,7 @@ package app.nukemichi.android.feature.wizard.impl.ui.mvi
 import app.nukemichi.android.R
 import app.nukemichi.android.core.ssh.model.SshHostKeyChangedException
 import app.nukemichi.android.core.ssh.model.SshHostKeyException
+import app.nukemichi.android.core.ssh.model.SshHostKeyUnverifiableException
 import app.nukemichi.android.core.ssh.model.SshUntrustedHostException
 import app.nukemichi.android.feature.wizard.impl.domain.WizardSetupCoordinator
 import app.nukemichi.android.platform.ui.mvi.ViewModelDelegate
@@ -64,6 +65,9 @@ internal class ConnectionCheckDelegate @Inject constructor(
                                     fingerprint = hostKeyError.fingerprint,
                                     expectedFingerprint = hostKeyError.expectedFingerprint,
                                 )
+
+                                is SshHostKeyUnverifiableException ->
+                                    ConnectionCheckState.HostKeyUnverifiable(hostKeyError.fingerprint)
 
                                 null -> ConnectionCheckState.Failed(
                                     error.message?.let(UiText::Raw) ?: UiText.Resource(R.string.wizard_error_unknown)

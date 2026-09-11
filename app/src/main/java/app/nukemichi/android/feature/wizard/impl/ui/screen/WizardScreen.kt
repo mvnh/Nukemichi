@@ -219,6 +219,18 @@ internal fun WizardScreen(
         )
     }
 
+    val unverifiableHostKey = uiState.connectionCheck as? ConnectionCheckState.HostKeyUnverifiable
+    if (unverifiableHostKey != null) {
+        ConfirmDialog(
+            icon = NukemichiIcons.Filled.Lock,
+            title = UiText.Resource(R.string.wizard_host_key_unverifiable_title),
+            body = UiText.Resource(R.string.wizard_host_key_unverifiable_body, unverifiableHostKey.fingerprint),
+            confirmText = UiText.Resource(R.string.wizard_host_key_unverifiable_confirm),
+            onConfirm = { viewModel.processIntent(Intent.TrustHostAndRetry(unverifiableHostKey.fingerprint)) },
+            onDismiss = { viewModel.processIntent(Intent.DismissConnectionErrorDialog) },
+        )
+    }
+
     val changedHostKey = uiState.connectionCheck as? ConnectionCheckState.HostKeyChanged
     if (changedHostKey != null) {
         // Accepting stays on the confirm button rather than being swapped with cancel: dismissing

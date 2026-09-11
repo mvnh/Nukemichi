@@ -49,9 +49,12 @@ private const val PAGE_COUNT = 4
 
 @Composable
 internal fun WizardScreen(
+    targetSubscriptionId: String?,
     onNavigateBack: () -> Unit,
-    onNavigateToDashboard: () -> Unit,
-    viewModel: WizardViewModel = hiltViewModel()
+    onNavigateToDashboard: (selectServerId: String) -> Unit,
+    viewModel: WizardViewModel = hiltViewModel<WizardViewModel, WizardViewModel.Factory>(
+        creationCallback = { factory -> factory.create(targetSubscriptionId) },
+    ),
 ) {
     val uiState by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -72,7 +75,7 @@ internal fun WizardScreen(
         when (effect) {
             is WizardContract.Effect.GoToNextPage -> wizardState.next()
             is WizardContract.Effect.NavigateBack -> onNavigateBack()
-            is WizardContract.Effect.NavigateToDashboard -> onNavigateToDashboard()
+            is WizardContract.Effect.NavigateToDashboard -> onNavigateToDashboard(effect.selectServerId)
             is WizardContract.Effect.RequestVpnPermission -> {
                 VpnService.prepare(context)?.let(vpnPermissionLauncher::launch)
                     ?: viewModel.processIntent(Intent.VpnPermissionGranted)

@@ -24,6 +24,7 @@ object WizardContract {
         val realityPublicKey: String = "",
         val realityShortId: String = "",
         val realityServerName: String = "",
+        val serverCountryCode: String? = null,
         val serverArchitecture: String? = null,
         val connectionCheck: ConnectionCheckState = ConnectionCheckState.Idle,
         val deployment: DeploymentUiState = DeploymentUiState(),
@@ -57,7 +58,7 @@ object WizardContract {
     internal sealed interface Effect {
         data object GoToNextPage : Effect
         data object NavigateBack : Effect
-        data object NavigateToDashboard : Effect
+        data class NavigateToDashboard(val selectServerId: String) : Effect
         data object RequestVpnPermission : Effect
     }
 

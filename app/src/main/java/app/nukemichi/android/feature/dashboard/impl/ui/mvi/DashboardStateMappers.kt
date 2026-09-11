@@ -1,0 +1,70 @@
+package app.nukemichi.android.feature.dashboard.impl.ui.mvi
+
+import app.nukemichi.android.core.vpn.XrayVpnProfile
+import app.nukemichi.android.core.vpn.spec.XraySecurity
+import app.nukemichi.android.core.vpn.spec.XrayTransport
+import app.nukemichi.android.feature.dashboard.impl.domain.model.ServerLibrary
+import app.nukemichi.android.feature.dashboard.impl.ui.model.ServerDetailsUi
+import app.nukemichi.android.feature.dashboard.impl.ui.model.ServerUi
+import app.nukemichi.android.feature.dashboard.impl.ui.model.SubscriptionUi
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
+
+internal fun ServerLibrary.toSubscriptionsUi(): ImmutableList<SubscriptionUi> {
+    val selectedId = selectedServer?.id
+    return subscriptions.map { subscription ->
+        SubscriptionUi(
+            id = subscription.id,
+            name = subscription.name,
+            isExpanded = subscription.id !in collapsedSubscriptionIds,
+            containsSelectedServer = subscription.servers.any { it.id == selectedId },
+            servers = subscription.servers.map { it.toServerUi(isSelected = it.id == selectedId) }.toImmutableList(),
+        )
+    }.toImmutableList()
+}
+
+internal fun XrayVpnProfile.toDetailsUi(): ServerDetailsUi {
+    val reality = security as? XraySecurity.Reality
+    return ServerDetailsUi(
+        id = id,
+        name = name,
+        flag = countryCode?.toFlagEmoji(),
+        stack = stackLabel(),
+        address = "$serverAddress:$serverPort",
+        maskingAs = reality?.serverName ?: (security as? XraySecurity.Tls)?.serverName,
+        deployedAtMillis = deployedAtMillis,
+        fingerprint = reality?.fingerprint,
+        muxEnabled = muxEnabled,
+        muxConcurrency = muxConcurrency,
+    )
+}
+
+private fun XrayVpnProfile.toServerUi(isSelected: Boolean) = ServerUi(
+    id = id,
+    name = name,
+    stack = stackLabel(),
+    flag = countryCode?.toFlagEmoji(),
+    isSelected = isSelected,
+)
+
+// Protocol names, not prose: identical in every locale.
+private fun XrayVpnProfile.stackLabel(): String = listOfNotNull(
+    "VLESS",
+    when (transport) {
+        is XrayTransport.Xhttp -> "XHTTP"
+        is XrayTransport.Raw -> "RAW"
+    },
+    (transport as? XrayTransport.Raw)?.flow?.let { "VISION" },
+    when (security) {
+        is XraySecurity.Reality -> "REALITY"
+        is XraySecurity.Tls -> "TLS"
+    },
+).joinToString(separator = " · ")
+
+/** Each letter maps onto its regional indicator symbol, and a pair of those renders as the country's flag. */
+private fun String.toFlagEmoji(): String? {
+    if (length != 2 || any { it !in 'A'..'Z' }) return null
+    return buildString { this@toFlagEmoji.forEach { appendCodePoint(REGIONAL_INDICATOR_A + (it - 'A')) } }
+}
+
+private const val REGIONAL_INDICATOR_A = 0x1F1E6

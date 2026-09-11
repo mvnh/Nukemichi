@@ -9,4 +9,5 @@ internal data class WizardProfileDraft(
     val realityServerName: String,
     val realityPublicKey: String,
     val realityShortId: String,
+    val countryCode: String?,
 )

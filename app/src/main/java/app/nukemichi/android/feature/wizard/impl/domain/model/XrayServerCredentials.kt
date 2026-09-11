@@ -5,4 +5,5 @@ internal data class XrayServerCredentials(
     val publicKey: String,
     val shortId: String,
     val realityServerName: String,
+    val countryCode: String? = null,
 )

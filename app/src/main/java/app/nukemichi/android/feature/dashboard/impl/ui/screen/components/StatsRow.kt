@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import app.nukemichi.android.R
 import app.nukemichi.android.core.vpn.XrayTrafficStats
 import app.nukemichi.android.platform.ui.theme.size.dimens
@@ -24,41 +25,49 @@ internal fun StatsRow(
 ) {
     val dimens = MaterialTheme.dimens
 
-    Row(
-        modifier = modifier
-            .clip(RoundedCornerShape(dimens.cornerRadius))
-            .background(MaterialTheme.colorScheme.surfaceContainerLow)
-            .padding(dimens.l),
-        horizontalArrangement = Arrangement.SpaceEvenly,
-    ) {
-        StatColumn(
+    Row(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(dimens.l)) {
+        StatCard(
             label = stringResource(R.string.dashboard_stats_down),
             value = formatBitrate(stats?.downlinkBytesPerSecond ?: 0L),
+            modifier = Modifier.weight(1f),
         )
-        StatColumn(
+        StatCard(
             label = stringResource(R.string.dashboard_stats_up),
             value = formatBitrate(stats?.uplinkBytesPerSecond ?: 0L),
+            modifier = Modifier.weight(1f),
         )
-        StatColumn(
+        StatCard(
             label = stringResource(R.string.dashboard_stats_total),
             value = formatBytes((stats?.downlinkTotalBytes ?: 0L) + (stats?.uplinkTotalBytes ?: 0L)),
+            modifier = Modifier.weight(1f),
         )
     }
 }
 
 // Plain String, not UiText: file-local literal labels + formatted numbers, no reuse.
 @Composable
-private fun StatColumn(label: String, value: String) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+private fun StatCard(label: String, value: String, modifier: Modifier = Modifier) {
+    val dimens = MaterialTheme.dimens
+
+    Column(
+        modifier = modifier
+            .clip(RoundedCornerShape(dimens.cornerRadius))
+            .background(MaterialTheme.colorScheme.surfaceContainerLow)
+            .padding(vertical = dimens.l, horizontal = dimens.m),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
         Text(
             text = value,
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.onSurface,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
         )
         Text(
             text = label,
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
+            maxLines = 1,
         )
     }
 }

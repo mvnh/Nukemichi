@@ -15,9 +15,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.NavEntry
 import androidx.navigation3.runtime.NavKey
 import androidx.navigation3.runtime.rememberNavBackStack
+import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import app.nukemichi.android.core.storage.AppStorage
 import app.nukemichi.android.core.storage.ExperienceKeys
@@ -66,7 +68,7 @@ class MainActivity : ComponentActivity() {
                                 StorageDomain.EXPERIENCE,
                                 ExperienceKeys.WIZARD_COMPLETED,
                             )
-                            if (done) DashboardKey else HelloKey
+                            if (done) DashboardKey() else HelloKey
                         }
                     }
                     val resolvedStartKey = startKey ?: return@Surface
@@ -96,6 +98,12 @@ class MainActivity : ComponentActivity() {
                         NavDisplay(
                             backStack = backStack,
                             onBack = navigator::back,
+                            // Scopes ViewModels to their back-stack entry: a screen opened again (the
+                            // wizard via "Add server") starts fresh, and popping an entry clears its ViewModel.
+                            entryDecorators = listOf(
+                                rememberSaveableStateHolderNavEntryDecorator(),
+                                rememberViewModelStoreNavEntryDecorator(),
+                            ),
                             transitionSpec = {
                                 slideInHorizontally(initialOffsetX = { it }) togetherWith
                                     slideOutHorizontally(targetOffsetX = { -it })

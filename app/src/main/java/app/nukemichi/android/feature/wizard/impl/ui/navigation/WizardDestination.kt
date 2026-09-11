@@ -15,8 +15,9 @@ class WizardDestination @Inject constructor() : Destination<WizardKey> {
         val navigator = LocalAppNavigator.current
 
         WizardScreen(
+            targetSubscriptionId = key.subscriptionId,
             onNavigateBack = navigator::back,
-            onNavigateToDashboard = { navigator.replaceAll(DashboardKey) }
+            onNavigateToDashboard = { serverId -> navigator.replaceAll(DashboardKey(selectServerId = serverId)) },
         )
     }
 }

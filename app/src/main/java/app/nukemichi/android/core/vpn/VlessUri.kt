@@ -45,4 +45,7 @@ fun XrayVpnProfile.toVlessUri(): String = buildString {
     append('#').append(name.urlEncode())
 }
 
+/** A plain-text subscription body: one link per line, the shape other clients import from the clipboard. */
+fun XraySubscription.toVlessUriList(): String = servers.joinToString(separator = "\n") { it.toVlessUri() }
+
 private fun String.urlEncode(): String = URLEncoder.encode(this, "UTF-8").replace("+", "%20")

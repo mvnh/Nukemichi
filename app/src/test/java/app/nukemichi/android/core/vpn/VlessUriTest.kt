@@ -9,6 +9,7 @@ class VlessUriTest {
 
     private fun profile(name: String = "My Server", realityServerName: String = "www.example.com") =
         XrayVpnProfile(
+            id = "server-1",
             name = name,
             sshHost = "203.0.113.1",
             sshPort = 22,

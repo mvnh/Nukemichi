@@ -15,15 +15,19 @@ import app.nukemichi.android.feature.wizard.impl.ui.mvi.WizardContract.State
 import app.nukemichi.android.platform.mode.AppModeRepository
 import app.nukemichi.android.platform.ui.mvi.MviViewModel
 import app.nukemichi.android.platform.ui.util.UiText
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import timber.log.Timber
 
 @Stable
-@HiltViewModel
-internal class WizardViewModel @Inject constructor(
+@HiltViewModel(assistedFactory = WizardViewModel.Factory::class)
+internal class WizardViewModel @AssistedInject constructor(
+    // The subscription a deployed server joins; null puts it in a new one.
+    @Assisted private val targetSubscriptionId: String?,
     private val coordinator: WizardSetupCoordinator,
     private val xrayControl: XrayControl,
     private val appStorage: AppStorage,
@@ -82,7 +86,7 @@ internal class WizardViewModel @Inject constructor(
     }
 
     private suspend fun finishSetup() {
-        coordinator.saveProfile(state.value.toProfileDraft())
+        coordinator.saveProfile(state.value.toProfileDraft(), targetSubscriptionId)
             .onSuccess { profile ->
                 appStorage.putBoolean(StorageDomain.EXPERIENCE, ExperienceKeys.WIZARD_COMPLETED, true)
                 if (xrayControl.needsVpnPermission()) sendEffect(Effect.RequestVpnPermission)
@@ -95,22 +99,28 @@ internal class WizardViewModel @Inject constructor(
     }
 
     private suspend fun startVpn(savedProfile: XrayVpnProfile? = null) {
-        val profile = savedProfile ?: coordinator.saveProfile(state.value.toProfileDraft()).getOrElse { error ->
-            Timber.e(error, "Saving the deployed profile failed")
-            reduce { copy(errorMessage = UiText.Resource(R.string.wizard_error_save_failed)) }
-            return
-        }
+        val profile = savedProfile
+            ?: coordinator.saveProfile(state.value.toProfileDraft(), targetSubscriptionId).getOrElse { error ->
+                Timber.e(error, "Saving the deployed profile failed")
+                reduce { copy(errorMessage = UiText.Resource(R.string.wizard_error_save_failed)) }
+                return
+            }
         reduce { copy(isLoading = true, errorMessage = null) }
-        processStartResult(xrayControl.start(XrayClientConfigFactory.createRuntimeConfig(profile)))
+        processStartResult(profile, xrayControl.start(XrayClientConfigFactory.createRuntimeConfig(profile)))
     }
 
-    private suspend fun processStartResult(result: Result<Unit>) {
+    private fun processStartResult(profile: XrayVpnProfile, result: Result<Unit>) {
         result.onSuccess {
             reduce { copy(isLoading = false, errorMessage = null) }
-            sendEffect(Effect.NavigateToDashboard)
+            sendEffect(Effect.NavigateToDashboard(selectServerId = profile.id))
         }.onFailure { error ->
             Timber.e(error, "Starting the VPN from the wizard failed")
             reduce { copy(isLoading = false, errorMessage = UiText.Resource(R.string.wizard_error_start_failed)) }
         }
+    }
+
+    @AssistedFactory
+    interface Factory {
+        fun create(targetSubscriptionId: String?): WizardViewModel
     }
 }

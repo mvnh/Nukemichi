@@ -2,11 +2,11 @@ package app.nukemichi.android.core.vpn.di
 
 import app.nukemichi.android.core.vpn.XrayControl
 import app.nukemichi.android.core.vpn.XrayMonitoring
-import app.nukemichi.android.core.vpn.XrayProfileStore
 import app.nukemichi.android.core.vpn.XrayServiceProvider
 import app.nukemichi.android.core.vpn.XrayStatsSource
+import app.nukemichi.android.core.vpn.XraySubscriptionStore
 import app.nukemichi.android.core.vpn.internal.RemoteXrayMonitoring
-import app.nukemichi.android.core.vpn.internal.StoredXrayProfileStore
+import app.nukemichi.android.core.vpn.internal.StoredXraySubscriptionStore
 import app.nukemichi.android.core.vpn.internal.XrayProcessControl
 import app.nukemichi.android.core.vpn.internal.XrayRuntime
 import app.nukemichi.android.core.vpn.internal.XrayServiceProviderImpl
@@ -28,7 +28,7 @@ internal abstract class VpnModule {
     abstract fun bindXrayStatsSource(impl: XrayRuntime): XrayStatsSource
 
     @Binds
-    abstract fun bindXrayProfileStore(impl: StoredXrayProfileStore): XrayProfileStore
+    abstract fun bindXraySubscriptionStore(impl: StoredXraySubscriptionStore): XraySubscriptionStore
 
     @Binds
     abstract fun bindXrayServiceProvider(impl: XrayServiceProviderImpl): XrayServiceProvider

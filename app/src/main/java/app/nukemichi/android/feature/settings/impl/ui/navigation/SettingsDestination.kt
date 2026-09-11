@@ -3,7 +3,6 @@ package app.nukemichi.android.feature.settings.impl.ui.navigation
 import androidx.compose.runtime.Composable
 import app.nukemichi.android.feature.dashboard.XrayLogsKey
 import app.nukemichi.android.feature.hello.AdvancedModeIntroKey
-import app.nukemichi.android.feature.hello.HelloKey
 import app.nukemichi.android.feature.settings.SettingsKey
 import app.nukemichi.android.feature.settings.impl.ui.screen.SettingsScreen
 import app.nukemichi.android.platform.navigation.Destination
@@ -19,7 +18,6 @@ class SettingsDestination @Inject constructor() : Destination<SettingsKey> {
         SettingsScreen(
             onNavigateToLogs = { navigator.navigate(XrayLogsKey) },
             onNavigateToAdvancedModeIntro = { navigator.navigate(AdvancedModeIntroKey) },
-            onServerForgotten = { navigator.replaceAll(HelloKey) },
         )
     }
 }

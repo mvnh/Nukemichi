@@ -1,7 +1,4 @@
 <resources>
-    <string name="dashboard_no_server_configured">No server configured</string>
-    <string name="dashboard_export_link_cd">Share VLESS connection link</string>
-    <string name="dashboard_export_link_label">Share VLESS link</string>
     <string name="dashboard_connected_for">Connected for %1$s</string>
     <string name="duration_hours_minutes">%1$dh %2$02dm</string>
     <string name="duration_minutes_seconds">%1$dm %2$02ds</string>
@@ -12,10 +9,37 @@
     <string name="dashboard_state_disconnecting">Disconnecting…</string>
     <string name="dashboard_state_error">Connection error</string>
     <string name="dashboard_state_taking_a_while">Still working on it. A first connection takes a little longer.</string>
+    <string name="dashboard_connect">Connect</string>
+    <string name="dashboard_disconnect">Disconnect</string>
 
+    <string name="dashboard_deploy_server">Deploy server</string>
+    <string name="dashboard_empty_hint">No servers yet. Deploy Xray to your own VPS and it shows up here.</string>
+
+    <string name="dashboard_subscription_own_servers">Your servers · %1$d</string>
+    <string name="dashboard_subscription_add_server_cd">Add a server to %1$s</string>
+    <string name="dashboard_subscription_share_cd">Share %1$s</string>
+    <string name="dashboard_subscription_edit_cd">Edit %1$s</string>
+    <string name="dashboard_subscription_edit_title">Edit subscription</string>
+    <string name="dashboard_subscription_name_label">Name</string>
+    <string name="dashboard_subscription_save">Save</string>
+    <string name="dashboard_subscription_delete">Delete subscription</string>
+    <string name="dashboard_subscription_delete_confirm_title">Delete this subscription?</string>
+    <string name="dashboard_subscription_delete_confirm_body">Its servers are removed from this device. The servers themselves keep running, so you can set them up again anytime.</string>
+
+    <string name="dashboard_server_details_cd">Details for %1$s</string>
     <string name="dashboard_server_info_server">Server</string>
     <string name="dashboard_server_info_masking_as">Masking as</string>
     <string name="dashboard_server_info_deployed">Deployed</string>
+    <string name="dashboard_export_link_label">Share VLESS link</string>
+    <string name="dashboard_server_forget">Forget this server</string>
+    <string name="dashboard_server_forget_confirm_title">Forget this server?</string>
+    <string name="dashboard_server_forget_confirm_body">This removes the saved connection from this device. Your server keeps running, so you can set it up again anytime.</string>
+
+    <string name="dashboard_server_advanced_title">Advanced</string>
+    <string name="dashboard_server_utls_fingerprint_title">TLS fingerprint</string>
+    <string name="dashboard_server_mux_title">Multiplexing</string>
+    <string name="dashboard_server_mux_description">Share one connection across multiple streams.</string>
+    <string name="dashboard_server_mux_concurrency">Concurrency: %1$d</string>
 
     <string name="dashboard_stats_down">↓ Down</string>
     <string name="dashboard_stats_up">↑ Up</string>

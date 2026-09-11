@@ -208,46 +208,62 @@ internal fun WizardScreen(
         )
     }
 
-    val untrustedHost = uiState.connectionCheck as? ConnectionCheckState.UntrustedHost
-    if (untrustedHost != null) {
-        ConfirmDialog(
-            title = UiText.Resource(R.string.wizard_untrusted_host_title),
-            body = UiText.Resource(R.string.wizard_untrusted_host_body, untrustedHost.fingerprint),
-            confirmText = UiText.Resource(R.string.wizard_untrusted_host_trust),
-            onConfirm = { viewModel.processIntent(Intent.TrustHostAndRetry(untrustedHost.fingerprint)) },
-            onDismiss = { viewModel.processIntent(Intent.DismissConnectionErrorDialog) },
-        )
-    }
+    HostKeyDialog(
+        state = uiState.connectionCheck,
+        onAccept = { fingerprint -> viewModel.processIntent(Intent.TrustHostAndRetry(fingerprint)) },
+        onDecline = { viewModel.processIntent(Intent.DismissConnectionErrorDialog) },
+    )
+}
 
-    val unverifiableHostKey = uiState.connectionCheck as? ConnectionCheckState.HostKeyUnverifiable
-    if (unverifiableHostKey != null) {
-        ConfirmDialog(
+/**
+ * The three ways a host key can stop a connection, as one dialog. They differ only in copy and in
+ * what the fingerprints mean, and keeping them in one `when` is what makes it obvious that the
+ * changed-key case reads differently from the other two rather than sharing their wording.
+ */
+@Composable
+private fun HostKeyDialog(
+    state: ConnectionCheckState,
+    onAccept: (fingerprint: String) -> Unit,
+    onDecline: () -> Unit,
+) {
+    when (state) {
+        is ConnectionCheckState.UntrustedHost -> ConfirmDialog(
+            title = UiText.Resource(R.string.wizard_untrusted_host_title),
+            body = UiText.Resource(R.string.wizard_untrusted_host_body, state.fingerprint),
+            confirmText = UiText.Resource(R.string.wizard_untrusted_host_trust),
+            onConfirm = { onAccept(state.fingerprint) },
+            onDismiss = onDecline,
+        )
+
+        is ConnectionCheckState.HostKeyUnverifiable -> ConfirmDialog(
             icon = NukemichiIcons.Filled.Lock,
             title = UiText.Resource(R.string.wizard_host_key_unverifiable_title),
-            body = UiText.Resource(R.string.wizard_host_key_unverifiable_body, unverifiableHostKey.fingerprint),
+            body = UiText.Resource(R.string.wizard_host_key_unverifiable_body, state.fingerprint),
             confirmText = UiText.Resource(R.string.wizard_host_key_unverifiable_confirm),
-            onConfirm = { viewModel.processIntent(Intent.TrustHostAndRetry(unverifiableHostKey.fingerprint)) },
-            onDismiss = { viewModel.processIntent(Intent.DismissConnectionErrorDialog) },
+            onConfirm = { onAccept(state.fingerprint) },
+            onDismiss = onDecline,
         )
-    }
 
-    val changedHostKey = uiState.connectionCheck as? ConnectionCheckState.HostKeyChanged
-    if (changedHostKey != null) {
         // Accepting stays on the confirm button rather than being swapped with cancel: dismissing
-        // is also what a tap outside and a back press do, so the safe action is the one that has
-        // to sit there. The label carries the weight instead.
-        ConfirmDialog(
+        // is also what a tap outside and a back press do, so the safe action is the one that has to
+        // sit there. The label carries the weight instead.
+        is ConnectionCheckState.HostKeyChanged -> ConfirmDialog(
             icon = NukemichiIcons.Filled.Shield,
             title = UiText.Resource(R.string.wizard_host_key_changed_title),
             body = UiText.Resource(
                 R.string.wizard_host_key_changed_body,
-                changedHostKey.expectedFingerprint,
-                changedHostKey.fingerprint,
+                state.expectedFingerprint,
+                state.fingerprint,
             ),
             confirmText = UiText.Resource(R.string.wizard_host_key_changed_replace),
-            onConfirm = { viewModel.processIntent(Intent.TrustHostAndRetry(changedHostKey.fingerprint)) },
+            onConfirm = { onAccept(state.fingerprint) },
             dismissText = UiText.Resource(R.string.wizard_host_key_changed_stop),
-            onDismiss = { viewModel.processIntent(Intent.DismissConnectionErrorDialog) },
+            onDismiss = onDecline,
         )
+
+        ConnectionCheckState.Idle,
+        ConnectionCheckState.Checking,
+        ConnectionCheckState.StillChecking,
+        is ConnectionCheckState.Failed -> Unit
     }
 }

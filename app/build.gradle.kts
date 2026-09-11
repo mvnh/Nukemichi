@@ -162,6 +162,8 @@ android {
                 "unsigned build."
         }
 
+        // Repeats what the require above already guarantees, because only the explicit null checks
+        // smart-cast these to non-null for the block below.
         if (storePath != null && store != null && alias != null && aliasPassword != null) {
             create("release") {
                 storeFile = rootProject.file(storePath)

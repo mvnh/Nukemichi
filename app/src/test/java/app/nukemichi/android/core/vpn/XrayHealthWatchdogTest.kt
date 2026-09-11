@@ -138,8 +138,12 @@ class XrayHealthWatchdogTest {
     }
 
     private companion object {
-        /** Longest a single jittered interval can take, so one advance is always exactly one round. */
-        const val PROBE_CYCLE_MS = XrayHealthWatchdog.PROBE_INTERVAL_MS + XrayHealthWatchdog.PROBE_JITTER_MS
+        /**
+         * The longest a single jittered interval can take (15s base + 5s jitter), taken from
+         * XrayHealthWatchdog's own constants, so one advance is always exactly one round: the
+         * shortest cycle is still longer than the jitter, so the clock can never fit two.
+         */
+        const val PROBE_CYCLE_MS = 20_000L
     }
 }
 

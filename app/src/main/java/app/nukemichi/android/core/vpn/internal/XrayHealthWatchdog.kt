@@ -56,7 +56,7 @@ internal class XrayHealthWatchdog @Inject constructor(
      * as such used to mean a forced reconnect every thirty seconds, for good.
      */
     private fun probeRound(socksEndpoint: SocksEndpoint): Boolean {
-        val (first, second) = ProbeTargets.pair()
+        val (first, second) = ProbeTargets.secondOpinionPair()
         return probe(socksEndpoint, first) || probe(socksEndpoint, second)
     }
 
@@ -73,7 +73,7 @@ internal class XrayHealthWatchdog @Inject constructor(
         false
     }
 
-    internal companion object {
+    private companion object {
         const val PROBE_INTERVAL_MS = 15_000L
         const val PROBE_JITTER_MS = 5_000L
         const val PROBE_TIMEOUT_MS = 6_000L

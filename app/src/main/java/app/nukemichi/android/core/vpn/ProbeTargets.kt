@@ -23,12 +23,9 @@ internal object ProbeTargets {
         "connectivitycheck.gstatic.com",
     )
 
-    /** Two distinct hosts, so a single blocked name cannot decide a round on its own. */
-    fun pair(): Pair<String, String> {
-        val shuffled = HOSTS.shuffled()
-        return shuffled[0] to shuffled[1]
-    }
+    /** Two distinct hosts, so a single blocked name cannot decide a probe round on its own. */
+    fun secondOpinionPair(): Pair<String, String> = HOSTS.shuffled().let { it[0] to it[1] }
 
-    /** A single host, for config fields that are fixed for the lifetime of a session. */
-    fun random(): String = HOSTS.random()
+    /** One host, for config fields xray reads once and keeps for the session. */
+    fun forWholeSession(): String = HOSTS.random()
 }

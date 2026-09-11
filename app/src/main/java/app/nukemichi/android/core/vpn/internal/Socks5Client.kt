@@ -81,14 +81,14 @@ internal object Socks5Client {
         input.readFully(reply)
         check(reply[0] == VERSION) { "SOCKS5 CONNECT reply has version ${reply[0]}" }
         check(reply[1] == REPLY_SUCCEEDED) { "SOCKS5 CONNECT failed, reply code ${reply[1]}" }
-        input.skipFully(boundAddressLength(input, addressType = reply[3]) + PORT_BYTES)
+        input.skipFully(input.readBoundAddressLength(addressType = reply[3]) + PORT_BYTES)
     }
 
-    /** Length of BND.ADDR for the reply's ATYP, having already consumed a domain's length byte. */
-    private fun boundAddressLength(input: DataInputStream, addressType: Byte): Int = when (addressType) {
+    /** Length of BND.ADDR for the reply's ATYP. Reads: a domain's length is itself a byte on the wire. */
+    private fun DataInputStream.readBoundAddressLength(addressType: Byte): Int = when (addressType) {
         ADDRESS_TYPE_IPV4 -> IPV4_BYTES
         ADDRESS_TYPE_IPV6 -> IPV6_BYTES
-        ADDRESS_TYPE_DOMAIN -> input.readUnsignedByte()
+        ADDRESS_TYPE_DOMAIN -> readUnsignedByte()
         else -> error("SOCKS5 CONNECT reply has unknown address type $addressType")
     }
 

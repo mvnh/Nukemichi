@@ -116,7 +116,7 @@ object XrayClientConfigFactory {
                 pingConfig = PingConfigObject(
                     // Fixed for the session because xray reads it once, but drawn from a pool so
                     // that it is not the same name on every install. See ProbeTargets.
-                    destination = "https://${ProbeTargets.random()}/",
+                    destination = "https://${ProbeTargets.forWholeSession()}/",
                     interval = "1m",
                     sampling = 4,
                     timeout = "3s",

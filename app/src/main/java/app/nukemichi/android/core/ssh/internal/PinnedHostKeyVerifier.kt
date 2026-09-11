@@ -59,7 +59,4 @@ internal class PinnedHostKeyVerifier(
     }
 
     override fun findExistingAlgorithms(hostname: String, port: Int): List<String?>? = null
-
-    private fun HostKeyPin.matches(fingerprint: String): Boolean =
-        this is HostKeyPin.Known && this.fingerprint == fingerprint
 }

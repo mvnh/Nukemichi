@@ -39,7 +39,7 @@ class XrayLogsViewModelTest {
 
     @Test
     fun `renders the lines it was given`() = runTest(dispatcher) {
-        val viewModel = XrayLogsViewModel(FakeServiceProvider(logs))
+        val viewModel = XrayLogsViewModel(FakeServiceProvider(logs), dispatcher)
         advanceUntilIdle()
 
         logs.emit(message("tunnel up"))
@@ -55,22 +55,27 @@ class XrayLogsViewModelTest {
      */
     @Test
     fun `keeps only the most recent lines`() = runTest(dispatcher) {
-        val viewModel = XrayLogsViewModel(FakeServiceProvider(logs))
+        val viewModel = XrayLogsViewModel(FakeServiceProvider(logs), dispatcher)
         advanceUntilIdle()
 
-        repeat(XrayLogsViewModel.MAX_LINES + 250) { index -> logs.emit(message("line $index")) }
+        repeat(MAX_LINES + 250) { index -> logs.emit(message("line $index")) }
         advanceUntilIdle()
 
         val lines = viewModel.lines.value
-        assertEquals(XrayLogsViewModel.MAX_LINES, lines.size)
+        assertEquals(MAX_LINES, lines.size)
         assertTrue("oldest lines must be evicted, got: ${lines.first()}", lines.first().endsWith("line 250"))
         assertTrue(
             "newest line must survive, got: ${lines.last()}",
-            lines.last().endsWith("line ${XrayLogsViewModel.MAX_LINES + 249}"),
+            lines.last().endsWith("line ${MAX_LINES + 249}"),
         )
     }
 
     private fun message(text: String) = XrayLogMessage(level = 1, message = text, timestampMillis = 0L)
+
+    private companion object {
+        /** Stated here rather than read off the view model, so changing the bound has to be deliberate. */
+        const val MAX_LINES = 1000
+    }
 }
 
 private class FakeServiceProvider(override val monitoring: XrayMonitoring) : XrayServiceProvider {

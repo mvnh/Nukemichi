@@ -60,11 +60,15 @@ internal class StoredXraySubscriptionStore @Inject constructor(
         cached.value ?: withContext(ioDispatcher) { load() }.also { cached.value = it }
 
     private fun load(): List<XraySubscription> {
-        // An unreadable document is left in place: an empty list is recoverable, deleting every server is not.
+        // Cleared rather than left in place. It is encrypted under a Keystore key that no longer
+        // exists, so nothing can ever read it again; keeping it only meant the next update()
+        // overwrote it anyway, later and without saying so. An empty server list is visible to the
+        // user in a way a vanished SSH host key pin is not, which is why that one is kept instead.
         val payload = try {
             appStorage.getString(StorageDomain.XRAY_PROFILES, KEY_SUBSCRIPTIONS)
         } catch (error: SecureStorageUnreadableException) {
-            Timber.e(error, "Stored subscriptions are unreadable")
+            Timber.e(error, "Stored subscriptions can no longer be decrypted - discarding them")
+            appStorage.remove(StorageDomain.XRAY_PROFILES, KEY_SUBSCRIPTIONS)
             return emptyList()
         } ?: return migrateLegacyProfile().orEmpty()
 

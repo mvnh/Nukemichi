@@ -56,7 +56,7 @@ internal class XrayHealthWatchdog @Inject constructor(
      * as such used to mean a forced reconnect every thirty seconds, for good.
      */
     private fun probeRound(socksEndpoint: SocksEndpoint): Boolean {
-        val (first, second) = ProbeTargets.secondOpinionPair()
+        val (first, second) = ProbeTargets.secondOpinionHosts()
         return probe(socksEndpoint, first) || probe(socksEndpoint, second)
     }
 

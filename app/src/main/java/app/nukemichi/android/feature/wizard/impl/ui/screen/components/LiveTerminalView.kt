@@ -1,12 +1,18 @@
 package app.nukemichi.android.feature.wizard.impl.ui.screen.components
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.Crossfade
+import androidx.compose.animation.SizeTransform
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -29,11 +35,11 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.res.painterResource
@@ -66,12 +72,25 @@ internal fun LiveTerminalView(
         }
     }
 
+    // Owned here rather than by the placeholder, which leaves composition whenever the terminal is shown:
+    // switching back resumes the message it left instead of restarting the rotation. It only advances
+    // while the placeholder is on screen, so nothing ticks for a view nobody sees.
+    val idleMessages = stringArrayResource(R.array.wizard_deployment_idle_messages)
+    var idleMessageIndex by rememberSaveable { mutableIntStateOf(0) }
+    LaunchedEffect(isExpanded, idleMessages.size) {
+        if (isExpanded) return@LaunchedEffect
+        while (true) {
+            delay(IDLE_MESSAGE_ROTATION_MS)
+            idleMessageIndex = (idleMessageIndex + 1) % idleMessages.size
+        }
+    }
+
     Column(modifier = modifier) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            TextButton(onClick = onToggleExpanded) {
+            TextButton(onClick = onToggleExpanded, modifier = Modifier.animateContentSize()) {
                 Icon(
                     imageVector = if (isExpanded) NukemichiIcons.Outlined.ArrowDropUp else NukemichiIcons.Outlined.ArrowDropDown,
                     contentDescription = null,
@@ -88,7 +107,8 @@ internal fun LiveTerminalView(
                     onClick = {
                         clipboard.setText(AnnotatedString(logLines.joinToString("\n")))
                         justCopied = true
-                    }
+                    },
+                    modifier = Modifier.animateContentSize(),
                 ) {
                     if (justCopied) {
                         Icon(imageVector = NukemichiIcons.Outlined.Check, contentDescription = null)
@@ -110,21 +130,26 @@ internal fun LiveTerminalView(
             shape = MaterialTheme.shapes.medium,
             color = MaterialTheme.colorScheme.surfaceContainerHighest,
         ) {
-            if (isExpanded) {
-                MonospaceLogList(
-                    lines = logLines,
-                    modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(dimens.m),
-                )
-            } else {
-                IdlePlaceholder(modifier = Modifier.fillMaxSize())
+            Crossfade(targetState = isExpanded, label = "terminal_content_transition") { showsTerminal ->
+                if (showsTerminal) {
+                    MonospaceLogList(
+                        lines = logLines,
+                        modifier = Modifier.fillMaxSize(),
+                        contentPadding = PaddingValues(dimens.m),
+                    )
+                } else {
+                    IdlePlaceholder(
+                        message = idleMessages[idleMessageIndex % idleMessages.size],
+                        modifier = Modifier.fillMaxSize(),
+                    )
+                }
             }
         }
     }
 }
 
 @Composable
-private fun IdlePlaceholder(modifier: Modifier = Modifier) {
+private fun IdlePlaceholder(message: String, modifier: Modifier = Modifier) {
     val dimens = MaterialTheme.dimens
     val transition = rememberInfiniteTransition(label = "idle_cat_bounce")
     val bounce by transition.animateFloat(
@@ -136,15 +161,6 @@ private fun IdlePlaceholder(modifier: Modifier = Modifier) {
         ),
         label = "idle_cat_bounce_value",
     )
-
-    val messages = stringArrayResource(R.array.wizard_deployment_idle_messages)
-    var messageIndex by remember { mutableIntStateOf(0) }
-    LaunchedEffect(messages) {
-        while (true) {
-            delay(IDLE_MESSAGE_ROTATION_MS)
-            messageIndex = (messageIndex + 1) % messages.size
-        }
-    }
 
     Box(modifier = modifier, contentAlignment = Alignment.Center) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -160,18 +176,24 @@ private fun IdlePlaceholder(modifier: Modifier = Modifier) {
                 Image(
                     painter = painterResource(R.drawable.michi_cat),
                     contentDescription = null,
+                    // The drawable is flat black line art, which disappears on a dark surface.
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface),
                     modifier = Modifier
                         .size(dimens.successBadge)
                         .graphicsLayer { translationY = -bounce * IDLE_BOUNCE_PX },
                 )
             }
-            Crossfade(
-                targetState = messageIndex,
-                label = "idle_message_crossfade",
+            // SizeTransform eases the text block between messages of different length, and the cat above it
+            // with it, instead of snapping both to the new height.
+            AnimatedContent(
+                targetState = message,
+                transitionSpec = { (fadeIn() togetherWith fadeOut()).using(SizeTransform(clip = false)) },
+                contentAlignment = Alignment.TopCenter,
+                label = "idle_message_transition",
                 modifier = Modifier.padding(top = dimens.l),
-            ) { index ->
+            ) { text ->
                 Text(
-                    text = messages.getOrElse(index) { messages.first() },
+                    text = text,
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     textAlign = TextAlign.Center,

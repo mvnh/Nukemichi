@@ -35,9 +35,6 @@ import app.nukemichi.android.platform.ui.components.ConfirmDialog
 import app.nukemichi.android.platform.ui.icons.NukemichiIcons
 import app.nukemichi.android.platform.ui.theme.size.dimens
 import app.nukemichi.android.platform.ui.util.UiText
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -85,13 +82,13 @@ internal fun ServerDetailsSheet(
             }
 
             Column(verticalArrangement = Arrangement.spacedBy(dimens.s)) {
-                InfoRow(label = stringResource(R.string.dashboard_server_info_server), value = details.address)
+                ServerInfoRow(label = stringResource(R.string.dashboard_server_info_server), value = details.address)
                 details.maskingAs?.let { maskingAs ->
-                    InfoRow(label = stringResource(R.string.dashboard_server_info_masking_as), value = maskingAs)
+                    ServerInfoRow(label = stringResource(R.string.dashboard_server_info_masking_as), value = maskingAs)
                 }
-                InfoRow(
+                ServerInfoRow(
                     label = stringResource(R.string.dashboard_server_info_deployed),
-                    value = formatDate(details.deployedAtMillis),
+                    value = details.deployedAtMillis.toDisplayDate(),
                 )
             }
 
@@ -146,26 +143,3 @@ internal fun ServerDetailsSheet(
         )
     }
 }
-
-// Plain String, not UiText: nothing here crosses the MVI-state boundary.
-@Composable
-private fun InfoRow(label: String, value: String) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-    ) {
-        Text(
-            text = label,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-        Text(
-            text = value,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurface,
-        )
-    }
-}
-
-private fun formatDate(millis: Long): String =
-    SimpleDateFormat("d MMM yyyy", Locale.getDefault()).format(Date(millis))

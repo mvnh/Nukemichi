@@ -45,6 +45,11 @@
     <string name="wizard_untrusted_host_body">If you created this server yourself, go ahead. If someone else gave you these details, check with them that this is the right server.\n\nHost key fingerprint: %1$s</string>
     <string name="wizard_untrusted_host_trust">Trust and continue</string>
 
+    <string name="wizard_host_key_changed_title">This server\'s identity changed</string>
+    <string name="wizard_host_key_changed_body">The server is presenting a different SSH host key than the one saved the last time you connected.\n\nIf you rebuilt or reinstalled this server, that is expected. If you did not, someone may be sitting between you and it — continuing would hand them your password or key.\n\nSaved: %1$s\nNow: %2$s</string>
+    <string name="wizard_host_key_changed_replace">I rebuilt it, replace the key</string>
+    <string name="wizard_host_key_changed_stop">Stop</string>
+
     <!-- Confirmation Page -->
     <string name="wizard_confirmation_summary_title">Summary</string>
     <string name="wizard_confirmation_server_label">Server</string>

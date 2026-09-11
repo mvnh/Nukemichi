@@ -36,6 +36,7 @@ import app.nukemichi.android.platform.navigation.LocalAppNavigator
 import app.nukemichi.android.platform.ui.components.ConfirmDialog
 import app.nukemichi.android.platform.ui.components.LoadingDialog
 import app.nukemichi.android.platform.ui.components.MessageDialog
+import app.nukemichi.android.platform.ui.icons.NukemichiIcons
 import app.nukemichi.android.platform.ui.util.CollectAsEffect
 import app.nukemichi.android.platform.ui.util.UiSecret
 import app.nukemichi.android.platform.ui.util.UiText
@@ -214,6 +215,26 @@ internal fun WizardScreen(
             body = UiText.Resource(R.string.wizard_untrusted_host_body, untrustedHost.fingerprint),
             confirmText = UiText.Resource(R.string.wizard_untrusted_host_trust),
             onConfirm = { viewModel.processIntent(Intent.TrustHostAndRetry(untrustedHost.fingerprint)) },
+            onDismiss = { viewModel.processIntent(Intent.DismissConnectionErrorDialog) },
+        )
+    }
+
+    val changedHostKey = uiState.connectionCheck as? ConnectionCheckState.HostKeyChanged
+    if (changedHostKey != null) {
+        // Accepting stays on the confirm button rather than being swapped with cancel: dismissing
+        // is also what a tap outside and a back press do, so the safe action is the one that has
+        // to sit there. The label carries the weight instead.
+        ConfirmDialog(
+            icon = NukemichiIcons.Filled.Shield,
+            title = UiText.Resource(R.string.wizard_host_key_changed_title),
+            body = UiText.Resource(
+                R.string.wizard_host_key_changed_body,
+                changedHostKey.expectedFingerprint,
+                changedHostKey.fingerprint,
+            ),
+            confirmText = UiText.Resource(R.string.wizard_host_key_changed_replace),
+            onConfirm = { viewModel.processIntent(Intent.TrustHostAndRetry(changedHostKey.fingerprint)) },
+            dismissText = UiText.Resource(R.string.wizard_host_key_changed_stop),
             onDismiss = { viewModel.processIntent(Intent.DismissConnectionErrorDialog) },
         )
     }

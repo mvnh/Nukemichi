@@ -45,6 +45,11 @@
     <string name="wizard_untrusted_host_body">Если вы сами создавали этот сервер, продолжайте. Если данные для входа передал кто-то другой, уточните у него, что сервер именно тот.\n\nОтпечаток ключа хоста: %1$s</string>
     <string name="wizard_untrusted_host_trust">Доверять и продолжить</string>
 
+    <string name="wizard_host_key_changed_title">Сервер сменил ключ</string>
+    <string name="wizard_host_key_changed_body">Сервер предъявляет не тот SSH-ключ хоста, который был сохранён при прошлом подключении.\n\nЕсли вы пересоздавали или переустанавливали этот сервер — так и должно быть. Если нет, кто-то может находиться между вами и сервером: продолжив, вы отдадите ему пароль или ключ.\n\nСохранён: %1$s\nСейчас: %2$s</string>
+    <string name="wizard_host_key_changed_replace">Я пересоздал сервер, заменить ключ</string>
+    <string name="wizard_host_key_changed_stop">Остановиться</string>
+
     <!-- Confirmation Page -->
     <string name="wizard_confirmation_summary_title">Сводка</string>
     <string name="wizard_confirmation_server_label">Сервер</string>

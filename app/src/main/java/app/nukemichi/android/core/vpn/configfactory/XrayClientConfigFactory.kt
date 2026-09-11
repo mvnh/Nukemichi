@@ -5,6 +5,7 @@ import app.nukemichi.android.core.vpn.SocksEndpoint
 import app.nukemichi.android.core.vpn.XrayRuntimeConfig
 import app.nukemichi.android.core.vpn.XrayVpnProfile
 import app.nukemichi.android.core.vpn.configfactory.XrayClientConfigFactory.createRuntimeConfig
+import app.nukemichi.android.core.vpn.ProbeTargets
 import app.nukemichi.android.core.vpn.spec.BurstObservatoryObject
 import app.nukemichi.android.core.vpn.spec.DnsObject
 import app.nukemichi.android.core.vpn.spec.FakeDnsObject
@@ -36,7 +37,6 @@ object XrayClientConfigFactory {
     private const val FAKE_DNS_MARKER = "fakedns"
     private const val FAKE_DNS_POOL = "198.18.0.0/15"
     private const val FAKE_DNS_POOL_SIZE = 65_535
-    private const val HEALTH_CHECK_URL = "http://gstatic.com/generate_204"
     private const val SOCKS_CREDENTIAL_BYTES = 18
 
     fun createRuntimeConfig(profile: XrayVpnProfile): XrayRuntimeConfig {
@@ -114,7 +114,9 @@ object XrayClientConfigFactory {
             burstObservatory = BurstObservatoryObject(
                 subjectSelector = listOf(PROXY_OUTBOUND_TAG),
                 pingConfig = PingConfigObject(
-                    destination = HEALTH_CHECK_URL,
+                    // Fixed for the session because xray reads it once, but drawn from a pool so
+                    // that it is not the same name on every install. See ProbeTargets.
+                    destination = "https://${ProbeTargets.random()}/",
                     interval = "1m",
                     sampling = 4,
                     timeout = "3s",

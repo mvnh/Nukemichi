@@ -152,6 +152,16 @@ android {
         val alias = signingValue("keyAlias", "NUKEMICHI_KEY_ALIAS")
         val aliasPassword = signingValue("keyPassword", "NUKEMICHI_KEY_PASSWORD")
 
+        // All four or none. Supplying some of them used to silently produce an unsigned release
+        // APK, which looks exactly like the intentionally unsigned one CI builds - the difference
+        // only shows up at install time, on whoever was handed the artifact.
+        val supplied = listOfNotNull(storePath, store, alias, aliasPassword)
+        require(supplied.isEmpty() || supplied.size == 4) {
+            "Release signing is half-configured (${supplied.size}/4 values present). Set storeFile, " +
+                "storePassword, keyAlias and keyPassword together, or leave all of them unset for an " +
+                "unsigned build."
+        }
+
         if (storePath != null && store != null && alias != null && aliasPassword != null) {
             create("release") {
                 storeFile = rootProject.file(storePath)

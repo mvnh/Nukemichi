@@ -15,9 +15,16 @@ internal class HevSocks5Tunnel @Inject constructor(
 
     fun start(tunInterface: ParcelFileDescriptor, socksEndpoint: SocksEndpoint) {
         check(!TProxyService.TProxyIsRunning()) { "hev SOCKS5 tunnel is already running." }
+        // The native side only takes a path, so the SOCKS credentials have to touch the disk. They
+        // are parsed during TProxyStartService and never read again, so the file is deleted the
+        // moment that call returns rather than being left sitting in filesDir until the next boot.
         val configFile = writeConfig(socksEndpoint)
-        check(TProxyService.TProxyStartService(configFile.absolutePath, tunInterface.fd)) {
-            "Unable to start hev SOCKS5 tunnel."
+        try {
+            check(TProxyService.TProxyStartService(configFile.absolutePath, tunInterface.fd)) {
+                "Unable to start hev SOCKS5 tunnel."
+            }
+        } finally {
+            configFile.delete()
         }
     }
 

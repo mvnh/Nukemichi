@@ -11,6 +11,7 @@ import app.nukemichi.android.core.storage.StorageDomain
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -74,9 +75,16 @@ internal class SshjManager(
         }
     }
 
-    private suspend fun release(key: SessionKey, shared: SharedConnection) {
+    /**
+     * NonCancellable because this runs from a `finally`: the wizard cancels its connection check
+     * and its deployment on a button press, and without this the very first suspension point
+     * (taking the mutex) would throw instead of returning the lease. The count would then never
+     * reach zero, the idle timer would never be armed, and a root SSH session to the user's VPS
+     * would stay open for the lifetime of the process.
+     */
+    private suspend fun release(key: SessionKey, shared: SharedConnection) = withContext(NonCancellable) {
         sessionsMutex.withLock {
-            if (shared.unlease() != 0) return
+            if (shared.unlease() != 0) return@withLock
 
             shared.idleCloseJob = scope.launch {
                 delay(IDLE_CONNECTION_TIMEOUT_MS.milliseconds)

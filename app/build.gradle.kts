@@ -1,76 +1,8 @@
-import java.net.URI
-import java.security.MessageDigest
 import java.util.Properties
 
-abstract class DownloadLibV2rayTask : DefaultTask() {
-
-    @get:Input
-    abstract val version: Property<String>
-
-    @get:Input
-    abstract val sha256: Property<String>
-
-    @get:OutputFile
-    abstract val outputFile: RegularFileProperty
-
-    @TaskAction
-    fun download() {
-        val target = outputFile.get().asFile
-
-        // Re-verified rather than trusted for existing: this path is restored from the Actions
-        // cache before the task runs, so skipping straight past an already-present file meant the
-        // pinned digest was never checked on any CI build, release-build included. A local
-        // build/ directory is no more trustworthy - it just fails less interestingly.
-        if (target.exists()) {
-            if (digestOf(target) == sha256.get()) {
-                logger.info("libv2ray.aar already staged and matches the pinned SHA-256")
-                return
-            }
-            logger.warn("Staged libv2ray.aar does not match the pinned SHA-256 - discarding it and downloading again.")
-            target.delete()
-        }
-
-        val url = "https://github.com/2dust/AndroidLibXrayLite/releases/download/${version.get()}/libv2ray.aar"
-        val tempFile = File(temporaryDir, "libv2ray.aar")
-        logger.lifecycle("Downloading libv2ray.aar ${version.get()}")
-
-        URI(url).toURL().openStream().use { input ->
-            tempFile.outputStream().use { output -> input.copyTo(output) }
-        }
-        verifyChecksum(tempFile)
-        target.parentFile.mkdirs()
-        tempFile.copyTo(target, overwrite = true)
-        logger.lifecycle("libv2ray.aar staged at ${target.path}")
-    }
-
-    private fun digestOf(archive: File): String {
-        val digest = MessageDigest.getInstance("SHA-256")
-        archive.inputStream().use { input ->
-            val buffer = ByteArray(64 * 1024)
-            while (true) {
-                val read = input.read(buffer)
-                if (read < 0) break
-                digest.update(buffer, 0, read)
-            }
-        }
-        return digest.digest().joinToString("") { "%02x".format(it) }
-    }
-
-    private fun verifyChecksum(archive: File) {
-        val expected = sha256.get()
-        val actual = digestOf(archive)
-
-        if (actual != expected) {
-            archive.delete()
-            throw GradleException("libv2ray.aar checksum mismatch: expected $expected but got $actual.")
-        }
-        logger.info("libv2ray.aar matches the pinned SHA-256")
-    }
-}
-
-// DownloadGeositeDatTask, VerifyGeoipDatTask, RegenerateGeoipDatTask and their shared
-// ChecksumUtil live in buildSrc (src/main/kotlin/) - separate compiled files, not inline here.
-// (DownloadLibV2rayTask above stays inline: untouched, working code, out of scope for that move.)
+// DownloadLibV2rayTask, DownloadGeositeDatTask, VerifyGeoipDatTask, RegenerateGeoipDatTask and
+// their shared ChecksumUtil all live in buildSrc/src/main/kotlin/ - separate compiled files, not
+// inline here.
 
 val libv2rayVersion = "v26.8.20"
 

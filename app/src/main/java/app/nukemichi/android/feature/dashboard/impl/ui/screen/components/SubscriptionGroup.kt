@@ -38,7 +38,6 @@ internal fun SubscriptionGroup(
         SubscriptionHeaderRow(
             subscription = subscription,
             onToggleExpanded = onToggleExpanded,
-            onAddServer = onAddServer,
             onShare = onShare,
             onEdit = onEdit,
         )
@@ -53,7 +52,8 @@ internal fun SubscriptionGroup(
             exit = shrinkVertically(animationSpec = dashboardSpatialSpec(), shrinkTowards = Alignment.Top) +
                 fadeOut(animationSpec = dashboardEffectsSpec()),
         ) {
-            val segmentCount = subscription.servers.size + 1
+            // Header, the servers, and the add-server row that closes the run.
+            val segmentCount = subscription.servers.size + 2
             Column(
                 modifier = Modifier
                     .clip(revealShape)
@@ -71,6 +71,11 @@ internal fun SubscriptionGroup(
                         )
                     }
                 }
+
+                AddServerRow(
+                    shape = segmentShape(index = segmentCount - 1, count = segmentCount),
+                    onClick = onAddServer,
+                )
             }
         }
     }

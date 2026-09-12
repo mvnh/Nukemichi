@@ -1,6 +1,7 @@
 package app.nukemichi.android.core.vpn
 
 import app.nukemichi.android.core.storage.AppStorage
+import app.nukemichi.android.core.storage.SecureStorageUnreadableException
 import app.nukemichi.android.core.storage.StorageDomain
 import app.nukemichi.android.core.vpn.internal.StoredXraySubscriptionStore
 import app.nukemichi.android.core.vpn.spec.XraySecurity
@@ -85,10 +86,45 @@ class StoredXraySubscriptionStoreTest {
         assertEquals(listOf(added), store(storage).subscriptions.first())
     }
 
-    private class InMemoryAppStorage : AppStorage {
+    /**
+     * The ciphertext is encrypted under a non-exportable Keystore key that is gone, so there is
+     * nothing left to recover from it. Leaving it in place only meant the next write silently
+     * overwrote it anyway, one step later and with no record of what happened.
+     */
+    @Test
+    fun `clears profiles it can no longer decrypt instead of leaving them to be overwritten`() = runTest {
+        val storage = InMemoryAppStorage(undecryptable = setOf(SUBSCRIPTIONS_KEY))
+
+        val subscriptions = store(storage).subscriptions.first()
+
+        assertEquals(emptyList<XraySubscription>(), subscriptions)
+        assertTrue("the dead ciphertext must not be left behind", SUBSCRIPTIONS_KEY in storage.removed)
+    }
+
+    @Test
+    fun `stays usable after profiles could not be decrypted`() = runTest {
+        val storage = InMemoryAppStorage(undecryptable = setOf(SUBSCRIPTIONS_KEY))
+        val store = store(storage)
+        store.subscriptions.first()
+        val added = XraySubscription(id = "home", name = "Home", servers = listOf(legacyProfile))
+
+        store.update { it + added }
+
+        assertEquals(listOf(added), store.subscriptions.first())
+    }
+
+    private class InMemoryAppStorage(
+        /** Keys whose ciphertext is present but no longer decryptable, as after a Keystore key is invalidated. */
+        private val undecryptable: Set<String> = emptySet(),
+    ) : AppStorage {
         private val values = mutableMapOf<Pair<StorageDomain, String>, String>()
 
-        override fun getString(domain: StorageDomain, key: String): String? = values[domain to key]
+        val removed = mutableListOf<String>()
+
+        override fun getString(domain: StorageDomain, key: String): String? {
+            if (key in undecryptable) throw SecureStorageUnreadableException(key, IllegalStateException("key gone"))
+            return values[domain to key]
+        }
 
         override fun putString(domain: StorageDomain, key: String, value: String) {
             values[domain to key] = value
@@ -102,10 +138,12 @@ class StoredXraySubscriptionStoreTest {
 
         override fun remove(domain: StorageDomain, key: String) {
             values.remove(domain to key)
+            removed += key
         }
     }
 
     private companion object {
         const val LEGACY_KEY = "active-profile"
+        const val SUBSCRIPTIONS_KEY = "subscriptions"
     }
 }

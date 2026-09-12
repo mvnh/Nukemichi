@@ -5,7 +5,7 @@ import java.security.MessageDigest
 import java.security.PublicKey
 import java.util.Base64
 
-object SecurityUtils {
+internal object SecurityUtils {
 
     // `PublicKey.encoded` is X.509 DER, not what SSH hashes. This must be the SSH wire-format
     // key (same bytes `ssh-keygen -lf`/a host's own fingerprint page hash) or TOFU has nothing to compare against.

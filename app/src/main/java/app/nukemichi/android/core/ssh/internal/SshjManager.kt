@@ -4,15 +4,15 @@ import app.nukemichi.android.core.ssh.SshConnection
 import app.nukemichi.android.core.ssh.SshManager
 import app.nukemichi.android.core.ssh.internal.model.SessionKey
 import app.nukemichi.android.core.ssh.internal.model.SharedConnection
-import app.nukemichi.android.core.ssh.internal.util.SecurityUtils
 import app.nukemichi.android.core.ssh.model.SshAuth
 import app.nukemichi.android.core.ssh.model.SshConfig
-import app.nukemichi.android.core.ssh.model.SshUntrustedHostException
 import app.nukemichi.android.core.storage.AppStorage
+import app.nukemichi.android.core.storage.SecureStorageUnreadableException
 import app.nukemichi.android.core.storage.StorageDomain
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -20,9 +20,7 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import net.schmizz.sshj.SSHClient
-import net.schmizz.sshj.transport.verification.HostKeyVerifier
 import timber.log.Timber
-import java.security.PublicKey
 import java.util.Locale
 import kotlin.time.Duration.Companion.milliseconds
 
@@ -78,9 +76,16 @@ internal class SshjManager(
         }
     }
 
-    private suspend fun release(key: SessionKey, shared: SharedConnection) {
+    /**
+     * NonCancellable because this runs from a `finally`: the wizard cancels its connection check
+     * and its deployment on a button press, and without this the very first suspension point
+     * (taking the mutex) would throw instead of returning the lease. The count would then never
+     * reach zero, the idle timer would never be armed, and a root SSH session to the user's VPS
+     * would stay open for the lifetime of the process.
+     */
+    private suspend fun release(key: SessionKey, shared: SharedConnection) = withContext(NonCancellable) {
         sessionsMutex.withLock {
-            if (shared.unlease() != 0) return
+            if (shared.unlease() != 0) return@withLock
 
             shared.idleCloseJob = scope.launch {
                 delay(IDLE_CONNECTION_TIMEOUT_MS.milliseconds)
@@ -113,11 +118,11 @@ internal class SshjManager(
         runCatching {
             val trustedHostKey = trustedHostKey(config.host, config.port)
             val explicitFingerprint = normalizeFingerprint(config.expectedFingerprint)
-            val cachedFingerprint = normalizeFingerprint(
-                appStorage.getString(StorageDomain.SSH_TRUST, trustedHostKey)
-            )
-            val fingerprintToVerify = explicitFingerprint ?: cachedFingerprint
-            val verifier = InternalHostKeyVerifier(fingerprintToVerify)
+            val pin = readPin(trustedHostKey)
+            // Both, not one falling back to the other: the verifier has to know a pin exists even
+            // when the user has accepted a different fingerprint, or a changed key is
+            // indistinguishable from a first connection.
+            val verifier = PinnedHostKeyVerifier(pin = pin, acceptedFingerprint = explicitFingerprint)
 
             val client = SSHClient()
             client.addHostKeyVerifier(verifier)
@@ -135,7 +140,7 @@ internal class SshjManager(
             }
 
             verifier.verifiedFingerprint?.let { verified ->
-                if (cachedFingerprint != verified) {
+                if (pin != HostKeyPin.Known(verified)) {
                     appStorage.putString(StorageDomain.SSH_TRUST, trustedHostKey, verified)
                     Timber.i("Stored trusted fingerprint for %s:%d", config.host, config.port)
                 }
@@ -154,63 +159,28 @@ internal class SshjManager(
         }
     }
 
+    /**
+     * An undecryptable pin becomes [HostKeyPin.Unreadable] rather than propagating: the Keystore
+     * key backing it is gone (a lock-screen change, a restore onto another device), which is not
+     * the host's fault and used to fail every subsequent connection to it with no way back. The
+     * user gets asked to confirm the fingerprint again instead, and confirming replaces the
+     * ciphertext nothing can read.
+     */
+    private fun readPin(trustedHostKey: String): HostKeyPin = try {
+        normalizeFingerprint(appStorage.getString(StorageDomain.SSH_TRUST, trustedHostKey))
+            ?.let(HostKeyPin::Known)
+            ?: HostKeyPin.None
+    } catch (error: SecureStorageUnreadableException) {
+        Timber.w(error, "Pinned host key for %s can no longer be decrypted", trustedHostKey)
+        HostKeyPin.Unreadable
+    }
+
     private fun normalizeFingerprint(value: String?): String? {
         return value?.trim()?.takeIf { it.isNotEmpty() }
     }
 
     private fun trustedHostKey(host: String, port: Int): String {
         return "$TRUSTED_HOST_PREFIX${host.lowercase(Locale.ROOT)}:$port"
-    }
-
-    private class InternalHostKeyVerifier(
-        private val expectedFingerprint: String?
-    ) : HostKeyVerifier {
-
-        var verifiedFingerprint: String? = null
-            private set
-
-        override fun verify(
-            hostname: String,
-            port: Int,
-            key: PublicKey
-        ): Boolean {
-            val actualFingerprint = SecurityUtils.getFingerprint(key)
-
-            return when (expectedFingerprint) {
-                null -> {
-                    Timber.w(
-                        "Untrusted host key: %s:%d fingerprint=%s",
-                        hostname,
-                        port,
-                        actualFingerprint
-                    )
-                    throw SshUntrustedHostException(actualFingerprint)
-                }
-
-                actualFingerprint -> {
-                    verifiedFingerprint = actualFingerprint
-                    true
-                }
-
-                else -> {
-                    Timber.w(
-                        "Host fingerprint mismatch: %s:%d expected=%s actual=%s",
-                        hostname,
-                        port,
-                        expectedFingerprint,
-                        actualFingerprint
-                    )
-                    throw SshUntrustedHostException(actualFingerprint)
-                }
-            }
-        }
-
-        override fun findExistingAlgorithms(
-            hostname: String,
-            port: Int
-        ): List<String?>? {
-            return null
-        }
     }
 
     private companion object {

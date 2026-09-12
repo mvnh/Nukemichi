@@ -67,6 +67,12 @@ internal class NukemichiVpnService : VpnService() {
         Timber.i("onStartCommand: %s", intent?.action)
         when (intent?.action) {
             ACTION_START, ACTION_RELOAD -> {
+                // First, and unconditionally: these arrive through startForegroundService, and
+                // every way out of this branch that never reaches startForeground ends in
+                // ForegroundServiceDidNotStartInTimeException. An undecodable config is one such
+                // way, and a restart PendingIntent outliving a change to XrayRuntimeConfig's
+                // shape is how it gets handed one.
+                startForeground(NOTIFICATION_ID, createNotification())
                 if (!isStarting.compareAndSet(false, true)) {
                     Timber.w("Ignoring %s: a start is already in progress.", intent.action)
                 } else {
@@ -75,6 +81,8 @@ internal class NukemichiVpnService : VpnService() {
                         isStarting.set(false)
                         Timber.e("Ignoring %s: runtime config missing/undecodable from intent extras.", intent.action)
                         telemetry.failed(IllegalArgumentException("Xray runtime configuration is missing."))
+                        stopForeground(STOP_FOREGROUND_REMOVE)
+                        stopSelf()
                     } else {
                         startVpn(config)
                     }
@@ -86,6 +94,20 @@ internal class NukemichiVpnService : VpnService() {
         return START_NOT_STICKY
     }
 
+    /**
+     * The user turned the VPN off from system settings, or another app took the tunnel over.
+     * Without this the tun fd is already dead while hev-socks5-tunnel keeps pumping into it,
+     * xray-core keeps running and the notification still claims a live connection.
+     *
+     * Deliberately does not call super: the default implementation stopSelf()s immediately, which
+     * would run onDestroy and cancel the scope out from under the teardown below. stopVpn ends in
+     * its own stopSelf once there is actually nothing left to stop.
+     */
+    override fun onRevoke() {
+        Timber.w("onRevoke: VPN permission withdrawn, tearing the tunnel down")
+        stopVpn()
+    }
+
     override fun onDestroy() {
         Timber.i("onDestroy")
         scope.cancel()
@@ -95,7 +117,6 @@ internal class NukemichiVpnService : VpnService() {
 
     private fun startVpn(config: XrayRuntimeConfig) {
         lastConfig = config
-        startForeground(NOTIFICATION_ID, createNotification())
         scope.launch {
             try {
                 lifecycleMutex.withLock {

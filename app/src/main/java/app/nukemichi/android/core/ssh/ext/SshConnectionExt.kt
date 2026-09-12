@@ -20,7 +20,7 @@ suspend fun <T> SshConnection.execute(
 ): Result<T> {
     val stdout = StringBuilder()
     val stderr = StringBuilder()
-    var exitCode = -1
+    var exitCode: Int? = null
 
     executeStreaming(command.command, command.args).collect { event ->
         when (event) {
@@ -37,8 +37,11 @@ suspend fun <T> SshConnection.execute(
     }
 
     return runCatching {
-        check(exitCode == 0) { "Exit code $exitCode: $stderr" }
-        command.parseOutput(CommandResult(stdout.toString(), stderr.toString(), exitCode))
+        val status = checkNotNull(exitCode) {
+            "The connection ended without reporting an exit code: $stderr"
+        }
+        check(status == 0) { "Exit code $status: $stderr" }
+        command.parseOutput(CommandResult(stdout.toString(), stderr.toString(), status))
     }
 }
 

@@ -1,8 +1,11 @@
 package app.nukemichi.android.feature.wizard.impl.ui.mvi
 
+import androidx.annotation.StringRes
+import app.nukemichi.android.R
 import app.nukemichi.android.feature.wizard.impl.domain.WizardSetupCoordinator
 import app.nukemichi.android.feature.wizard.impl.domain.model.DeploymentEvent
 import app.nukemichi.android.platform.ui.mvi.ViewModelDelegate
+import app.nukemichi.android.platform.ui.util.UiText
 import javax.inject.Inject
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.flowOf
@@ -15,9 +18,16 @@ internal class DeploymentDelegate @Inject constructor(
     private var job: Job? = null
 
     fun start() {
-        val architecture = currentState.serverArchitecture ?: return
-        check(currentState.setupStrategy == WizardContract.SetupStrategy.FAST_START) {
-            "${currentState.setupStrategy} has no deployment implementation yet."
+        // Both of these used to leave the user on a deployment page that simply never started:
+        // the missing architecture returned silently, and the unsupported strategy threw out of
+        // the intent loop. Neither is recoverable from here, so say so on the page itself.
+        if (currentState.setupStrategy != WizardContract.SetupStrategy.FAST_START) {
+            failBeforeStarting(R.string.wizard_error_strategy_unsupported)
+            return
+        }
+        val architecture = currentState.serverArchitecture ?: run {
+            failBeforeStarting(R.string.wizard_error_architecture_unknown)
+            return
         }
         job?.cancel()
         reduce { copy(deployment = DeploymentUiState()) }
@@ -51,5 +61,13 @@ internal class DeploymentDelegate @Inject constructor(
         job?.cancel()
         job = null
         reduce { copy(deployment = DeploymentUiState()) }
+    }
+
+    private fun failBeforeStarting(@StringRes reason: Int) {
+        job?.cancel()
+        job = null
+        reduce {
+            copy(deployment = DeploymentUiState(phase = DeploymentPhase.Failed(UiText.Resource(reason))))
+        }
     }
 }

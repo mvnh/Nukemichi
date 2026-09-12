@@ -16,7 +16,19 @@ abstract class DownloadLibV2rayTask : DefaultTask() {
     @TaskAction
     fun download() {
         val target = outputFile.get().asFile
-        if (target.exists()) return
+
+        // Re-verified rather than trusted for existing: this path is restored from the Actions
+        // cache before the task runs, so skipping straight past an already-present file meant the
+        // pinned digest was never checked on any CI build, release-build included. A local
+        // build/ directory is no more trustworthy - it just fails less interestingly.
+        if (target.exists()) {
+            if (digestOf(target) == sha256.get()) {
+                logger.info("libv2ray.aar already staged and matches the pinned SHA-256")
+                return
+            }
+            logger.warn("Staged libv2ray.aar does not match the pinned SHA-256 - discarding it and downloading again.")
+            target.delete()
+        }
 
         val url = "https://github.com/2dust/AndroidLibXrayLite/releases/download/${version.get()}/libv2ray.aar"
         val tempFile = File(temporaryDir, "libv2ray.aar")
@@ -31,8 +43,7 @@ abstract class DownloadLibV2rayTask : DefaultTask() {
         logger.lifecycle("libv2ray.aar staged at ${target.path}")
     }
 
-    private fun verifyChecksum(archive: File) {
-        val expected = sha256.get()
+    private fun digestOf(archive: File): String {
         val digest = MessageDigest.getInstance("SHA-256")
         archive.inputStream().use { input ->
             val buffer = ByteArray(64 * 1024)
@@ -42,7 +53,12 @@ abstract class DownloadLibV2rayTask : DefaultTask() {
                 digest.update(buffer, 0, read)
             }
         }
-        val actual = digest.digest().joinToString("") { "%02x".format(it) }
+        return digest.digest().joinToString("") { "%02x".format(it) }
+    }
+
+    private fun verifyChecksum(archive: File) {
+        val expected = sha256.get()
+        val actual = digestOf(archive)
 
         if (actual != expected) {
             archive.delete()
@@ -136,6 +152,18 @@ android {
         val alias = signingValue("keyAlias", "NUKEMICHI_KEY_ALIAS")
         val aliasPassword = signingValue("keyPassword", "NUKEMICHI_KEY_PASSWORD")
 
+        // All four or none. Supplying some of them used to silently produce an unsigned release
+        // APK, which looks exactly like the intentionally unsigned one CI builds - the difference
+        // only shows up at install time, on whoever was handed the artifact.
+        val supplied = listOfNotNull(storePath, store, alias, aliasPassword)
+        require(supplied.isEmpty() || supplied.size == 4) {
+            "Release signing is half-configured (${supplied.size}/4 values present). Set storeFile, " +
+                "storePassword, keyAlias and keyPassword together, or leave all of them unset for an " +
+                "unsigned build."
+        }
+
+        // Repeats what the require above already guarantees, because only the explicit null checks
+        // smart-cast these to non-null for the block below.
         if (storePath != null && store != null && alias != null && aliasPassword != null) {
             create("release") {
                 storeFile = rootProject.file(storePath)

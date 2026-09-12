@@ -73,19 +73,23 @@ internal class SshjConnection(
         try {
             val cmd = session.exec(renderCommand(command, args))
 
-            val stdoutJob = drainLines(cmd.inputStream) { trySend(CommandEvent.Output(it)) }
-            val stderrJob = drainLines(cmd.errorStream) { trySend(CommandEvent.Error(it)) }
+            // send, not trySend: channelFlow's buffer is 64 and a package install fills it in
+            // milliseconds, so trySend silently dropped lines that commands downstream scrape
+            // their results out of. Backpressuring the reader thread is the cost of not losing
+            // them, and both streams drain on their own job so neither can starve the other.
+            val stdoutJob = drainLines(cmd.inputStream) { send(CommandEvent.Output(it)) }
+            val stderrJob = drainLines(cmd.errorStream) { send(CommandEvent.Error(it)) }
 
             stdoutJob.join()
             stderrJob.join()
             cmd.join()
-            trySend(CommandEvent.Exit(cmd.exitStatus ?: -1))
+            send(CommandEvent.Exit(cmd.exitStatus ?: -1))
             Timber.d("SSH streaming command finished: %s exit=%d", command, cmd.exitStatus ?: -1)
         } catch (cancellation: CancellationException) {
             throw cancellation
         } catch (error: Throwable) {
             Timber.e(error, "SSH streaming command failed: %s", command)
-            trySend(CommandEvent.Error(error.message ?: "Unknown execution error"))
+            send(CommandEvent.Error(error.message ?: "Unknown execution error"))
         } finally {
             withContext(NonCancellable) { runCatching { session.close() } }
         }
@@ -93,10 +97,14 @@ internal class SshjConnection(
 
     private fun CoroutineScope.drainLines(
         stream: InputStream,
-        onLine: (String) -> Unit,
+        onLine: suspend (String) -> Unit,
     ): Job = launch(ioDispatcher) {
         try {
-            stream.bufferedReader().useLines { lines -> lines.forEach(onLine) }
+            stream.bufferedReader().use { reader ->
+                while (true) {
+                    onLine(reader.readLine() ?: break)
+                }
+            }
         } catch (cancellation: CancellationException) {
             throw cancellation
         } catch (error: IOException) {

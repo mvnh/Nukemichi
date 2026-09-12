@@ -86,6 +86,20 @@ class SshConnectionExtTest {
         assertTrue(connection.execute(RecordingCommand()).isFailure)
     }
 
+    /**
+     * "Exit code -1" reads as a command that ran and failed, which sends anyone debugging it at
+     * the remote script instead of at the transport that died under it.
+     */
+    @Test
+    fun `says the stream ended rather than reporting a synthetic exit code`() = runTest {
+        val connection = FakeSshConnection(CommandEvent.Output("partial"))
+
+        val message = connection.execute(RecordingCommand()).exceptionOrNull()?.message.orEmpty()
+
+        assertFalse("a synthetic -1 must not be presented as the command's own status", message.contains("-1"))
+        assertTrue("unhelpful message: $message", message.contains("without reporting an exit code"))
+    }
+
     @Test
     fun `wraps a throwing parser into a failed result`() = runTest {
         val connection = FakeSshConnection(CommandEvent.Output("junk"), CommandEvent.Exit(0))

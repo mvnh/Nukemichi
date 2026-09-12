@@ -18,9 +18,11 @@ import java.net.Socket
  * Drives [XrayHealthWatchdog] against a real loopback [ServerSocket] standing in for xray-core's
  * local SOCKS5 inbound, over the same probe path it exercises against the genuine one, rather than
  * faking the socket layer, since the class's whole reason to exist is trusting nothing but a raw
- * socket. Probe cadence (15s) and the consecutive-failure threshold (2 probes) come straight from
- * the production constants, so the test drives them through [kotlinx.coroutines.test]'s virtual
- * clock instead of actually waiting on them.
+ * socket. Probe cadence, its jitter and the consecutive-failure threshold come straight from the
+ * production constants, so the test drives them through [kotlinx.coroutines.test]'s virtual clock
+ * instead of actually waiting on them. Advancing by one full jittered cycle is what makes exactly
+ * one round land: the shortest cycle is still longer than the jitter, so the clock can never fit
+ * two.
  */
 class XrayHealthWatchdogTest {
 
@@ -41,7 +43,7 @@ class XrayHealthWatchdogTest {
         watchdog.start(this, socksServer.endpoint()) { degradedCount++ }
 
         // Three probe intervals' worth of healthy probes.
-        advanceTimeBy(3 * PROBE_INTERVAL_MS)
+        advanceTimeBy(3 * PROBE_CYCLE_MS)
         runCurrent()
 
         assertEquals(0, degradedCount)
@@ -59,17 +61,17 @@ class XrayHealthWatchdogTest {
         watchdog.start(this, socksServer.endpoint()) { degradedCount++ }
 
         // First failed probe alone must not trip it.
-        advanceTimeBy(PROBE_INTERVAL_MS)
+        advanceTimeBy(PROBE_CYCLE_MS)
         runCurrent()
         assertEquals(0, degradedCount)
 
         // Second consecutive failure crosses the threshold.
-        advanceTimeBy(PROBE_INTERVAL_MS)
+        advanceTimeBy(PROBE_CYCLE_MS)
         runCurrent()
         assertEquals(1, degradedCount)
 
         // The watchdog stops probing itself once degraded is reported, so no further calls.
-        advanceTimeBy(5 * PROBE_INTERVAL_MS)
+        advanceTimeBy(5 * PROBE_CYCLE_MS)
         runCurrent()
         assertEquals(1, degradedCount)
     }
@@ -83,27 +85,65 @@ class XrayHealthWatchdogTest {
 
         watchdog.start(this, socksServer.endpoint()) { degradedCount++ }
 
-        advanceTimeBy(PROBE_INTERVAL_MS)
+        advanceTimeBy(PROBE_CYCLE_MS)
         runCurrent()
         assertEquals(0, degradedCount)
 
         socksServer.behavior = FakeSocksServer.Behavior.ACCEPT
-        advanceTimeBy(PROBE_INTERVAL_MS)
+        advanceTimeBy(PROBE_CYCLE_MS)
         runCurrent()
         assertEquals(0, degradedCount)
 
         socksServer.behavior = FakeSocksServer.Behavior.HANG_UP
-        advanceTimeBy(PROBE_INTERVAL_MS)
+        advanceTimeBy(PROBE_CYCLE_MS)
         runCurrent()
         assertEquals(0, degradedCount) // one failure after a reset streak still isn't two in a row
 
-        advanceTimeBy(PROBE_INTERVAL_MS)
+        advanceTimeBy(PROBE_CYCLE_MS)
         runCurrent()
         assertEquals(1, degradedCount)
     }
 
+    /**
+     * A round asks two different hosts and only fails if both do, so one blocked name cannot by
+     * itself force a reconnect. Counting connections is how that stays true: a healthy round
+     * short-circuits after the first, a failing one has to try the second.
+     */
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun `a failing round asks a second host before giving up`() = runTest {
+        val socksServer = FakeSocksServer(FakeSocksServer.Behavior.HANG_UP).also { server = it }
+        val watchdog = XrayHealthWatchdog(StandardTestDispatcher(testScheduler))
+
+        watchdog.start(this, socksServer.endpoint()) {}
+        advanceTimeBy(PROBE_CYCLE_MS)
+        runCurrent()
+
+        assertEquals("one failed round must cost two probes", 2, socksServer.connectionCount())
+        watchdog.stop()
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    @Test
+    fun `a healthy round stops after the first host answers`() = runTest {
+        val socksServer = FakeSocksServer(FakeSocksServer.Behavior.ACCEPT).also { server = it }
+        val watchdog = XrayHealthWatchdog(StandardTestDispatcher(testScheduler))
+
+        watchdog.start(this, socksServer.endpoint()) {}
+        advanceTimeBy(PROBE_CYCLE_MS)
+        runCurrent()
+
+        assertEquals("a healthy round must not probe twice", 1, socksServer.connectionCount())
+        watchdog.stop()
+    }
+
     private companion object {
-        const val PROBE_INTERVAL_MS = 15_000L
+        /**
+         * The longest a single jittered interval can take (15s base + 5s jitter), taken from
+         * XrayHealthWatchdog's own constants, so one advance is always exactly one round: the
+         * shortest cycle is still longer than the jitter, so the clock can never fit two.
+         */
+        const val PROBE_CYCLE_MS = 20_000L
     }
 }
 

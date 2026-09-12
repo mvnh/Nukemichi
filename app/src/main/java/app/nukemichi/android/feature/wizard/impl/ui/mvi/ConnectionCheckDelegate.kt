@@ -1,6 +1,9 @@
 package app.nukemichi.android.feature.wizard.impl.ui.mvi
 
 import app.nukemichi.android.R
+import app.nukemichi.android.core.ssh.model.SshHostKeyChangedException
+import app.nukemichi.android.core.ssh.model.SshHostKeyException
+import app.nukemichi.android.core.ssh.model.SshHostKeyUnverifiableException
 import app.nukemichi.android.core.ssh.model.SshUntrustedHostException
 import app.nukemichi.android.feature.wizard.impl.domain.WizardSetupCoordinator
 import app.nukemichi.android.platform.ui.mvi.ViewModelDelegate
@@ -47,17 +50,26 @@ internal class ConnectionCheckDelegate @Inject constructor(
                     graceJob.cancel()
                     // sshj wraps whatever the HostKeyVerifier throws as the *cause* of its own
                     // TransportException (confirmed in KeyExchanger.verifyHost's bytecode) rather
-                    // than propagating it directly, so it has to be unwrapped here to tell
-                    // "first connection to this host" apart from a real failure.
-                    val untrusted = generateSequence(error) { it.cause }
-                        .filterIsInstance<SshUntrustedHostException>()
+                    // than propagating it directly, so it has to be unwrapped here to tell a host
+                    // key question apart from a real failure.
+                    val hostKeyError = generateSequence(error) { it.cause }
+                        .filterIsInstance<SshHostKeyException>()
                         .firstOrNull()
                     reduce {
                         copy(
-                            connectionCheck = if (untrusted != null) {
-                                ConnectionCheckState.UntrustedHost(untrusted.fingerprint)
-                            } else {
-                                ConnectionCheckState.Failed(
+                            connectionCheck = when (hostKeyError) {
+                                is SshUntrustedHostException ->
+                                    ConnectionCheckState.UntrustedHost(hostKeyError.fingerprint)
+
+                                is SshHostKeyChangedException -> ConnectionCheckState.HostKeyChanged(
+                                    fingerprint = hostKeyError.fingerprint,
+                                    expectedFingerprint = hostKeyError.expectedFingerprint,
+                                )
+
+                                is SshHostKeyUnverifiableException ->
+                                    ConnectionCheckState.HostKeyUnverifiable(hostKeyError.fingerprint)
+
+                                null -> ConnectionCheckState.Failed(
                                     error.message?.let(UiText::Raw) ?: UiText.Resource(R.string.wizard_error_unknown)
                                 )
                             }

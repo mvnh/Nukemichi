@@ -23,6 +23,7 @@ import libv2ray.Libv2ray
 internal class XrayRuntime @Inject constructor(
     @ApplicationContext context: Context,
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher,
+    private val geoAssetInstaller: GeoAssetInstaller,
 ) : XrayStatsSource {
     private val mutex = Mutex()
 
@@ -48,6 +49,9 @@ internal class XrayRuntime @Inject constructor(
         mutex.withLock {
             check(controller == null) { "Xray is already running" }
             awaitPendingStop()
+            // Must land in filesDir before startLoop() below, since that's when Xray resolves the
+            // routing config's geosite:/geoip: rules against whatever is staged there.
+            geoAssetInstaller.ensureInstalled()
             val running = CoreController(callbackHandler)
             running.startLoop(config.rawJson, 0)
             check(running.isRunning) { "Xray core reported success but is not running." }

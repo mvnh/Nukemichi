@@ -15,7 +15,11 @@ git clone --recurse-submodules https://github.com/mvnh/Nukemichi.git
 `minSdk` 26. Open in Android Studio and run the `app` module.
 
 The build downloads `libv2ray.aar` and verifies it against a pinned SHA-256; a mismatch fails the
-build rather than warning.
+build rather than warning. It does the same for `geosite.dat` (domain-based direct routing for a
+handful of heavily-censored countries). `geoip.dat` is different: it's vendored at
+`app/src/main/assets/geoip.dat` rather than downloaded, and the build only verifies it against a
+pinned checksum - see `tools/geoip-dat/README.md` for why, and for the maintainer-only
+regeneration step.
 
 ## Verifying a change
 

@@ -42,10 +42,10 @@ class XrayClientConfigStructureTest {
     }
 
     @Test
-    fun `routing sends DNS out, blackholes IPv6 and QUIC, then proxies the rest`() {
+    fun `routing sends DNS out, blackholes IPv6 and QUIC, routes heavily-censored countries direct, then proxies the rest`() {
         val rules = config().routing().getValue("rules").jsonArray.map { it.jsonObject }
 
-        assertEquals(4, rules.size)
+        assertEquals(6, rules.size)
 
         assertEquals("dns-out", rules[0].outboundTag())
         assertEquals("udp", rules[0].getValue("network").jsonPrimitive.content)
@@ -58,9 +58,21 @@ class XrayClientConfigStructureTest {
         assertEquals(443, rules[2].getValue("port").jsonPrimitive.content.toInt())
         assertEquals("udp", rules[2].getValue("network").jsonPrimitive.content)
 
-        assertNull("the catch-all proxies via the balancer, not a direct outbound", rules[3]["outboundTag"])
-        assertEquals("balancer_proxy", rules[3].getValue("balancerTag").jsonPrimitive.content)
-        assertEquals("tcp,udp", rules[3].getValue("network").jsonPrimitive.content)
+        assertEquals("direct", rules[3].outboundTag())
+        assertEquals(
+            listOf("geosite:category-ru", "geosite:cn", "geosite:category-ir", "geosite:category-tm"),
+            rules[3].getValue("domain").jsonArray.map { it.jsonPrimitive.content },
+        )
+
+        assertEquals("direct", rules[4].outboundTag())
+        assertEquals(
+            listOf("geoip:ru", "geoip:by", "geoip:ir", "geoip:cn", "geoip:tm"),
+            rules[4].getValue("ip").jsonArray.map { it.jsonPrimitive.content },
+        )
+
+        assertNull("the catch-all proxies via the balancer, not a direct outbound", rules[5]["outboundTag"])
+        assertEquals("balancer_proxy", rules[5].getValue("balancerTag").jsonPrimitive.content)
+        assertEquals("tcp,udp", rules[5].getValue("network").jsonPrimitive.content)
     }
 
     /** Second line of defence behind the TUN exposing no IPv6 path at all. */

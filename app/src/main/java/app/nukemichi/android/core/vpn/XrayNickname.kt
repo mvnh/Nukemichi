@@ -1,9 +1,7 @@
-package app.nukemichi.android.feature.wizard.impl.domain.model
+package app.nukemichi.android.core.vpn
 
-// The dashboard shouldn't have to show a bare IP as "the server"; its own address is already
-// visible lower on that screen. Deterministic per-[seed] so redeploying to the same server (the
-// wizard's own idempotent-by-design contract) keeps the same name instead of reshuffling it.
-internal fun generateServerNickname(seed: String): String {
+// Deterministic per [seed], so redeploying to the same address keeps the same name.
+fun generateNickname(seed: String): String {
     val hash = seed.hashCode()
     val adjective = ADJECTIVES[Math.floorMod(hash, ADJECTIVES.size)]
     val noun = NOUNS[Math.floorMod(hash / ADJECTIVES.size, NOUNS.size)]

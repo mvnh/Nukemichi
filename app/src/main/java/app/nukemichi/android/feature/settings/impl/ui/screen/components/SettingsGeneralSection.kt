@@ -13,14 +13,10 @@ import androidx.compose.ui.res.stringResource
 import app.nukemichi.android.R
 import app.nukemichi.android.platform.ui.theme.size.dimens
 
-// Always visible regardless of AppMode: viewing logs or removing a saved server isn't an
-// expert-only action, it just used to live in the wrong place (a text button in Dashboard's
-// top bar, and nowhere at all, respectively).
+// Visible in every AppMode: viewing logs isn't an expert-only action.
 @Composable
 internal fun SettingsGeneralSection(
-    hasProfile: Boolean,
     onViewLogsClick: () -> Unit,
-    onForgetServerClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val dimens = MaterialTheme.dimens
@@ -37,15 +33,6 @@ internal fun SettingsGeneralSection(
             description = stringResource(id = R.string.settings_view_logs_description),
             onClick = onViewLogsClick,
         )
-
-        if (hasProfile) {
-            SettingsActionRow(
-                title = stringResource(id = R.string.settings_forget_server_title),
-                description = stringResource(id = R.string.settings_forget_server_description),
-                onClick = onForgetServerClick,
-                titleColor = MaterialTheme.colorScheme.error,
-            )
-        }
     }
 }
 

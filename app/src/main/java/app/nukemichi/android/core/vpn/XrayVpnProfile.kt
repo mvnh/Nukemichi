@@ -6,6 +6,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class XrayVpnProfile(
+    val id: String,
     val name: String,
     val sshHost: String,
     val sshPort: Int,
@@ -18,6 +19,8 @@ data class XrayVpnProfile(
     val security: XraySecurity,
     val transport: XrayTransport = XrayTransport.Xhttp(),
     val deployedAtMillis: Long,
+    // ISO 3166-1 alpha-2.
+    val countryCode: String? = null,
     val muxEnabled: Boolean = false,
     val muxConcurrency: Int = DEFAULT_MUX_CONCURRENCY,
 ) {

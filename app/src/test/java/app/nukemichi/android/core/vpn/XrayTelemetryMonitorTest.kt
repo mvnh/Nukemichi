@@ -5,6 +5,7 @@ import app.nukemichi.android.core.vpn.internal.XrayTelemetryMonitor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -77,6 +78,37 @@ class XrayTelemetryMonitorTest {
         monitor.running(STATS_INTERVAL_MS)
         assertEquals(XrayEngineState.RUNNING, monitor.state.value)
 
+        monitor.stopping()
+    }
+
+    @Test
+    fun `reports the session server while running and clears it once stopped`() = runBlocking {
+        val monitor = monitor()
+        assertNull(monitor.sessionServerId.value)
+
+        monitor.starting()
+        monitor.running(STATS_INTERVAL_MS, serverId = "server-a")
+        assertEquals("server-a", monitor.sessionServerId.value)
+
+        monitor.stopping()
+        assertNull("a stopped engine must not claim a session server", monitor.sessionServerId.value)
+
+        monitor.starting()
+        monitor.running(STATS_INTERVAL_MS, serverId = "server-b")
+        assertEquals("a restart reports the server it switched to", "server-b", monitor.sessionServerId.value)
+
+        monitor.stopping()
+    }
+
+    @Test
+    fun `failing clears a previously reported session server`() = runBlocking {
+        val monitor = monitor()
+
+        monitor.starting()
+        monitor.running(STATS_INTERVAL_MS, serverId = "server-a")
+        monitor.failed(IllegalStateException("tunnel lost"))
+
+        assertNull(monitor.sessionServerId.value)
         monitor.stopping()
     }
 

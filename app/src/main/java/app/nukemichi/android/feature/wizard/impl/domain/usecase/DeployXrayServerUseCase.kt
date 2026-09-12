@@ -12,6 +12,7 @@ import app.nukemichi.android.feature.wizard.impl.domain.model.SniSelector
 import app.nukemichi.android.feature.wizard.impl.domain.model.XrayServerCredentials
 import app.nukemichi.android.feature.wizard.impl.domain.model.XrayServerSecrets
 import app.nukemichi.android.feature.wizard.impl.domain.ssh.DetectPackageManagerCommand
+import app.nukemichi.android.feature.wizard.impl.domain.ssh.DetectServerCountryCommand
 import app.nukemichi.android.feature.wizard.impl.domain.ssh.GenerateXrayServerSecretsCommand
 import app.nukemichi.android.feature.wizard.impl.domain.ssh.InstallXrayRuntimeCommand
 import app.nukemichi.android.feature.wizard.impl.domain.ssh.ScanSniCommand
@@ -23,6 +24,7 @@ import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
+import timber.log.Timber
 
 internal class DeployXrayServerUseCase @Inject constructor() {
 
@@ -66,7 +68,7 @@ internal class DeployXrayServerUseCase @Inject constructor() {
                 ).getOrThrow()
             }
 
-            emit(DeploymentEvent.Completed(credentials))
+            emit(DeploymentEvent.Completed(credentials.copy(countryCode = detectCountryCode(connection))))
         }.catch { error ->
             // A failed step has already emitted StepFailed. Everything else, cancellation
             // included, belongs to the caller.
@@ -129,6 +131,16 @@ internal class DeployXrayServerUseCase @Inject constructor() {
             shortId = secrets.shortId,
             realityServerName = realityServerName,
         )
+    }
+
+    /** The flag it feeds is cosmetic, so a failed lookup must not fail a deployment that already succeeded. */
+    private suspend fun detectCountryCode(connection: SshConnection): String? = try {
+        connection.execute(DetectServerCountryCommand()).getOrNull()
+    } catch (error: CancellationException) {
+        throw error
+    } catch (error: Exception) {
+        Timber.w(error, "Detecting the server's country failed")
+        null
     }
 
     /**

@@ -118,7 +118,7 @@ internal class NukemichiVpnService : VpnService() {
                         throw error
                     }
                     tunInterface = establishedTun
-                    telemetry.running(config.statusIntervalMillis)
+                    telemetry.running(config.statusIntervalMillis, config.serverId)
                     healthWatchdog.start(scope, config.socksEndpoint, ::onHealthDegraded)
                     Timber.i("VPN started")
                 }

@@ -67,6 +67,9 @@ internal class XrayTelemetryMonitor @Inject constructor(
     override val logs: Flow<XrayLogMessage> = _logs.asSharedFlow()
     override val healthDegraded: Flow<Unit> = _healthDegraded.asSharedFlow()
 
+    private val _sessionServerId = MutableStateFlow<String?>(null)
+    override val sessionServerId: StateFlow<String?> = _sessionServerId.asStateFlow()
+
     private val lifecycle = Mutex()
     private var statsJob: Job? = null
     private var logcatReader: GoLogcatReader? = null
@@ -82,12 +85,14 @@ internal class XrayTelemetryMonitor @Inject constructor(
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    suspend fun running(intervalMillis: Long) = lifecycle.withLock {
+    suspend fun running(intervalMillis: Long, serverId: String? = null) = lifecycle.withLock {
         check(statsJob == null) { "Telemetry is already tracking a running Xray session." }
         uplinkTotalBytes = 0L
         downlinkTotalBytes = 0L
         _stats.resetReplayCache()
         pollIntervalMillis = intervalMillis.coerceAtLeast(MIN_STATS_INTERVAL_MS)
+        // Published before RUNNING, so a client reacting to RUNNING already knows which server it is on.
+        _sessionServerId.value = serverId
         _state.value = XrayEngineState.RUNNING
 
         logcatReader = GoLogcatReader(scope) { line -> _logs.tryEmit(line.toLogMessage()) }
@@ -114,6 +119,7 @@ internal class XrayTelemetryMonitor @Inject constructor(
 
         endingStats?.cancelAndJoin()
         endingLogcat?.stop()
+        _sessionServerId.value = null
         _state.value = XrayEngineState.STOPPED
     }
 
@@ -122,6 +128,7 @@ internal class XrayTelemetryMonitor @Inject constructor(
     }
 
     fun failed(error: Throwable) {
+        _sessionServerId.value = null
         _state.value = XrayEngineState.ERROR
         _logs.tryEmit(
             XrayLogMessage(

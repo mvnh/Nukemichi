@@ -4,17 +4,6 @@
     <string name="settings_general_section_title">Основное</string>
     <string name="settings_view_logs_title">Просмотреть журнал</string>
     <string name="settings_view_logs_description">Что делал Xray за последнее время.</string>
-    <string name="settings_forget_server_title">Забыть этот сервер</string>
-    <string name="settings_forget_server_description">Удалить сохранённое подключение и начать заново.</string>
-    <string name="settings_forget_server_confirm_title">Забыть этот сервер?</string>
-    <string name="settings_forget_server_confirm_body">Сохранённое подключение удалится с этого устройства. Сам сервер продолжит работать, так что настроить его заново можно в любой момент.</string>
-
-    <string name="settings_advanced_section_title">Расширенные</string>
-    <string name="settings_utls_fingerprint_title">TLS-отпечаток</string>
-    <string name="settings_mux_title">Мультиплексирование</string>
-    <string name="settings_mux_description">Использовать одно соединение для нескольких потоков.</string>
-    <string name="settings_mux_concurrency">Конкурентность: %1$d</string>
-    <string name="settings_export_vless_link">Экспортировать как vless://-ссылку</string>
 
     <string name="settings_danger_zone_title">Опасная зона</string>
     <string name="settings_advanced_mode_toggle_title">Расширенный режим</string>

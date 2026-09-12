@@ -9,6 +9,7 @@ class XrayRuntimeConfigFactoryTest {
     @Test
     fun `creates a local SOCKS endpoint`() {
         val profile = XrayVpnProfile(
+            id = "server-1",
             name = "test",
             sshHost = "ssh.example",
             sshPort = 22,

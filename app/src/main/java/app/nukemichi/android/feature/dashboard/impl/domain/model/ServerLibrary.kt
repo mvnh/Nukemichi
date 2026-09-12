@@ -1,0 +1,10 @@
+package app.nukemichi.android.feature.dashboard.impl.domain.model
+
+import app.nukemichi.android.core.vpn.XraySubscription
+import app.nukemichi.android.core.vpn.XrayVpnProfile
+
+internal data class ServerLibrary(
+    val subscriptions: List<XraySubscription>,
+    val selectedServer: XrayVpnProfile?,
+    val collapsedSubscriptionIds: Set<String>,
+)

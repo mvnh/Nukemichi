@@ -37,6 +37,7 @@ internal class DeploymentDelegate @Inject constructor(
                             realityPublicKey = event.credentials.publicKey,
                             realityShortId = event.credentials.shortId,
                             realityServerName = event.credentials.realityServerName,
+                            serverCountryCode = event.credentials.countryCode,
                         )
                     } else {
                         next

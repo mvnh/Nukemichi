@@ -15,7 +15,7 @@ class HelloDestination @Inject constructor() : Destination<HelloKey> {
         val navigator = LocalAppNavigator.current
 
         HelloScreen(
-            onSetUpServerClick = { navigator.navigate(WizardKey) },
+            onSetUpServerClick = { navigator.navigate(WizardKey()) },
         )
     }
 }

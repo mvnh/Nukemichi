@@ -8,6 +8,8 @@ internal object VpnIpcProtocol {
     const val MSG_LOG_LINE = 12
     /** No payload. See [app.nukemichi.android.core.vpn.internal.XrayHealthWatchdog]. */
     const val MSG_HEALTH_DEGRADED = 13
+    /** [KEY_SESSION_SERVER_ID] payload, absent while no session runs. */
+    const val MSG_SESSION_SERVER_CHANGED = 14
 
     const val KEY_UPLINK_BPS = "uplink_bps"
     const val KEY_DOWNLINK_BPS = "downlink_bps"
@@ -20,4 +22,6 @@ internal object VpnIpcProtocol {
     const val KEY_LOG_MESSAGE = "log_message"
     const val KEY_LOG_TIMESTAMP = "log_timestamp"
     const val KEY_LOG_SEQUENCE = "log_sequence"
+
+    const val KEY_SESSION_SERVER_ID = "session_server_id"
 }

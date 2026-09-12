@@ -31,4 +31,5 @@ internal fun WizardContract.State.toProfileDraft(): WizardProfileDraft = WizardP
     realityServerName = realityServerName.trim(),
     realityPublicKey = realityPublicKey.trim(),
     realityShortId = realityShortId.trim(),
+    countryCode = serverCountryCode,
 )

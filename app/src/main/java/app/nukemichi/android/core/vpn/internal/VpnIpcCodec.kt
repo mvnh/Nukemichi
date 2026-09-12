@@ -29,6 +29,12 @@ internal fun XrayLogMessage.toBundle(): Bundle = Bundle().apply {
     putLong(VpnIpcProtocol.KEY_LOG_SEQUENCE, sequence)
 }
 
+internal fun sessionServerBundle(serverId: String?): Bundle = Bundle().apply {
+    putString(VpnIpcProtocol.KEY_SESSION_SERVER_ID, serverId)
+}
+
+internal fun Bundle.toSessionServerId(): String? = getString(VpnIpcProtocol.KEY_SESSION_SERVER_ID)
+
 internal fun Bundle.toLogMessage(): XrayLogMessage = XrayLogMessage(
     level = getInt(VpnIpcProtocol.KEY_LOG_LEVEL),
     message = getString(VpnIpcProtocol.KEY_LOG_MESSAGE).orEmpty(),

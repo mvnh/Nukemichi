@@ -1,7 +1,4 @@
 <resources>
-    <string name="dashboard_no_server_configured">Сервер не настроен</string>
-    <string name="dashboard_export_link_cd">Поделиться VLESS-ссылкой подключения</string>
-    <string name="dashboard_export_link_label">Поделиться VLESS-ссылкой</string>
     <string name="dashboard_connected_for">Подключено %1$s</string>
     <string name="duration_hours_minutes">%1$d ч %2$02d мин</string>
     <string name="duration_minutes_seconds">%1$d мин %2$02d с</string>
@@ -12,10 +9,37 @@
     <string name="dashboard_state_disconnecting">Отключение…</string>
     <string name="dashboard_state_error">Ошибка подключения</string>
     <string name="dashboard_state_taking_a_while">Ещё работаем. Первое подключение занимает больше времени.</string>
+    <string name="dashboard_connect">Подключить</string>
+    <string name="dashboard_disconnect">Отключить</string>
 
+    <string name="dashboard_deploy_server">Развернуть сервер</string>
+    <string name="dashboard_empty_hint">Серверов пока нет. Разверните Xray на своём VPS, и он появится здесь.</string>
+
+    <string name="dashboard_subscription_own_servers">Ваши серверы · %1$d</string>
+    <string name="dashboard_subscription_add_server_cd">Добавить сервер в %1$s</string>
+    <string name="dashboard_subscription_share_cd">Поделиться: %1$s</string>
+    <string name="dashboard_subscription_edit_cd">Изменить: %1$s</string>
+    <string name="dashboard_subscription_edit_title">Изменить подписку</string>
+    <string name="dashboard_subscription_name_label">Название</string>
+    <string name="dashboard_subscription_save">Сохранить</string>
+    <string name="dashboard_subscription_delete">Удалить подписку</string>
+    <string name="dashboard_subscription_delete_confirm_title">Удалить эту подписку?</string>
+    <string name="dashboard_subscription_delete_confirm_body">Её серверы удалятся с этого устройства. Сами серверы продолжат работать, так что настроить их заново можно в любой момент.</string>
+
+    <string name="dashboard_server_details_cd">Сведения о сервере %1$s</string>
     <string name="dashboard_server_info_server">Сервер</string>
     <string name="dashboard_server_info_masking_as">Маскировка под</string>
     <string name="dashboard_server_info_deployed">Развёрнут</string>
+    <string name="dashboard_export_link_label">Поделиться VLESS-ссылкой</string>
+    <string name="dashboard_server_forget">Забыть этот сервер</string>
+    <string name="dashboard_server_forget_confirm_title">Забыть этот сервер?</string>
+    <string name="dashboard_server_forget_confirm_body">Сохранённое подключение удалится с этого устройства. Сам сервер продолжит работать, так что настроить его заново можно в любой момент.</string>
+
+    <string name="dashboard_server_advanced_title">Расширенные</string>
+    <string name="dashboard_server_utls_fingerprint_title">TLS-отпечаток</string>
+    <string name="dashboard_server_mux_title">Мультиплексирование</string>
+    <string name="dashboard_server_mux_description">Использовать одно соединение для нескольких потоков.</string>
+    <string name="dashboard_server_mux_concurrency">Конкурентность: %1$d</string>
 
     <string name="dashboard_stats_down">↓ Загрузка</string>
     <string name="dashboard_stats_up">↑ Отдача</string>

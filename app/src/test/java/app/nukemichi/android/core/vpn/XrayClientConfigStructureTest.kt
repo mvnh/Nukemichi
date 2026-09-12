@@ -142,6 +142,7 @@ class XrayClientConfigStructureTest {
     }
 
     private fun profile(transport: XrayTransport = XrayTransport.Xhttp()) = XrayVpnProfile(
+        id = "server-1",
         name = "test",
         sshHost = "ssh.example",
         sshPort = 22,

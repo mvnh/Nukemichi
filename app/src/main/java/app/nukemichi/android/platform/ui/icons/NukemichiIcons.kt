@@ -1,6 +1,8 @@
 package app.nukemichi.android.platform.ui.icons
 
 import androidx.compose.ui.graphics.vector.ImageVector
+import app.nukemichi.android.platform.ui.icons.sources._add_filled
+import app.nukemichi.android.platform.ui.icons.sources._add_outlined
 import app.nukemichi.android.platform.ui.icons.sources._arrow_back_filled
 import app.nukemichi.android.platform.ui.icons.sources._arrow_back_outlined
 import app.nukemichi.android.platform.ui.icons.sources._arrow_drop_down_filled
@@ -17,6 +19,12 @@ import app.nukemichi.android.platform.ui.icons.sources._close_filled
 import app.nukemichi.android.platform.ui.icons.sources._close_outlined
 import app.nukemichi.android.platform.ui.icons.sources._dns_filled
 import app.nukemichi.android.platform.ui.icons.sources._dns_outlined
+import app.nukemichi.android.platform.ui.icons.sources._edit_filled
+import app.nukemichi.android.platform.ui.icons.sources._edit_outlined
+import app.nukemichi.android.platform.ui.icons.sources._expand_more_filled
+import app.nukemichi.android.platform.ui.icons.sources._expand_more_outlined
+import app.nukemichi.android.platform.ui.icons.sources._info_filled
+import app.nukemichi.android.platform.ui.icons.sources._info_outlined
 import app.nukemichi.android.platform.ui.icons.sources._lock_filled
 import app.nukemichi.android.platform.ui.icons.sources._lock_outlined
 import app.nukemichi.android.platform.ui.icons.sources._more_vert_filled
@@ -55,6 +63,10 @@ object NukemichiIcons {
         val MoreVert: ImageVector get() = _more_vert_filled
         val Share: ImageVector get() = _share_filled
         val Settings: ImageVector get() = _settings
+        val Add: ImageVector get() = _add_filled
+        val Edit: ImageVector get() = _edit_filled
+        val Info: ImageVector get() = _info_filled
+        val ExpandMore: ImageVector get() = _expand_more_filled
     }
 
     object Outlined {
@@ -75,5 +87,9 @@ object NukemichiIcons {
         val MoreVert: ImageVector get() = _more_vert_outlined
         val Share: ImageVector get() = _share_outlined
         val Settings: ImageVector get() = _settings
+        val Add: ImageVector get() = _add_outlined
+        val Edit: ImageVector get() = _edit_outlined
+        val Info: ImageVector get() = _info_outlined
+        val ExpandMore: ImageVector get() = _expand_more_outlined
     }
 }

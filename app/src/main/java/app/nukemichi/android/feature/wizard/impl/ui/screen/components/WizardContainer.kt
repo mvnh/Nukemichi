@@ -31,6 +31,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -292,6 +293,8 @@ private fun WizardBottomBar(
                 modifier = Modifier
                     .align(Alignment.Center)
                     .fillMaxWidth(0.5f)
+                    // Clipped to the button's own shape, so swapping label for spinner never squares its ends.
+                    .clip(ButtonDefaults.shape)
                     .animateContentSize()
             ) {
                 if (isLoading) {

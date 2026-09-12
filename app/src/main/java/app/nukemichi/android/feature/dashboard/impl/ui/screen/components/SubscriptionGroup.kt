@@ -9,13 +9,17 @@ import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import app.nukemichi.android.feature.dashboard.impl.ui.model.SubscriptionUi
 import app.nukemichi.android.platform.ui.theme.size.dimens
+
+private val revealShape = RoundedCornerShape(bottomStart = SegmentOuterCorner, bottomEnd = SegmentOuterCorner)
 
 @Composable
 internal fun SubscriptionGroup(
@@ -41,6 +45,9 @@ internal fun SubscriptionGroup(
 
         AnimatedVisibility(
             visible = subscription.isExpanded,
+            // A reveal clips to its animated height, which would saw the emerging row's rounded corners
+            // off square. Rounding the reveal itself keeps the leading edge shaped like the rows behind it.
+            modifier = Modifier.clip(revealShape),
             enter = expandVertically(animationSpec = dashboardSpatialSpec(), expandFrom = Alignment.Top) +
                 fadeIn(animationSpec = dashboardEffectsSpec()),
             exit = shrinkVertically(animationSpec = dashboardSpatialSpec(), shrinkTowards = Alignment.Top) +
@@ -49,6 +56,7 @@ internal fun SubscriptionGroup(
             val segmentCount = subscription.servers.size + 1
             Column(
                 modifier = Modifier
+                    .clip(revealShape)
                     .animateContentSize(animationSpec = dashboardSpatialSpec())
                     .padding(top = dimens.xs),
                 verticalArrangement = Arrangement.spacedBy(dimens.xs),

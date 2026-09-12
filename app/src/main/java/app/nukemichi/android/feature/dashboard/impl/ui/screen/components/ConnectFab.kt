@@ -4,6 +4,7 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
@@ -11,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import app.nukemichi.android.R
@@ -40,7 +42,10 @@ internal fun ConnectFab(
 
     ExtendedFloatingActionButton(
         onClick = { if (!state.isBusy) onClick() },
-        modifier = modifier.animateContentSize(animationSpec = dashboardSpatialSpec()),
+        // Clipped to the FAB's own shape, so the pill keeps its rounded ends while the label's width changes.
+        modifier = modifier
+            .clip(FloatingActionButtonDefaults.extendedFabShape)
+            .animateContentSize(animationSpec = dashboardSpatialSpec()),
         containerColor = containerColor,
         contentColor = contentColorFor(containerColor),
         icon = {

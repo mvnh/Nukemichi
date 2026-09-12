@@ -1,5 +1,10 @@
 package app.nukemichi.android.feature.dashboard.impl.ui.screen.components
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -21,22 +26,26 @@ import app.nukemichi.android.platform.ui.theme.size.dimens
 @Composable
 internal fun StatsRow(
     stats: XrayTrafficStats?,
+    visible: Boolean,
     modifier: Modifier = Modifier,
 ) {
     val dimens = MaterialTheme.dimens
 
     Row(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(dimens.l)) {
         StatCard(
+            visible = visible,
             label = stringResource(R.string.dashboard_stats_down),
             value = formatBitrate(stats?.downlinkBytesPerSecond ?: 0L),
             modifier = Modifier.weight(1f),
         )
         StatCard(
+            visible = visible,
             label = stringResource(R.string.dashboard_stats_up),
             value = formatBitrate(stats?.uplinkBytesPerSecond ?: 0L),
             modifier = Modifier.weight(1f),
         )
         StatCard(
+            visible = visible,
             label = stringResource(R.string.dashboard_stats_total),
             value = formatBytes((stats?.downlinkTotalBytes ?: 0L) + (stats?.uplinkTotalBytes ?: 0L)),
             modifier = Modifier.weight(1f),
@@ -44,13 +53,34 @@ internal fun StatsRow(
     }
 }
 
+// Each card reveals behind its own rounded clip: one clip across the row would leave the middle card's
+// corners sawn off square while the row grows.
 // Plain String, not UiText: file-local literal labels + formatted numbers, no reuse.
 @Composable
-private fun StatCard(label: String, value: String, modifier: Modifier = Modifier) {
+private fun StatCard(visible: Boolean, label: String, value: String, modifier: Modifier = Modifier) {
+    val dimens = MaterialTheme.dimens
+    val cardShape = RoundedCornerShape(dimens.cornerRadius)
+
+    AnimatedVisibility(
+        visible = visible,
+        modifier = modifier.clip(cardShape),
+        enter = expandVertically(animationSpec = dashboardSpatialSpec(), expandFrom = Alignment.Top) +
+            fadeIn(animationSpec = dashboardEffectsSpec()),
+        exit = shrinkVertically(animationSpec = dashboardSpatialSpec(), shrinkTowards = Alignment.Top) +
+            fadeOut(animationSpec = dashboardEffectsSpec()),
+    ) {
+        StatCardContent(label = label, value = value)
+    }
+}
+
+@Composable
+private fun StatCardContent(label: String, value: String) {
     val dimens = MaterialTheme.dimens
 
     Column(
-        modifier = modifier
+        modifier = Modifier
+            // Its own top spacing, so the gap above the cards appears and disappears with them.
+            .padding(top = dimens.xl)
             .clip(RoundedCornerShape(dimens.cornerRadius))
             .background(MaterialTheme.colorScheme.surfaceContainerLow)
             .padding(vertical = dimens.l, horizontal = dimens.m),

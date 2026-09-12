@@ -35,7 +35,6 @@ private const val EXPANDED_CHEVRON_ROTATION = 180f
 internal fun SubscriptionHeaderRow(
     subscription: SubscriptionUi,
     onToggleExpanded: () -> Unit,
-    onAddServer: () -> Unit,
     onShare: () -> Unit,
     onEdit: () -> Unit,
     modifier: Modifier = Modifier,
@@ -109,12 +108,6 @@ internal fun SubscriptionHeaderRow(
             }
 
             Row {
-                IconButton(onClick = onAddServer) {
-                    Icon(
-                        imageVector = NukemichiIcons.Outlined.Add,
-                        contentDescription = stringResource(R.string.dashboard_subscription_add_server_cd, subscription.name),
-                    )
-                }
                 IconButton(onClick = onShare) {
                     Icon(
                         imageVector = NukemichiIcons.Outlined.Share,

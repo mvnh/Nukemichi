@@ -16,7 +16,7 @@
     <string name="dashboard_empty_hint">No servers yet. Deploy Xray to your own VPS and it shows up here.</string>
 
     <string name="dashboard_subscription_own_servers">Your servers · %1$d</string>
-    <string name="dashboard_subscription_add_server_cd">Add a server to %1$s</string>
+    <string name="dashboard_subscription_add_server">Add server</string>
     <string name="dashboard_subscription_share_cd">Share %1$s</string>
     <string name="dashboard_subscription_edit_cd">Edit %1$s</string>
     <string name="dashboard_subscription_edit_title">Edit subscription</string>
@@ -43,7 +43,7 @@
 
     <string name="dashboard_stats_down">↓ Down</string>
     <string name="dashboard_stats_up">↑ Up</string>
-    <string name="dashboard_stats_total">Total</string>
+    <string name="dashboard_stats_total">Traffic</string>
 
     <string name="dashboard_error_vpn_permission_denied">VPN permission was denied.</string>
     <string name="dashboard_error_failed_to_stop_vpn">Failed to stop VPN.</string>

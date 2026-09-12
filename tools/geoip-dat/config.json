@@ -1,0 +1,22 @@
+{
+  "input": [
+    {
+      "type": "dbipCountryMMDB",
+      "action": "add",
+      "args": {
+        "uri": "./db-ip/dbip-country-lite.mmdb"
+      }
+    }
+  ],
+  "output": [
+    {
+      "type": "v2rayGeoIPDat",
+      "action": "output",
+      "args": {
+        "outputDir": "./nukemichi-output",
+        "outputName": "geoip.dat",
+        "wantedList": ["ru", "by", "ir", "cn", "tm"]
+      }
+    }
+  ]
+}

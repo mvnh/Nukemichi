@@ -1,72 +1,8 @@
-import java.net.URI
-import java.security.MessageDigest
 import java.util.Properties
 
-abstract class DownloadLibV2rayTask : DefaultTask() {
-
-    @get:Input
-    abstract val version: Property<String>
-
-    @get:Input
-    abstract val sha256: Property<String>
-
-    @get:OutputFile
-    abstract val outputFile: RegularFileProperty
-
-    @TaskAction
-    fun download() {
-        val target = outputFile.get().asFile
-
-        // Re-verified rather than trusted for existing: this path is restored from the Actions
-        // cache before the task runs, so skipping straight past an already-present file meant the
-        // pinned digest was never checked on any CI build, release-build included. A local
-        // build/ directory is no more trustworthy - it just fails less interestingly.
-        if (target.exists()) {
-            if (digestOf(target) == sha256.get()) {
-                logger.info("libv2ray.aar already staged and matches the pinned SHA-256")
-                return
-            }
-            logger.warn("Staged libv2ray.aar does not match the pinned SHA-256 - discarding it and downloading again.")
-            target.delete()
-        }
-
-        val url = "https://github.com/2dust/AndroidLibXrayLite/releases/download/${version.get()}/libv2ray.aar"
-        val tempFile = File(temporaryDir, "libv2ray.aar")
-        logger.lifecycle("Downloading libv2ray.aar ${version.get()}")
-
-        URI(url).toURL().openStream().use { input ->
-            tempFile.outputStream().use { output -> input.copyTo(output) }
-        }
-        verifyChecksum(tempFile)
-        target.parentFile.mkdirs()
-        tempFile.copyTo(target, overwrite = true)
-        logger.lifecycle("libv2ray.aar staged at ${target.path}")
-    }
-
-    private fun digestOf(archive: File): String {
-        val digest = MessageDigest.getInstance("SHA-256")
-        archive.inputStream().use { input ->
-            val buffer = ByteArray(64 * 1024)
-            while (true) {
-                val read = input.read(buffer)
-                if (read < 0) break
-                digest.update(buffer, 0, read)
-            }
-        }
-        return digest.digest().joinToString("") { "%02x".format(it) }
-    }
-
-    private fun verifyChecksum(archive: File) {
-        val expected = sha256.get()
-        val actual = digestOf(archive)
-
-        if (actual != expected) {
-            archive.delete()
-            throw GradleException("libv2ray.aar checksum mismatch: expected $expected but got $actual.")
-        }
-        logger.info("libv2ray.aar matches the pinned SHA-256")
-    }
-}
+// DownloadLibV2rayTask, DownloadGeositeDatTask, VerifyGeoipDatTask, RegenerateGeoipDatTask and
+// their shared ChecksumUtil all live in buildSrc/src/main/kotlin/ - separate compiled files, not
+// inline here.
 
 val libv2rayVersion = "v26.8.20"
 
@@ -85,6 +21,51 @@ val downloadLibV2ray = tasks.register<DownloadLibV2rayTask>("downloadLibV2ray") 
 }
 
 val libv2rayAar: Provider<RegularFile> = downloadedLibv2rayAarFile
+
+// Country-based direct routing (see XrayRoutingFactory): geosite.dat drives the domain half,
+// geoip.dat the IP half. Both are read from the app's filesDir at runtime, not from the APK's
+// assets directly - GeoAssetInstaller copies them there on first use of a version it hasn't
+// staged yet.
+val geositeVersion = "20260908094002"
+
+// Staged under a versioned directory (like downloadedLibv2rayAarFile) so bumping the version is
+// itself a cache miss, but the leaf filename stays the flat "geosite.dat" the app opens by name.
+val geositeStagingDir = layout.buildDirectory.dir("generated/geosite/$geositeVersion")
+val downloadedGeositeDatFile = geositeStagingDir.map { it.file("geosite.dat") }
+
+val downloadGeositeDat = tasks.register<DownloadGeositeDatTask>("downloadGeositeDat") {
+    group = "build setup"
+    description = "Downloads and verifies geosite.dat (v2fly/domain-list-community) for country-based direct routing"
+
+    version.set(geositeVersion)
+    // Computed locally from the release asset, not the project's own sha256sum file (which
+    // returned empty over plain HTTP) - see the geosite research in this session.
+    sha256.set("35ed26a24cafa1256bd7261414224b7bcef5c944cea7760e172b030a8b266450")
+    outputFile.set(downloadedGeositeDatFile)
+}
+
+// geoip.dat is vendored (app/src/main/assets/geoip.dat), not downloaded - see
+// tools/geoip-dat/README.md for why. This only verifies the committed file matches what's pinned.
+val geoipDatSha256 = "c8cce77b4d57088431b4eb543b4e06c5581204a7eec4f66b5812f3295c251216"
+
+val verifyGeoipDat = tasks.register<VerifyGeoipDatTask>("verifyGeoipDat") {
+    group = "verification"
+    description = "Verifies app/src/main/assets/geoip.dat against the pinned SHA-256"
+
+    geoipDat.set(layout.projectDirectory.file("src/main/assets/geoip.dat"))
+    expectedSha256.set(geoipDatSha256)
+}
+
+tasks.register<RegenerateGeoipDatTask>("regenerateGeoipDat") {
+    group = "build setup"
+    description = "Maintainer-only: rebuilds app/src/main/assets/geoip.dat from a fresh DB-IP snapshot. Needs Go. See tools/geoip-dat/README.md"
+
+    // Pinned so the generator's own behaviour is reproducible even though its input data isn't.
+    geoipGeneratorCommit.set("fd96fbac6cffc06ab9a10d6ee8fad61afe9b771c")
+    generatorConfig.set(rootProject.file("tools/geoip-dat/config.json"))
+    outputFile.set(layout.projectDirectory.file("src/main/assets/geoip.dat"))
+    outputs.upToDateWhen { false } // always talks to the network for fresh data; never "up to date"
+}
 
 val keystoreProperties = Properties().apply {
     rootProject.file("keystore.properties").takeIf { it.exists() }?.inputStream()?.use(::load)
@@ -128,6 +109,12 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
+        // Single source of truth for GeoAssetInstaller's cache-bust key, so bumping the pinned
+        // version/checksum here automatically invalidates what's staged in the app's filesDir -
+        // no separate constant to remember to update in Kotlin.
+        buildConfigField("String", "GEOSITE_DAT_VERSION", "\"$geositeVersion\"")
+        buildConfigField("String", "GEOIP_DAT_SHA256", "\"$geoipDatSha256\"")
+
         externalNativeBuild {
             ndkBuild {
                 // hev-jni.c's JNI_OnLoad does FindClass(PKGNAME "/" CLSNAME) to bind its native
@@ -143,6 +130,20 @@ android {
     externalNativeBuild {
         ndkBuild {
             path = file("src/main/cpp/hev-socks5-tunnel/Android.mk")
+        }
+    }
+
+    sourceSets {
+        getByName("main") {
+            // geosite.dat is downloaded, not committed (see downloadGeositeDat below - ordering
+            // relies on the same preBuild.dependsOn wiring as downloadLibV2ray, not on Gradle
+            // inferring a task dependency from this srcDir); geoip.dat already lives in
+            // src/main/assets and is picked up from there as usual.
+            // AGP's legacy AndroidSourceSet API refuses a Provider here ("cannot determine if it
+            // points to a generated or static directory") - resolving eagerly is fine since the
+            // path itself is static (just "build/generated/geosite/$geositeVersion"), only the
+            // file inside it is produced later, by downloadGeositeDat via the preBuild wiring below.
+            assets.srcDir(geositeStagingDir.get().asFile)
         }
     }
 
@@ -252,5 +253,5 @@ dependencies {
 }
 
 tasks.named("preBuild") {
-    dependsOn(downloadLibV2ray)
+    dependsOn(downloadLibV2ray, downloadGeositeDat, verifyGeoipDat)
 }

@@ -57,20 +57,11 @@ internal fun ConnectionHeader(
 
         SlowTransitionHint(state = state)
 
-        AnimatedVisibility(
+        StatsRow(
+            stats = state.stats,
             visible = state.isConnected,
-            enter = expandVertically(animationSpec = dashboardSpatialSpec(), expandFrom = Alignment.Top) +
-                fadeIn(animationSpec = dashboardEffectsSpec()),
-            exit = shrinkVertically(animationSpec = dashboardSpatialSpec(), shrinkTowards = Alignment.Top) +
-                fadeOut(animationSpec = dashboardEffectsSpec()),
-        ) {
-            StatsRow(
-                stats = state.stats,
-                modifier = Modifier
-                    .padding(top = dimens.xl)
-                    .fillMaxWidth(),
-            )
-        }
+            modifier = Modifier.fillMaxWidth(),
+        )
     }
 }
 

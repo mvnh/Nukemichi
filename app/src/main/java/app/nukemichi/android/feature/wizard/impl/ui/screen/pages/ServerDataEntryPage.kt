@@ -1,6 +1,10 @@
 package app.nukemichi.android.feature.wizard.impl.ui.screen.pages
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.SizeTransform
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -123,7 +127,10 @@ internal fun ServerDataEntryPage(
 
         AnimatedContent(
             targetState = authMethod,
-            label = "authentication_method"
+            label = "authentication_method",
+            // Resizing between the one-line password field and the taller key field clips by default,
+            // which saws the field's rounded corners off square mid-transition.
+            transitionSpec = { (fadeIn() togetherWith fadeOut()).using(SizeTransform(clip = false)) },
         ) { method ->
             when (method) {
                 ServerAuthMethod.PASSWORD -> {

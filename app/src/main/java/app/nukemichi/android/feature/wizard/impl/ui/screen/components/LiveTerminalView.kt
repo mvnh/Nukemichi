@@ -39,6 +39,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalClipboardManager
@@ -90,7 +91,13 @@ internal fun LiveTerminalView(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            TextButton(onClick = onToggleExpanded, modifier = Modifier.animateContentSize()) {
+            // Clipped to the button's own pill, so a changing label never squares its ends off.
+            TextButton(
+                onClick = onToggleExpanded,
+                modifier = Modifier
+                    .clip(CircleShape)
+                    .animateContentSize(),
+            ) {
                 Icon(
                     imageVector = if (isExpanded) NukemichiIcons.Outlined.ArrowDropUp else NukemichiIcons.Outlined.ArrowDropDown,
                     contentDescription = null,
@@ -102,13 +109,15 @@ internal fun LiveTerminalView(
                 )
             }
 
-            AnimatedVisibility(visible = isExpanded) {
+            AnimatedVisibility(visible = isExpanded, modifier = Modifier.clip(CircleShape)) {
                 TextButton(
                     onClick = {
                         clipboard.setText(AnnotatedString(logLines.joinToString("\n")))
                         justCopied = true
                     },
-                    modifier = Modifier.animateContentSize(),
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .animateContentSize(),
                 ) {
                     if (justCopied) {
                         Icon(imageVector = NukemichiIcons.Outlined.Check, contentDescription = null)

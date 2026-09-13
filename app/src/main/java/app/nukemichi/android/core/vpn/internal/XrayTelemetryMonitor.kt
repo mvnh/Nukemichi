@@ -37,6 +37,7 @@ import timber.log.Timber
 internal class XrayTelemetryMonitor @Inject constructor(
     private val statsSource: XrayStatsSource,
     @IoDispatcher ioDispatcher: CoroutineDispatcher,
+    private val elapsedRealtimeSource: ElapsedRealtimeSource,
 ) : XrayMonitoring, CoreCallbackHandler {
     // A SupervisorJob means a failing child (the stats poller, the logcat reader) never takes
     // down its sibling, but it also means neither has anywhere to propagate an unexpected
@@ -70,6 +71,9 @@ internal class XrayTelemetryMonitor @Inject constructor(
     private val _sessionServerId = MutableStateFlow<String?>(null)
     override val sessionServerId: StateFlow<String?> = _sessionServerId.asStateFlow()
 
+    private val _runningSinceRealtime = MutableStateFlow<Long?>(null)
+    override val runningSinceRealtime: StateFlow<Long?> = _runningSinceRealtime.asStateFlow()
+
     private val lifecycle = Mutex()
     private var statsJob: Job? = null
     private var logcatReader: GoLogcatReader? = null
@@ -93,6 +97,10 @@ internal class XrayTelemetryMonitor @Inject constructor(
         pollIntervalMillis = intervalMillis.coerceAtLeast(MIN_STATS_INTERVAL_MS)
         // Published before RUNNING, so a client reacting to RUNNING already knows which server it is on.
         _sessionServerId.value = serverId
+        // elapsedRealtime(), not epoch time: it's monotonic and shared across processes on this
+        // device, so a UI process recreated underneath a live tunnel can compare against it
+        // directly instead of re-guessing a start time from whenever it happened to reconnect.
+        _runningSinceRealtime.value = elapsedRealtimeSource.elapsedRealtimeMillis()
         _state.value = XrayEngineState.RUNNING
 
         logcatReader = GoLogcatReader(scope) { line -> _logs.tryEmit(line.toLogMessage()) }
@@ -120,6 +128,7 @@ internal class XrayTelemetryMonitor @Inject constructor(
         endingStats?.cancelAndJoin()
         endingLogcat?.stop()
         _sessionServerId.value = null
+        _runningSinceRealtime.value = null
         _state.value = XrayEngineState.STOPPED
     }
 
@@ -129,6 +138,7 @@ internal class XrayTelemetryMonitor @Inject constructor(
 
     fun failed(error: Throwable) {
         _sessionServerId.value = null
+        _runningSinceRealtime.value = null
         _state.value = XrayEngineState.ERROR
         _logs.tryEmit(
             XrayLogMessage(

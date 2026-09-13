@@ -58,6 +58,14 @@ internal class VpnIpcService : Service() {
         telemetry.state.onEach { state ->
             broadcast(Message.obtain(null, VpnIpcProtocol.MSG_STATE_CHANGED, state.ordinal, 0))
         }.launchIn(scope)
+        // Collected alongside state: RUNNING with no way to know when it started is no better off
+        // than the UI process guessing its own start time, which is the bug this exists to fix.
+        telemetry.runningSinceRealtime.onEach { runningSinceRealtime ->
+            broadcast(
+                Message.obtain(null, VpnIpcProtocol.MSG_RUNNING_SINCE_CHANGED)
+                    .apply { data = runningSinceBundle(runningSinceRealtime) }
+            )
+        }.launchIn(scope)
         telemetry.stats.onEach { stats ->
             lastStats = stats
             broadcast(
@@ -104,6 +112,10 @@ internal class VpnIpcService : Service() {
                 telemetry.state.value.ordinal,
                 0
             )
+        )
+        client.trySend(
+            Message.obtain(null, VpnIpcProtocol.MSG_RUNNING_SINCE_CHANGED)
+                .apply { data = runningSinceBundle(telemetry.runningSinceRealtime.value) }
         )
         lastStats?.let { stats ->
             client.trySend(

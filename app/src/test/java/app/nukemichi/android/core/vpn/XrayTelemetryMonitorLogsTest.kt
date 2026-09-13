@@ -1,5 +1,6 @@
 package app.nukemichi.android.core.vpn
 
+import app.nukemichi.android.core.vpn.internal.ElapsedRealtimeSource
 import app.nukemichi.android.core.vpn.internal.XrayTelemetryMonitor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -69,7 +70,7 @@ class XrayTelemetryMonitorLogsTest {
         assertEquals(XrayEngineState.ERROR, monitor.state.value)
     }
 
-    private fun monitor() = XrayTelemetryMonitor(NoStatsSource, Dispatchers.IO)
+    private fun monitor() = XrayTelemetryMonitor(NoStatsSource, Dispatchers.IO, ElapsedRealtimeSource { 0L })
 
     private object NoStatsSource : XrayStatsSource {
         override fun queryAllOutboundTrafficStats(): String? = null

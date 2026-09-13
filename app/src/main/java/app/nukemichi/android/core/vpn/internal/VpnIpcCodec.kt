@@ -35,6 +35,16 @@ internal fun sessionServerBundle(serverId: String?): Bundle = Bundle().apply {
 
 internal fun Bundle.toSessionServerId(): String? = getString(VpnIpcProtocol.KEY_SESSION_SERVER_ID)
 
+// A Long can't represent "no session" as a value the way sessionServerBundle uses a null String,
+// so absence is the signal: the key is left out entirely rather than written as 0.
+internal fun runningSinceBundle(runningSinceRealtime: Long?): Bundle = Bundle().apply {
+    runningSinceRealtime?.let { putLong(VpnIpcProtocol.KEY_RUNNING_SINCE_REALTIME, it) }
+}
+
+internal fun Bundle.toRunningSinceRealtime(): Long? =
+    takeIf { it.containsKey(VpnIpcProtocol.KEY_RUNNING_SINCE_REALTIME) }
+        ?.getLong(VpnIpcProtocol.KEY_RUNNING_SINCE_REALTIME)
+
 internal fun Bundle.toLogMessage(): XrayLogMessage = XrayLogMessage(
     level = getInt(VpnIpcProtocol.KEY_LOG_LEVEL),
     message = getString(VpnIpcProtocol.KEY_LOG_MESSAGE).orEmpty(),

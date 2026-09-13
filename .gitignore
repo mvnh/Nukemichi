@@ -113,6 +113,7 @@ render.experimental.xml
 google-services.json
 *.hprof
 !/.kotlin/
+/.kotlin/
 
 # Claude Code project instructions (local, not versioned)
 .claude/

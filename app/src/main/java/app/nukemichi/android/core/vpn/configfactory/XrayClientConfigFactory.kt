@@ -49,9 +49,10 @@ object XrayClientConfigFactory {
         )
     }
 
-    /** The same shape of config [createRuntimeConfig] would run, minus a real [SocksEndpoint] to
-     *  hand a runtime. For previewing or testing the generated JSON without a caller needing to
-     *  thread a throwaway SOCKS credential through as well. */
+    /**
+     * The config [createRuntimeConfig] would run, for previewing or testing the generated JSON
+     * without threading a throwaway SOCKS credential through.
+     */
     fun build(profile: XrayVpnProfile): XrayConfig = build(profile, generateSocksCredential())
 
     private fun build(profile: XrayVpnProfile, socksCredential: SocksCredential): XrayConfig {

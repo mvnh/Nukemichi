@@ -23,7 +23,6 @@ internal class ServerLibraryCoordinator @Inject constructor(
         combine(subscriptionStore.subscriptions, preferences.preferences) { subscriptions, preferences ->
             ServerLibrary(
                 subscriptions = subscriptions,
-                // A selection whose server is gone falls back to the first server, never to nothing.
                 selectedServer = preferences.selectedServerId?.let(subscriptions::findServer)
                     ?: subscriptions.firstNotNullOfOrNull { it.servers.firstOrNull() },
                 collapsedSubscriptionIds = preferences.collapsedSubscriptionIds,

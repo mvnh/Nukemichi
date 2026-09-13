@@ -9,11 +9,10 @@ import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
 
 /**
- * Downloads dlc.dat from v2fly/domain-list-community and stages it as geosite.dat - the compiled
- * domain-category database Xray's `geosite:` routing rules read at runtime (see
- * XrayRoutingFactory in :app). Unlike geoip.dat, this one *can* be pinned forever the same way
- * libv2ray.aar is: it's an immutable GitHub release asset, not a source someone else rotates out
- * from under a fixed URL.
+ * Downloads dlc.dat from v2fly/domain-list-community and stages it as geosite.dat, the compiled
+ * domain-category database Xray's `geosite:` rules read at runtime (see XrayRoutingFactory in
+ * :app). Unlike geoip.dat this one can be pinned forever: it is an immutable GitHub release asset,
+ * not a source someone rotates out from under a fixed URL.
  */
 abstract class DownloadGeositeDatTask : DefaultTask() {
 
@@ -35,7 +34,7 @@ abstract class DownloadGeositeDatTask : DefaultTask() {
                 logger.info("geosite.dat already staged and matches the pinned SHA-256")
                 return
             }
-            logger.warn("Staged geosite.dat does not match the pinned SHA-256 - discarding it and downloading again.")
+            logger.warn("Staged geosite.dat does not match the pinned SHA-256, discarding it and downloading again.")
             target.delete()
         }
 

@@ -48,7 +48,7 @@ internal class ScanSniCommand(architecture: String) : BashScriptCommand<List<Str
 
         // Upstream publishes no checksums for these assets, so unlike Xray-core's own .dgst these
         // digests are computed from the downloaded binaries and pinned here. Update together with
-        // SCANNER_VERSION - a version bump with a stale digest fails the scan, by design.
+        // SCANNER_VERSION: a version bump with a stale digest fails the scan, by design.
         private fun assetFor(architecture: String): ScannerAsset = when (architecture) {
             "64" -> ScannerAsset(
                 name = "RealiTLScanner-linux-amd64",

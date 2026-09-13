@@ -39,10 +39,9 @@ internal class XrayTelemetryMonitor @Inject constructor(
     @IoDispatcher ioDispatcher: CoroutineDispatcher,
     private val elapsedRealtimeSource: ElapsedRealtimeSource,
 ) : XrayMonitoring, CoreCallbackHandler {
-    // A SupervisorJob means a failing child (the stats poller, the logcat reader) never takes
-    // down its sibling, but it also means neither has anywhere to propagate an unexpected
-    // exception to - without this handler it would otherwise reach the JVM's uncaught-exception
-    // path instead of this monitor's own logs.
+    // SupervisorJob keeps the stats poller and the logcat reader from killing each other, but it
+    // also leaves neither anywhere to propagate to. Without this handler an unexpected exception
+    // reaches the JVM's uncaught path instead of these logs.
     private val scope = CoroutineScope(
         SupervisorJob() + ioDispatcher + CoroutineExceptionHandler { _, error ->
             Timber.w(error, "XrayTelemetryMonitor: uncaught exception in a monitoring coroutine")
@@ -97,9 +96,8 @@ internal class XrayTelemetryMonitor @Inject constructor(
         pollIntervalMillis = intervalMillis.coerceAtLeast(MIN_STATS_INTERVAL_MS)
         // Published before RUNNING, so a client reacting to RUNNING already knows which server it is on.
         _sessionServerId.value = serverId
-        // elapsedRealtime(), not epoch time: it's monotonic and shared across processes on this
-        // device, so a UI process recreated underneath a live tunnel can compare against it
-        // directly instead of re-guessing a start time from whenever it happened to reconnect.
+        // elapsedRealtime(), not epoch time: monotonic and shared across processes, so a UI process
+        // recreated under a live tunnel can compare against it instead of guessing a start time.
         _runningSinceRealtime.value = elapsedRealtimeSource.elapsedRealtimeMillis()
         _state.value = XrayEngineState.RUNNING
 

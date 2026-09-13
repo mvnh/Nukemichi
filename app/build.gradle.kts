@@ -1,16 +1,11 @@
 import java.util.Properties
 
-// ---------------------------------------------------------------------------
-// Pinned third-party binaries. Task types (DownloadLibV2rayTask,
-// DownloadGeositeDatTask, VerifyGeoipDatTask, RegenerateGeoipDatTask, and
-// their shared ChecksumUtil) live in buildSrc/src/main/kotlin/, not here.
-// Update procedure for each: see CONTRIBUTING.md.
-// ---------------------------------------------------------------------------
+// The task types below live in buildSrc/src/main/kotlin/. Bump procedure: CONTRIBUTING.md.
 
 // xray-core, as a prebuilt gomobile Android library (AndroidLibXrayLite release).
 val libv2rayVersion = "v26.8.20"
-// Filename carries the version, so bumping it is itself a cache miss - otherwise a stale
-// build/ artifact would satisfy the task's own "already staged" check and never get re-verified.
+// The version is in the filename so a bump always misses the cache; otherwise a stale build/
+// artifact satisfies the task's "already staged" check and is never re-verified.
 val downloadedLibv2rayAarFile = layout.buildDirectory.file("generated/libv2ray/libv2ray-$libv2rayVersion.aar")
 val downloadLibV2ray = tasks.register<DownloadLibV2rayTask>("downloadLibV2ray") {
     group = "build setup"
@@ -34,7 +29,7 @@ val downloadGeositeDat = tasks.register<DownloadGeositeDatTask>("downloadGeosite
 }
 
 // geoip.dat: IP-based half of the same rules. Vendored at app/src/main/assets/geoip.dat instead of
-// downloaded - see tools/geoip-dat/README.md for why - so this only verifies the committed file.
+// downloaded (tools/geoip-dat/README.md says why), so this only verifies the committed file.
 val geoipDatSha256 = "c8cce77b4d57088431b4eb543b4e06c5581204a7eec4f66b5812f3295c251216"
 val verifyGeoipDat = tasks.register<VerifyGeoipDatTask>("verifyGeoipDat") {
     group = "verification"
@@ -48,13 +43,10 @@ tasks.register<RegenerateGeoipDatTask>("regenerateGeoipDat") {
     geoipGeneratorCommit.set("fd96fbac6cffc06ab9a10d6ee8fad61afe9b771c") // pins the generator's own behaviour; its input data can't be pinned the same way
     generatorConfig.set(rootProject.file("tools/geoip-dat/config.json"))
     outputFile.set(layout.projectDirectory.file("src/main/assets/geoip.dat"))
-    outputs.upToDateWhen { false } // always fetches fresh data over the network - never "up to date"
+    outputs.upToDateWhen { false } // always refetches over the network
 }
 
-// ---------------------------------------------------------------------------
-// Release signing: storeFile/storePassword/keyAlias/keyPassword from
-// keystore.properties (local dev) or matching NUKEMICHI_* env vars (CI).
-// ---------------------------------------------------------------------------
+// Signing config comes from keystore.properties locally, NUKEMICHI_* env vars on CI.
 
 val keystoreProperties = Properties().apply {
     rootProject.file("keystore.properties").takeIf { it.exists() }?.inputStream()?.use(::load)
@@ -99,18 +91,16 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
-        // Read by GeoAssetInstaller to decide whether filesDir already has the current version -
-        // single source of truth, so bumping the pin above is enough to invalidate it.
+        // GeoAssetInstaller compares these against what it staged, so bumping the pins above is
+        // enough to invalidate filesDir.
         buildConfigField("String", "GEOSITE_DAT_VERSION", "\"$geositeVersion\"")
         buildConfigField("String", "GEOIP_DAT_SHA256", "\"$geoipDatSha256\"")
 
         externalNativeBuild {
             ndkBuild {
-                // hev-jni.c's JNI_OnLoad does FindClass(PKGNAME "/" CLSNAME) to bind its native
-                // methods, so this must match TProxyService.kt's actual package, or the class
-                // lookup fails at library-load time and the process aborts. Android.mk never
-                // forwards an ndk-build `arguments()` variable into LOCAL_CFLAGS, so it has to be
-                // injected here instead: cFlags is applied globally as -D flags by ndk-build.
+                // hev-jni.c's JNI_OnLoad binds its natives via FindClass(PKGNAME "/" CLSNAME), so a
+                // mismatch with TProxyService.kt's package aborts the process at library load.
+                // ndk-build never forwards `arguments()` into LOCAL_CFLAGS; cFlags is the way in.
                 cFlags("-O3", "-DPKGNAME=app/nukemichi/android/core/vpn/internal")
             }
         }
@@ -124,10 +114,8 @@ android {
 
     sourceSets {
         getByName("main") {
-            // geosite.dat lands here once downloadGeositeDat runs (wired via preBuild below, not
-            // a Gradle task dependency inferred from this srcDir - AGP's legacy AndroidSourceSet
-            // API rejects a Provider here). geoip.dat needs no entry: it's already committed
-            // under src/main/assets and picked up automatically.
+            // Wired to downloadGeositeDat via preBuild below: AGP's legacy AndroidSourceSet API
+            // rejects a Provider, so this srcDir infers no task dependency on its own.
             assets.srcDir(geositeStagingDir.get().asFile)
         }
     }
@@ -138,9 +126,8 @@ android {
         val alias = signingValue("keyAlias", "NUKEMICHI_KEY_ALIAS")
         val aliasPassword = signingValue("keyPassword", "NUKEMICHI_KEY_PASSWORD")
 
-        // All four or none. Supplying some of them used to silently produce an unsigned release
-        // APK, which looks exactly like the intentionally unsigned one CI builds - the difference
-        // only shows up at install time, on whoever was handed the artifact.
+        // All four or none. A partial set used to yield a silently unsigned release APK,
+        // indistinguishable from the intentionally unsigned CI one until someone tried to install it.
         val supplied = listOfNotNull(storePath, store, alias, aliasPassword)
         require(supplied.isEmpty() || supplied.size == 4) {
             "Release signing is half-configured (${supplied.size}/4 values present). Set storeFile, " +
@@ -148,8 +135,7 @@ android {
                 "unsigned build."
         }
 
-        // Repeats what the require above already guarantees, because only the explicit null checks
-        // smart-cast these to non-null for the block below.
+        // Redundant after the require above, but only explicit null checks smart-cast these.
         if (storePath != null && store != null && alias != null && aliasPassword != null) {
             create("release") {
                 storeFile = rootProject.file(storePath)

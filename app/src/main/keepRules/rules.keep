@@ -5,7 +5,7 @@
 #   https://d.android.com/r/tools/r8/keep-rules
 
 # kotlinx.serialization: XrayConfigModels/XrayVpnProfile/etc. are serialized via reflection on
-# generated `serializer()` companions — R8 strips these without explicit keep rules.
+# generated `serializer()` companions, which R8 strips without explicit keep rules.
 # https://github.com/Kotlin/kotlinx.serialization/blob/master/rules/common.pro
 -keepattributes *Annotation*, InnerClasses
 -dontnote kotlinx.serialization.AnnotationsKt
@@ -32,6 +32,6 @@
 -dontwarn org.bouncycastle.**
 
 # hev-socks5-tunnel's native JNI_OnLoad does FindClass() by the hardcoded package/class name
-# baked into Android.mk's PKGNAME cFlag — R8 renaming this class breaks that lookup with
-# JNI_ERR at library load (native code has no way to see through obfuscation).
+# baked into Android.mk's PKGNAME cFlag. R8 renaming this class breaks that lookup with JNI_ERR
+# at library load, since native code cannot see through obfuscation.
 -keep class app.nukemichi.android.core.vpn.internal.TProxyService { *; }

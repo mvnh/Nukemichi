@@ -11,13 +11,11 @@ import kotlinx.serialization.json.encodeToJsonElement
 import kotlinx.serialization.json.jsonObject
 
 /**
- * Xray-core Configuration Data Classes
- * Based on the official Xray-core documentation.
+ * Xray-core's config schema, following the official documentation.
  *
- * Fields whose JSON shape varies by protocol/context (e.g. a port that may be an
- * int or a range string, or a protocol's `settings` block) use [JsonElement] /
- * [JsonObject] / [JsonPrimitive] instead of `Any`, since kotlinx.serialization has
- * first-class support for those and `Any` cannot be serialized at all.
+ * Fields whose JSON shape varies by protocol or context (a port that may be an int or a range
+ * string, a protocol's `settings` block) are [JsonElement] / [JsonObject] / [JsonPrimitive]
+ * rather than `Any`, which kotlinx.serialization cannot serialize at all.
  */
 
 @Serializable
@@ -40,8 +38,6 @@ data class XrayConfig(
 ) {
     fun toJson(): String = XrayJson.default.encodeToString(serializer(), this)
 }
-
-// --- Base Modules ---
 
 @Serializable
 data class LogObject(
@@ -238,8 +234,6 @@ data class VersionObject(
     val max: String? = null
 )
 
-// --- Inbounds & Outbounds ---
-
 @Serializable
 data class InboundObject(
     val listen: String? = null,
@@ -286,8 +280,6 @@ data class MuxObject(
     val xudpConcurrency: Int? = null,
     val xudpProxyUDP443: String? = null
 )
-
-// --- Transport Settings ---
 
 @Serializable
 data class StreamSettingsObject(
@@ -372,8 +364,6 @@ data class MasqObject(
     val statusCode: Int? = null
 )
 
-// --- Security Settings ---
-
 @Serializable
 data class RealityObject(
     val show: Boolean? = null,
@@ -436,8 +426,6 @@ data class CertificateObject(
     val certificate: List<String>? = null,
     val key: List<String>? = null
 )
-
-// --- Additional & Network Settings ---
 
 @Serializable
 data class FinalMaskObject(
@@ -517,11 +505,9 @@ data class HappyEyeballsObject(
     val maxConcurrentTry: Int? = null
 )
 
-// --- Typed protocol settings (VLESS only for now) ---
-//
-// InboundObject.settings / OutboundObject.settings stay generic JsonObject since
-// their shape depends on `protocol`. These typed classes give compile-time safety
-// when building VLESS blocks; flatten with `toJsonObject()` before assigning.
+// InboundObject.settings / OutboundObject.settings stay generic JsonObject because their shape
+// depends on `protocol`. The VLESS classes below are the typed way to build one; flatten with
+// toJsonObject() before assigning.
 
 @Serializable
 data class VlessClient(
@@ -531,9 +517,8 @@ data class VlessClient(
     val level: Int? = null
 )
 
-// `decryption`/`encryption` deliberately have no default: XrayJson's encodeDefaults=false
-// would silently drop a defaulted value from the emitted JSON, but xray-core expects
-// these keys present even when the value is "none".
+// `decryption`/`encryption` have no default on purpose: XrayJson sets encodeDefaults=false and
+// would drop them from the JSON, but xray-core wants the keys present even when the value is "none".
 @Serializable
 data class VlessInboundSettings(
     val clients: List<VlessClient>,

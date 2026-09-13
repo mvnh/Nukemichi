@@ -45,7 +45,7 @@ has_scope="${BASH_REMATCH[2]}"
 subject="${BASH_REMATCH[5]}"
 
 if [[ ! " ${TYPES[*]} " == *" $type "* ]]; then
-  errors+=("unknown type '$type' — use one of: $(join "${TYPES[@]}")")
+  errors+=("unknown type '$type': use one of $(join "${TYPES[@]}")")
   case "$type" in
     ux|UX)   errors+=("  'ux' is not a type: user-visible copy or behaviour is 'feat', a layout fix is 'fix', a pure restructure is 'refactor'") ;;
     Fix|Add|Update|Remove|Merge)
@@ -53,16 +53,16 @@ if [[ ! " ${TYPES[*]} " == *" $type "* ]]; then
   esac
 fi
 
-# `security` is a scope, not a type — a security fix is still fix(security) or fix(ssh).
+# `security` is a scope, not a type: a security fix is still fix(security) or fix(ssh).
 if [[ "$type" == "security" ]]; then
   errors+=("  'security' is a scope, not a type: try 'fix(security): ...'")
 fi
 
 if [[ -n "$has_scope" ]]; then
   if [[ -z "$scope" ]]; then
-    errors+=("empty scope '()' — drop the parentheses when the change has no single scope")
+    errors+=("empty scope '()': drop the parentheses when the change has no single scope")
   elif [[ ! " ${SCOPES[*]} " == *" $scope "* ]]; then
-    errors+=("unknown scope '$scope' — use one of: $(join "${SCOPES[@]}"), or drop the scope entirely")
+    errors+=("unknown scope '$scope': use one of $(join "${SCOPES[@]}"), or drop the scope entirely")
     errors+=("  if this is a genuinely new module, add it to SCOPES in $(basename "$0")")
   fi
 fi

@@ -1,16 +1,14 @@
 package app.nukemichi.android.core.vpn
 
 /**
- * Endpoints used to ask "is traffic still flowing through the tunnel".
+ * Endpoints the watchdog probes to ask whether traffic still flows through the tunnel.
  *
- * A pool rather than one fixed host, for two reasons. A single host makes every install produce
- * the same request to the same name on the same cadence, which is a pattern an observer gets for
- * free. And a host that is merely blocked - which brand-name endpoints routinely are on the
- * networks this app exists for - would otherwise read as a dead tunnel and drive an endless
- * reconnect loop, so the watchdog wants a second, different opinion before it believes the first.
+ * A pool, not one fixed host: a single host would make every install hit the same name on the same
+ * cadence, and a host that is merely blocked (routine on the networks this app exists for) would
+ * read as a dead tunnel and drive an endless reconnect loop.
  *
- * Every entry is a captive-portal check: it answers TLS on 443 and returns a response of a few
- * bytes, so a probe costs almost nothing and looks like what a phone does on any new network.
+ * Every entry is a captive-portal check, so a probe costs a few bytes and looks like what any
+ * phone does on a new network.
  */
 internal object ProbeTargets {
 

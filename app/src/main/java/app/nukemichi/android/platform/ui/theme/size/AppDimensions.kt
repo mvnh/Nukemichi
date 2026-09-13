@@ -18,8 +18,8 @@ data class AppDimensions(
     val xl: Dp = 32.dp,
     val xxl: Dp = 64.dp,
 
-    // Sizes that are not spacing. Naming them by role keeps them off the scale above, where they
-    // would otherwise need half-steps that mean nothing on their own.
+    // Sizes that are not spacing. Named by role so they stay off the scale above, which has no
+    // meaningful half-steps.
     val cornerRadius: Dp = 12.dp,
     val icon: Dp = 24.dp,
     val control: Dp = 40.dp,

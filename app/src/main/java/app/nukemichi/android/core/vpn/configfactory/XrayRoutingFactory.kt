@@ -32,11 +32,10 @@ internal object XrayRoutingFactory {
                 network = "udp",
                 outboundTag = "block",
             ),
-            // These countries' own domestic services commonly geo-fence to local IPs or block
-            // known VPN exit ranges outright, so routing them through the proxy breaks them
-            // rather than protecting anything. geosite.dat/geoip.dat are staged into filesDir by
-            // GeoAssetInstaller before Xray starts - see tools/geoip-dat/README.md for the
-            // country list and how to change it.
+            // Domestic services in these countries commonly geo-fence to local IPs or block known
+            // VPN exit ranges, so proxying them breaks them rather than protecting anything.
+            // GeoAssetInstaller stages geosite.dat/geoip.dat into filesDir before Xray starts;
+            // tools/geoip-dat/README.md covers the country list.
             RuleObject(
                 type = "field",
                 inboundTag = listOf(socksInboundTag),

@@ -24,15 +24,14 @@ abstract class DownloadLibV2rayTask : DefaultTask() {
         val target = outputFile.get().asFile
 
         // Re-verified rather than trusted for existing: this path is restored from the Actions
-        // cache before the task runs, so skipping straight past an already-present file meant the
-        // pinned digest was never checked on any CI build, release-build included. A local
-        // build/ directory is no more trustworthy - it just fails less interestingly.
+        // cache before the task runs, so skipping an already-present file meant the pinned digest
+        // was never checked on any CI build, releases included. A local build/ is no better.
         if (target.exists()) {
             if (ChecksumUtil.sha256Hex(target) == sha256.get()) {
                 logger.info("libv2ray.aar already staged and matches the pinned SHA-256")
                 return
             }
-            logger.warn("Staged libv2ray.aar does not match the pinned SHA-256 - discarding it and downloading again.")
+            logger.warn("Staged libv2ray.aar does not match the pinned SHA-256, discarding it and downloading again.")
             target.delete()
         }
 

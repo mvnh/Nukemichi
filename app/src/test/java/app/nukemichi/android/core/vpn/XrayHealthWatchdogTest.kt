@@ -15,14 +15,12 @@ import java.net.ServerSocket
 import java.net.Socket
 
 /**
- * Drives [XrayHealthWatchdog] against a real loopback [ServerSocket] standing in for xray-core's
- * local SOCKS5 inbound, over the same probe path it exercises against the genuine one, rather than
- * faking the socket layer, since the class's whole reason to exist is trusting nothing but a raw
- * socket. Probe cadence, its jitter and the consecutive-failure threshold come straight from the
- * production constants, so the test drives them through [kotlinx.coroutines.test]'s virtual clock
- * instead of actually waiting on them. Advancing by one full jittered cycle is what makes exactly
- * one round land: the shortest cycle is still longer than the jitter, so the clock can never fit
- * two.
+ * Drives [XrayHealthWatchdog] against a real loopback [ServerSocket] rather than a faked socket
+ * layer, since the class exists precisely to trust nothing but a raw socket.
+ *
+ * Cadence, jitter and the failure threshold are the production constants, run on
+ * [kotlinx.coroutines.test]'s virtual clock. Advancing by one full jittered cycle lands exactly
+ * one round: the shortest cycle is still longer than the jitter, so two can never fit.
  */
 class XrayHealthWatchdogTest {
 

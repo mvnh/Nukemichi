@@ -13,12 +13,10 @@ internal class HevSocks5Tunnel @Inject constructor(
     @ApplicationContext private val context: Context,
 ) {
 
-    // The native API only takes a path, so the SOCKS credentials have to be written somewhere.
-    // They are deleted in stop() rather than straight after start(): hev-jni's
-    // native_start_service returns as soon as it has pthread_create'd its worker, and the config
-    // is read on that worker afterwards, so deleting on the way out of start() is a race.
-    // native_stop_service joins that thread, which makes stop() the first point where nothing can
-    // still be reading the file.
+    // The native API only takes a config path, so the SOCKS credentials have to go to disk.
+    // Deleted in stop(), not at the end of start(): native_start_service returns as soon as its
+    // worker thread is spawned, and that worker reads the config afterwards. native_stop_service
+    // joins the thread, so stop() is the first point where nothing can still be reading the file.
     fun start(tunInterface: ParcelFileDescriptor, socksEndpoint: SocksEndpoint) {
         check(!TProxyService.TProxyIsRunning()) { "hev SOCKS5 tunnel is already running." }
         val configFile = writeConfig(socksEndpoint)
@@ -33,8 +31,7 @@ internal class HevSocks5Tunnel @Inject constructor(
                 check(TProxyService.TProxyStopService()) { "Unable to stop hev SOCKS5 tunnel." }
             }
         } finally {
-            // Unconditional: it also sweeps up a config left behind by a start that failed, or by
-            // a build from before this was cleaned up at all.
+            // Unconditional, so a config left behind by a failed start is swept up too.
             configFile().delete()
         }
     }

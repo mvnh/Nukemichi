@@ -32,9 +32,8 @@ internal class VpnIpcService : Service() {
     @MainDispatcher
     internal lateinit var mainDispatcher: CoroutineDispatcher
 
-    // Registered from the binder thread's handler, iterated from the telemetry scope. Copy-on-write
-    // rather than a lock because the read path runs on every log line while writes happen only when
-    // a client binds or goes away.
+    // Registered from the binder thread, iterated from the telemetry scope. Copy-on-write rather
+    // than a lock: reads run on every log line, writes only when a client binds or goes away.
     private val clients = CopyOnWriteArraySet<Messenger>()
     private val messenger = Messenger(IncomingHandler())
 
@@ -58,8 +57,8 @@ internal class VpnIpcService : Service() {
         telemetry.state.onEach { state ->
             broadcast(Message.obtain(null, VpnIpcProtocol.MSG_STATE_CHANGED, state.ordinal, 0))
         }.launchIn(scope)
-        // Collected alongside state: RUNNING with no way to know when it started is no better off
-        // than the UI process guessing its own start time, which is the bug this exists to fix.
+        // Collected alongside state: RUNNING without a start time leaves the UI guessing again,
+        // which is the bug this exists to fix.
         telemetry.runningSinceRealtime.onEach { runningSinceRealtime ->
             broadcast(
                 Message.obtain(null, VpnIpcProtocol.MSG_RUNNING_SINCE_CHANGED)

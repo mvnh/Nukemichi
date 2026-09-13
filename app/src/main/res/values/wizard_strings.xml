@@ -46,12 +46,12 @@
     <string name="wizard_untrusted_host_trust">Trust and continue</string>
 
     <string name="wizard_host_key_changed_title">This server\'s identity changed</string>
-    <string name="wizard_host_key_changed_body">The server is presenting a different SSH host key than the one saved the last time you connected.\n\nIf you rebuilt or reinstalled this server, that is expected. If you did not, someone may be sitting between you and it — continuing would hand them your password or key.\n\nSaved: %1$s\nNow: %2$s</string>
+    <string name="wizard_host_key_changed_body">The server is presenting a different SSH host key than the one saved the last time you connected.\n\nIf you rebuilt or reinstalled this server, that is expected. If you did not, someone may be sitting between you and it, and continuing would hand them your password or key.\n\nSaved: %1$s\nNow: %2$s</string>
     <string name="wizard_host_key_changed_replace">I rebuilt it, replace the key</string>
     <string name="wizard_host_key_changed_stop">Stop</string>
 
     <string name="wizard_host_key_unverifiable_title">Can\'t check this server\'s identity</string>
-    <string name="wizard_host_key_unverifiable_body">This server was confirmed before, but the saved fingerprint can no longer be read. That normally means the screen lock changed, or this is a restore onto a different device — not that anything is wrong with the server.\n\nConfirm the fingerprint against your hosting panel before continuing, and it will be saved again.\n\nHost key fingerprint: %1$s</string>
+    <string name="wizard_host_key_unverifiable_body">This server was confirmed before, but the saved fingerprint can no longer be read. That normally means the screen lock changed, or this is a restore onto a different device, not that anything is wrong with the server.\n\nConfirm the fingerprint against your hosting panel before continuing, and it will be saved again.\n\nHost key fingerprint: %1$s</string>
     <string name="wizard_host_key_unverifiable_confirm">Confirm and save again</string>
 
     <!-- Confirmation Page -->

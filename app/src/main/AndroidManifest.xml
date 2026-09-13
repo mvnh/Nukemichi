@@ -45,10 +45,10 @@
                 <action android:name="android.net.VpnService" />
             </intent-filter>
         </service>
-        <!-- Same :vpn process as NukemichiVpnService (shares its Hilt singletons, incl.
-             XrayTelemetryMonitor) — bindable by our own app for the Messenger telemetry
-             channel, unlike NukemichiVpnService itself whose BIND_VPN_SERVICE permission is
-             system-only. See VpnIpcService/RemoteXrayMonitoring. -->
+        <!-- Same :vpn process as NukemichiVpnService, so it shares its Hilt singletons including
+             XrayTelemetryMonitor. Bindable by our own app for the Messenger telemetry channel,
+             unlike NukemichiVpnService, whose BIND_VPN_SERVICE permission is system-only.
+             See VpnIpcService/RemoteXrayMonitoring. -->
         <service
             android:name=".core.vpn.internal.VpnIpcService"
             android:exported="false"

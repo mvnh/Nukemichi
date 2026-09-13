@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-   secure_storage backs AppStorage's encrypted domains (SSH_TRUST, XRAY_PROFILES — see
-   StorageDomain) — every value in it is AES/GCM-encrypted under a
-   non-exportable Android Keystore key (see AppStorageImpl.getOrCreateSecretKey), which never
-   itself leaves the device and never gets included in a backup. A cloud-restored or
-   device-transferred copy of that file is therefore just undecryptable ciphertext on the
-   receiving side — ballast with no restore value, not a byte of it worth shipping off-device
-   for something that already handles VPS SSH credentials and connection profiles.
+   secure_storage backs AppStorage's encrypted domains (SSH_TRUST, XRAY_PROFILES; see StorageDomain).
+   Every value in it is AES/GCM-encrypted under a non-exportable Keystore key that never leaves the
+   device, so a restored or transferred copy is undecryptable ciphertext on the receiving side:
+   no restore value, and not worth shipping off-device for something holding SSH credentials.
 -->
 <data-extraction-rules>
     <cloud-backup>

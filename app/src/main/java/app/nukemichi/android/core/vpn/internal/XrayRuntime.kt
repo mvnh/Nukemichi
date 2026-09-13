@@ -27,17 +27,15 @@ internal class XrayRuntime @Inject constructor(
 ) : XrayStatsSource {
     private val mutex = Mutex()
 
-    // Volatile because stopWithoutWaiting() writes both fields without taking the mutex (see its
-    // own comment for why) while start()/stop() read them under it, and queryAllOutboundTrafficStats()
-    // reads from the telemetry poller - all of them different threads of the IO pool. Without it
-    // start()'s "is one already running" check can be answered from a stale cache.
+    // stopWithoutWaiting() writes this without the mutex while start()/stop() read it under one,
+    // on different IO-pool threads. A stale read would answer start()'s "already running" check
+    // from cache.
     @Volatile
     private var controller: CoreController? = null
     private val detachedScope = CoroutineScope(SupervisorJob() + ioDispatcher)
 
-    // Set by stopWithoutWaiting(), cleared once start() has waited on it (or given up). Lets a
-    // fast disconnect-then-reconnect avoid racing the old CoreController for its inbound port,
-    // without going back to blocking every plain disconnect on the native stopLoop() call.
+    // Set by stopWithoutWaiting(), cleared once start() has waited on it. Lets a fast
+    // disconnect-then-reconnect avoid racing the old CoreController for its inbound port.
     @Volatile
     private var pendingStop: Job? = null
 
@@ -64,12 +62,10 @@ internal class XrayRuntime @Inject constructor(
     }
 
     /**
-     * Fire-and-forget disconnect: xray-core's native stopLoop() can wedge for minutes on a stuck
-     * goroutine (the same failure mode XrayHealthWatchdog watches for elsewhere), and skips the
-     * mutex too, so a wedged stopLoop() can't block a later start(). Safe for a caller that
-     * doesn't need xray actually stopped when this returns: start() still waits (briefly) for
-     * this to finish before handing out a new CoreController, so a quick reconnect can't race the
-     * old one for the same inbound port.
+     * Fire-and-forget disconnect, for callers that don't need xray actually stopped on return.
+     * stopLoop() can wedge for minutes on a stuck goroutine, so this skips the mutex as well and a
+     * wedged stop can never block a later start(). start() still waits briefly on the pending job,
+     * so a quick reconnect cannot race the old controller for the same inbound port.
      */
     fun stopWithoutWaiting() {
         val running = controller ?: return
@@ -79,10 +75,9 @@ internal class XrayRuntime @Inject constructor(
         }
     }
 
-    // Bounded, not unconditional: a stuck stopLoop() must not turn a plain reconnect into the
-    // same kind of indefinite wait stopWithoutWaiting() exists to avoid. If it's still not done
-    // by the timeout, start() proceeds anyway; worst case is a bind conflict on the old inbound
-    // port, which surfaces as a normal start failure rather than a hang.
+    // Bounded, so a stuck stopLoop() cannot reintroduce the indefinite wait stopWithoutWaiting()
+    // exists to avoid. On timeout start() proceeds anyway and a bind conflict on the old inbound
+    // port surfaces as an ordinary start failure.
     private suspend fun awaitPendingStop() {
         val job = pendingStop ?: return
         withTimeoutOrNull(PENDING_STOP_TIMEOUT_MS) { job.join() }

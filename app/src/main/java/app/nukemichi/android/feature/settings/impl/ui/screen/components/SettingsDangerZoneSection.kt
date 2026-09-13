@@ -18,9 +18,9 @@ import androidx.compose.ui.text.font.FontWeight
 import app.nukemichi.android.R
 import app.nukemichi.android.platform.ui.theme.size.dimens
 
-// Deliberately at the bottom, deliberately styled apart from every other row on this screen:
-// this switch is the only thing on the page that can turn Advanced mode ON. Turning it off
-// stays a plain, ungated flip — only unlocking the risk-gated features needs the friction.
+// At the bottom and styled apart from every other row: this switch is the only thing on the page
+// that can turn Advanced mode on. Turning it off stays a plain ungated flip, since only unlocking
+// the risk-gated features needs the friction.
 @Composable
 internal fun SettingsDangerZoneSection(
     advancedModeEnabled: Boolean,

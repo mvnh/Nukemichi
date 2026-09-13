@@ -21,6 +21,21 @@ handful of heavily-censored countries). `geoip.dat` is different: it's vendored 
 pinned checksum - see `tools/geoip-dat/README.md` for why, and for the maintainer-only
 regeneration step.
 
+### Updating a pinned version
+
+Why pin by hash at all: these are third-party binaries fetched over the network at build time. An
+unverified download means a compromised release or a MITM ships arbitrary code into a VPN app with
+full device permissions - the checksum turns silent tampering into a failed build.
+
+- **`libv2rayVersion`** / **`geositeVersion`** (`app/build.gradle.kts`): find the new release tag,
+  download its `libv2ray.aar` / `dlc.dat` asset, `shasum -a 256` it, and update the version string
+  and `sha256.set(...)` together - never one without the other.
+- **`geoip.dat`**: run `./gradlew regenerateGeoipDat` (needs Go on `PATH`), then copy the SHA-256 it
+  prints into `geoipDatSha256`. Commit the regenerated `app/src/main/assets/geoip.dat` and the
+  updated hash **together** - `verifyGeoipDat` fails the build for everyone else if they drift
+  apart. To change which countries it covers, edit `wantedList` in `tools/geoip-dat/config.json`
+  first.
+
 ## Verifying a change
 
 ```sh

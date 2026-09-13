@@ -7,8 +7,8 @@ import java.util.Base64
 
 internal object SecurityUtils {
 
-    // `PublicKey.encoded` is X.509 DER, not what SSH hashes. This must be the SSH wire-format
-    // key (same bytes `ssh-keygen -lf`/a host's own fingerprint page hash) or TOFU has nothing to compare against.
+    // `PublicKey.encoded` is X.509 DER, not what SSH hashes. This has to be the SSH wire format,
+    // the same bytes `ssh-keygen -lf` digests, or TOFU has nothing to compare against.
     fun getFingerprint(hostKey: PublicKey): String {
         val wireEncoded = Buffer.PlainBuffer().putPublicKey(hostKey).compactData
         val digest = MessageDigest.getInstance("SHA-256").digest(wireEncoded)

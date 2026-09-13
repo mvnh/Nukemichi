@@ -44,10 +44,9 @@ internal class XrayLogsViewModel @Inject constructor(
                     if (buffer.size == MAX_LINES) buffer.removeFirst()
                     buffer.addLast(line)
                 }
-                // Upstream of conflate, so every line still reaches the buffer; what gets dropped
-                // is only the redundant snapshots. xray-core at debug level out-produces anything
-                // that can render it, and rebuilding a 1000-element list per line was most of the
-                // work this screen did.
+                // Upstream of conflate, so every line still reaches the buffer and only redundant
+                // snapshots are dropped. xray-core at debug level out-produces anything that can
+                // render it, and rebuilding a 1000-element list per line was most of this screen's cost.
                 .conflate()
                 .collect {
                     _lines.value = buffer.toImmutableList()

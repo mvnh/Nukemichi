@@ -74,9 +74,8 @@ internal class SshjConnection(
             val cmd = session.exec(renderCommand(command, args))
 
             // send, not trySend: channelFlow's buffer is 64 and a package install fills it in
-            // milliseconds, so trySend silently dropped lines that commands downstream scrape
-            // their results out of. Backpressuring the reader thread is the cost of not losing
-            // them, and both streams drain on their own job so neither can starve the other.
+            // milliseconds, so trySend dropped lines that downstream commands scrape their results
+            // out of. Both streams drain on their own job, so backpressure cannot starve either.
             val stdoutJob = drainLines(cmd.inputStream) { send(CommandEvent.Output(it)) }
             val stderrJob = drainLines(cmd.errorStream) { send(CommandEvent.Error(it)) }
 

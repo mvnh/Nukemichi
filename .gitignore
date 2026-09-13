@@ -121,5 +121,5 @@ google-services.json
 # Release signing material (see signingConfigs in app/build.gradle.kts)
 keystore.properties
 
-# Locally built libv2ray.aar (patched xray-core) — see app/build.gradle.kts
+# Locally built libv2ray.aar (patched xray-core); see app/build.gradle.kts
 /vendor/

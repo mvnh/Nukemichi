@@ -11,14 +11,11 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
 /**
- * Stages geosite.dat and geoip.dat in the app's filesDir - the only place Xray's
- * `Libv2ray.initCoreEnv(...)` asset lookup can read them from (see [XrayRuntime]). The APK's own
- * assets/ directory isn't a real filesystem path the native core can open, so this is a one-time
- * copy rather than something the core can be pointed at directly.
+ * Stages geosite.dat and geoip.dat in filesDir, the only place `Libv2ray.initCoreEnv(...)` can
+ * read them from: the APK's own assets/ is not a filesystem path the native core can open.
  *
- * Each file is copied once per pinned version: a sidecar `.version` file records what's staged,
- * so a version that's already current short-circuits to a no-op instead of re-copying a few
- * hundred KB to a few MB on every VPN start.
+ * A sidecar `.version` file records what is staged, so an already-current version short-circuits
+ * instead of re-copying megabytes on every VPN start.
  */
 @Singleton
 internal class GeoAssetInstaller @Inject constructor(

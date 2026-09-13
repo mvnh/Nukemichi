@@ -47,7 +47,7 @@ internal class InstallXrayRuntimeCommand(
 
         // Digests are the upstream release's own published .dgst values (SHA2-256), verified
         // against a locally computed hash of the downloaded asset. Update together with
-        // XRAY_VERSION - a version bump with a stale digest fails the install, by design.
+        // XRAY_VERSION: a version bump with a stale digest fails the install, by design.
         fun releaseAssetFor(architecture: String): ReleaseAsset = when (architecture) {
             "64" -> ReleaseAsset(
                 name = "Xray-linux-64.zip",

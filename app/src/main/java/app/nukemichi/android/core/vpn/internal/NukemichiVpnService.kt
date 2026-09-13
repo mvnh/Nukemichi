@@ -67,11 +67,10 @@ internal class NukemichiVpnService : VpnService() {
         Timber.i("onStartCommand: %s", intent?.action)
         when (intent?.action) {
             ACTION_START, ACTION_RELOAD -> {
-                // First, and unconditionally: these arrive through startForegroundService, and
-                // every way out of this branch that never reaches startForeground ends in
+                // First and unconditional: these arrive via startForegroundService, and any path
+                // out of this branch that skips startForeground ends in
                 // ForegroundServiceDidNotStartInTimeException. An undecodable config is one such
-                // way, and a restart PendingIntent outliving a change to XrayRuntimeConfig's
-                // shape is how it gets handed one.
+                // path, which a restart PendingIntent older than XrayRuntimeConfig's shape produces.
                 startForeground(NOTIFICATION_ID, createNotification())
                 if (!isStarting.compareAndSet(false, true)) {
                     Timber.w("Ignoring %s: a start is already in progress.", intent.action)
@@ -159,10 +158,8 @@ internal class NukemichiVpnService : VpnService() {
     private suspend fun onHealthDegraded() {
         Timber.w("onHealthDegraded: tunnel silently stuck, forcing a full reconnect")
         telemetry.degraded()
-        // This process is about to die (see stopVpnAndRestartProcess's killProcess) and can't
-        // restart itself. The restart goes through AlarmManager, which survives that, instead
-        // of being left to whichever app process happens to be alive to notice the
-        // degraded signal and reconnect.
+        // This process is about to be killed and cannot restart itself, so the restart is handed
+        // to AlarmManager, which outlives it.
         lastConfig?.let(::scheduleRestart)
         stopVpnAndRestartProcess()
     }
@@ -181,12 +178,10 @@ internal class NukemichiVpnService : VpnService() {
         )
     }
 
-    // Plain user-initiated disconnect: tear down and let this process live on. It must NOT kill
-    // the process: VpnIpcService is bound from the main process, and killing a process out from
-    // under an active bind reads to Android as a crash, which is throttled by an escalating
-    // restart backoff. That backoff is what made disconnects look like they took minutes: the
-    // native side was already stopped well before the UI ever found out, because it was waiting
-    // on the killed :vpn process to be let back up and rebound.
+    // Plain user-initiated disconnect: tear down but keep this process alive. VpnIpcService is
+    // bound from the main process, and killing a process out from under an active bind reads to
+    // Android as a crash, earning an escalating restart backoff. Waiting out that backoff before
+    // the UI could rebind is what made disconnects look like they took minutes.
     private fun stopVpn() {
         scope.launch {
             lifecycleMutex.withLock {
@@ -200,9 +195,8 @@ internal class NukemichiVpnService : VpnService() {
         }
     }
 
-    // Only for onHealthDegraded: xray-core's own state may be wedged beyond what tearing down and
-    // starting a new CoreController can fix in-process, so this path accepts the process-kill (and
-    // the restart-backoff delay that comes with it) to guarantee a genuinely fresh instance.
+    // Only for onHealthDegraded: xray-core may be wedged past what a fresh CoreController can fix
+    // in-process, so this path pays the process kill, and its restart backoff, for a clean slate.
     private fun stopVpnAndRestartProcess() {
         scope.launch {
             lifecycleMutex.withLock {
@@ -235,10 +229,9 @@ internal class NukemichiVpnService : VpnService() {
             .establish()
     ) { "Android rejected VPN interface establishment." }
 
-    // waitForXrayStop=false is only for the disconnect path (stopVpn): xray-core's stopLoop() can
-    // hang for minutes, and Process.killProcess() right after cleans up the native state
-    // regardless of whether stopLoop() ever returns. startVpn's own pre-flight teardown needs the
-    // old instance to actually be gone first, because the process keeps running there.
+    // waitForXrayStop=false only on the disconnect path: stopLoop() can hang for minutes, and the
+    // killProcess() right after frees the native state either way. startVpn's pre-flight teardown
+    // keeps the process alive, so there the old instance really has to be gone first.
     private suspend fun teardown(waitForXrayStop: Boolean = true) {
         hevSocks5Tunnel.stop()
         if (waitForXrayStop) runtime.stop() else runtime.stopWithoutWaiting()

@@ -52,7 +52,7 @@ internal fun SubscriptionGroup(
             exit = shrinkVertically(animationSpec = dashboardSpatialSpec(), shrinkTowards = Alignment.Top) +
                 fadeOut(animationSpec = dashboardEffectsSpec()),
         ) {
-            // Header, the servers, and the add-server row that closes the run.
+            // +2: the header and the add-server row that closes the run.
             val segmentCount = subscription.servers.size + 2
             Column(
                 modifier = Modifier

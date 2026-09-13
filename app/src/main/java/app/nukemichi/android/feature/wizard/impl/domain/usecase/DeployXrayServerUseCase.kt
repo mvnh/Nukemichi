@@ -51,8 +51,8 @@ internal class DeployXrayServerUseCase @Inject constructor() {
             val secrets = runStep(DeploymentStep.GENERATE_SECRETS) {
                 connection.execute(
                     GenerateXrayServerSecretsCommand(),
-                    // Redacted downstream in the UI reducer regardless. This only stops the step
-                    // suppressing its own output the way no other step's is suppressed.
+                    // This step's output carries secrets, but the UI reducer redacts every log line
+                    // anyway, so it streams like the rest instead of being the one that goes silent.
                     onOutputLine = { line -> emit(DeploymentEvent.LogLine(DeploymentStep.GENERATE_SECRETS, line)) },
                 ).getOrThrow()
             }

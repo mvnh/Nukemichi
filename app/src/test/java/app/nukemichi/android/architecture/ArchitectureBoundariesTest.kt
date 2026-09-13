@@ -8,19 +8,19 @@ import org.junit.Assert.fail
 import org.junit.Test
 
 /**
- * The whole app lives in one Gradle module, so `internal` only blocks access from *outside the
- * module* - there is no outside, so it currently enforces nothing. These tests are the substitute
- * for the module boundaries these packages are already written as if they had.
+ * The whole app lives in one Gradle module, so `internal` only blocks access from outside the
+ * module, of which there is none: it enforces nothing today. These tests stand in for the module
+ * boundaries these packages are already written as if they had.
  *
- * `core` and `platform` are a deliberate split: `core.<module>` (vpn, ssh, security, storage) is
- * the data layer - only a feature's `domain` touches it. `platform.<module>` (ui, navigation,
- * mode, di) is cross-cutting infrastructure with no data-layer content of its own - `platform.ui`
- * and `platform.navigation` are inherently Compose-shaped and could not live in `domain` even in
+ * `core` and `platform` are a deliberate split. `core.<module>` (vpn, ssh, security, storage) is
+ * the data layer, touched only by a feature's `domain`. `platform.<module>` (ui, navigation, mode,
+ * di) is cross-cutting infrastructure with no data-layer content of its own: `platform.ui` and
+ * `platform.navigation` are inherently Compose-shaped and could not live in `domain` even in
  * principle, so any layer may use `platform.*` directly.
  *
  *  1. core.<module> exposes only abstractions (interfaces, abstract/sealed classes, plain data
- *     types) outside its own .internal/.di - concrete behavior lives in .internal.
- *  2. feature.<name> exposes only *Key navigation keys at its root - everything else lives in
+ *     types) outside its own .internal/.di; concrete behavior lives in .internal.
+ *  2. feature.<name> exposes only *Key navigation keys at its root, everything else lives in
  *     .impl.
  *  3. every root *Key has a Destination<Key> registered somewhere under that feature's .impl, or
  *     MainActivity's lookup fails at runtime instead of at build time.

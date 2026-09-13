@@ -59,9 +59,9 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background,
                 ) {
-                    // Which screen opens depends on a stored flag, and reading it touches disk.
-                    // The Surface above is already painted, so resolving it off the main thread
-                    // costs a themed frame rather than a stalled one.
+                    // The start screen depends on a stored flag, and reading it touches disk. The
+                    // Surface above is already painted, so resolving it off the main thread costs a
+                    // themed frame rather than a stalled one.
                     val startKey by produceState<NavKey?>(initialValue = null) {
                         value = withContext(ioDispatcher) {
                             val done = appStorage.getBoolean(

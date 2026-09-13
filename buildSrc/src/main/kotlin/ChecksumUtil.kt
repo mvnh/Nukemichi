@@ -1,8 +1,6 @@
 import java.io.File
 import java.security.MessageDigest
 
-/** Shared by the geo-data build tasks (DownloadGeositeDatTask, VerifyGeoipDatTask,
- *  RegenerateGeoipDatTask) so none of them duplicates its own digest loop. */
 object ChecksumUtil {
     fun sha256Hex(file: File): String {
         val digest = MessageDigest.getInstance("SHA-256")

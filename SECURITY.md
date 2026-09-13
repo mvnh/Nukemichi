@@ -5,7 +5,7 @@
 Use **[private vulnerability reporting](https://github.com/mvnh/Nukemichi/security/advisories/new)**
 in the Security tab. Please do not open a public issue for anything you believe is exploitable.
 
-Nukemichi is maintained by one person. Expect a first reply within about a week — if you have not
+Nukemichi is maintained by one person. Expect a first reply within about a week. If you have not
 heard back in two, feel free to ping the report. Fixes are developed privately and disclosed once a
 release is available. You will be credited unless you would rather not be.
 
@@ -24,7 +24,7 @@ else in it.
 It is built to resist:
 
 - a network observer between your device and your server, including active DPI probing;
-- other applications on the same device — the local SOCKS inbound is credentialed for this reason,
+- other applications on the same device: the local SOCKS inbound is credentialed for this reason,
   and stored profiles are encrypted under a non-exportable Keystore key;
 - whoever else shares your VPS's subnet, since masking-domain candidates come from certificates
   those neighbours control.
@@ -35,7 +35,7 @@ It does **not** protect you from:
   to see. No client-side change can alter that;
 - a compromised, rooted, or malware-carrying device;
 - an observer positioned to correlate traffic at both ends simultaneously;
-- your own operational choices — a reused SSH password, a VPS that was already compromised, a
+- your own operational choices: a reused SSH password, a VPS that was already compromised, a
   server whose provider cooperates with whoever you are avoiding.
 
 Whether REALITY itself is distinguishable on the wire is an open research question about
@@ -47,7 +47,7 @@ Whether REALITY itself is distinguishable on the wire is an open research questi
 
 - bypassing `ShellHost` or otherwise injecting into a script that runs as root on the user's server;
 - defeating host key verification, or weakening the trust-on-first-use flow;
-- leaking SSH credentials or profile material — through logs, Android backups, inter-process
+- leaking SSH credentials or profile material, through logs, Android backups, inter-process
   communication, or a generated `toString`;
 - weakening the generated Xray configuration: losing a blackhole rule, degrading REALITY masking,
   or making a connection more distinguishable than intended;
@@ -58,7 +58,7 @@ Whether REALITY itself is distinguishable on the wire is an open research questi
 **Out of scope**
 
 - the hosting provider observing traffic, as above;
-- detectability of REALITY, XHTTP, or Xray-core itself — report those upstream;
+- detectability of REALITY, XHTTP, or Xray-core itself: report those upstream;
 - weak user-chosen credentials, or an already-compromised server;
 - attacks that require a rooted device, physical access to an unlocked device, or a malicious app
   already granted elevated privileges;
@@ -95,5 +95,5 @@ Stated because knowing them may change how you use this, not because they are op
 
 In some jurisdictions, running circumvention software carries legal consequences independent of
 what you do with it. Nukemichi cannot know your situation and makes no claim to keep you safe from
-it. Understand your local law and your own exposure before relying on this — or on any tool of this
+it. Understand your local law and your own exposure before relying on this, or on any tool of this
 kind.

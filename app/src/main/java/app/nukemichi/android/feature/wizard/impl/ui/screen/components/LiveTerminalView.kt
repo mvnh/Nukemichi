@@ -73,9 +73,9 @@ internal fun LiveTerminalView(
         }
     }
 
-    // Owned here rather than by the placeholder, which leaves composition whenever the terminal is shown:
-    // switching back resumes the message it left instead of restarting the rotation. It only advances
-    // while the placeholder is on screen, so nothing ticks for a view nobody sees.
+    // Owned here, not by the placeholder, which leaves composition whenever the terminal is shown:
+    // switching back resumes the rotation instead of restarting it. It only advances while the
+    // placeholder is on screen.
     val idleMessages = stringArrayResource(R.array.wizard_deployment_idle_messages)
     var idleMessageIndex by rememberSaveable { mutableIntStateOf(0) }
     LaunchedEffect(isExpanded, idleMessages.size) {
@@ -192,8 +192,8 @@ private fun IdlePlaceholder(message: String, modifier: Modifier = Modifier) {
                         .graphicsLayer { translationY = -bounce * IDLE_BOUNCE_PX },
                 )
             }
-            // SizeTransform eases the text block between messages of different length, and the cat above it
-            // with it, instead of snapping both to the new height.
+            // SizeTransform eases the text block, and the cat above it, between messages of
+            // different length instead of snapping to the new height.
             AnimatedContent(
                 targetState = message,
                 transitionSpec = { (fadeIn() togetherWith fadeOut()).using(SizeTransform(clip = false)) },

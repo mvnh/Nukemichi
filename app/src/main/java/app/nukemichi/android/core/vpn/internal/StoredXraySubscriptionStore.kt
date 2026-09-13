@@ -60,10 +60,9 @@ internal class StoredXraySubscriptionStore @Inject constructor(
         cached.value ?: withContext(ioDispatcher) { load() }.also { cached.value = it }
 
     private fun load(): List<XraySubscription> {
-        // Cleared rather than left in place. It is encrypted under a Keystore key that no longer
-        // exists, so nothing can ever read it again; keeping it only meant the next update()
-        // overwrote it anyway, later and without saying so. An empty server list is visible to the
-        // user in a way a vanished SSH host key pin is not, which is why that one is kept instead.
+        // Cleared, not kept: it is encrypted under a Keystore key that no longer exists, so nothing
+        // can read it again and the next update() would overwrite it silently anyway. An empty server
+        // list is visible to the user; a vanished SSH host key pin is not, which is why that one stays.
         val payload = try {
             appStorage.getString(StorageDomain.XRAY_PROFILES, KEY_SUBSCRIPTIONS)
         } catch (error: SecureStorageUnreadableException) {

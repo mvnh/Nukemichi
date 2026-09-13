@@ -13,9 +13,9 @@ import java.security.PublicKey
  * explain.
  *
  * [pin] is what trust-on-first-use knows about this host; [acceptedFingerprint] is what the user
- * approved for this one attempt. Accepting is checked first so a genuinely rotated key can be
- * adopted, but only ever through a decision the user made against a prompt that told them what
- * the old state was — a pin on its own never yields to a new key.
+ * approved for this one attempt. Accepting is checked first so a rotated key can be adopted, but
+ * only through a decision made against a prompt that named the old state. A pin on its own never
+ * yields to a new key.
  */
 internal class PinnedHostKeyVerifier(
     private val pin: HostKeyPin,

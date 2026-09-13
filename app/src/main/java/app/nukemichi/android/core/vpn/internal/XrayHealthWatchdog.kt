@@ -51,9 +51,9 @@ internal class XrayHealthWatchdog @Inject constructor(
     }
 
     /**
-     * A round fails only when two different hosts both fail. One name being blocked - which is
-     * routine on the networks this app exists for - is not the tunnel being dead, and treating it
-     * as such used to mean a forced reconnect every thirty seconds, for good.
+     * A round fails only when two different hosts both fail. One blocked name is routine on the
+     * networks this app exists for and does not mean a dead tunnel; treating it as one meant a
+     * forced reconnect every thirty seconds, forever.
      */
     private fun probeRound(socksEndpoint: SocksEndpoint): Boolean {
         val (first, second) = ProbeTargets.secondOpinionHosts()

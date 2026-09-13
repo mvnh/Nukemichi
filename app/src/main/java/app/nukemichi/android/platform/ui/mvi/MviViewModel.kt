@@ -24,9 +24,9 @@ abstract class MviViewModel<State, Intent, Effect>(
 
     override val scope: CoroutineScope = viewModelScope
 
-    // UNLIMITED, matching intents: a bounded channel drops once its 64 slots fill, and nothing
-    // that would fill them is worth losing - navigation, a permission request, a share sheet. The
-    // collector is gated on STARTED, so a backgrounded screen legitimately accumulates a backlog.
+    // UNLIMITED, matching intents: a bounded channel drops once its 64 slots fill, and none of
+    // what fills them is droppable (navigation, a permission request, a share sheet). The collector
+    // is gated on STARTED, so a backgrounded screen legitimately accumulates a backlog.
     private val effects = Channel<Effect>(Channel.UNLIMITED)
     val effect: Flow<Effect> = effects.receiveAsFlow()
 
@@ -36,10 +36,9 @@ abstract class MviViewModel<State, Intent, Effect>(
         viewModelScope.launch {
             for (intent in intents) {
                 // One coroutine drains the channel, so an exception escaping a handler would end
-                // the loop for the rest of the view model's life: every later intent would go
-                // into a channel nothing reads, and the screen would stop responding with no
-                // crash to point at. Cancellation still propagates - that is the scope shutting
-                // this down on purpose.
+                // the loop for the view model's whole life: later intents land in a channel nothing
+                // reads and the screen stops responding with no crash to point at. Cancellation
+                // still propagates, since that is the scope shutting this down on purpose.
                 try {
                     onIntent(intent)
                 } catch (cancellation: CancellationException) {

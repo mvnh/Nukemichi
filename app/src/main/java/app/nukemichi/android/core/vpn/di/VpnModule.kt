@@ -37,8 +37,7 @@ internal abstract class VpnModule {
     abstract fun bindXrayServiceProvider(impl: XrayServiceProviderImpl): XrayServiceProvider
 
     companion object {
-        // No concrete class to @Binds - the real implementation is exactly one platform call, so
-        // it's provided directly rather than wrapped in a named class for its own sake.
+        // @Provides, not @Binds: the implementation is one platform call and needs no class.
         @Provides
         fun provideElapsedRealtimeSource(): ElapsedRealtimeSource =
             ElapsedRealtimeSource(SystemClock::elapsedRealtime)

@@ -51,10 +51,8 @@ internal fun WizardPage(
             content = content
         )
 
-        // A plain, non-interactive scroll-position indicator instead of an edge shadow. A fade
-        // only reads as "content is clipped here" when there's a visible container frame to
-        // anchor it to, which the page no longer has. This sits to the side and never overlaps
-        // content, so unlike a floating hint icon it needs no backing surface of its own.
+        // A scroll-position indicator instead of an edge fade: a fade only reads as "clipped here"
+        // when there is a container frame to anchor it to, which this page no longer has.
         if (scrollState.maxValue > 0) {
             val contentPx = viewportPx + scrollState.maxValue
             val thumbFraction = (viewportPx / contentPx).coerceIn(SCROLLBAR_MIN_THUMB_FRACTION, 1f)

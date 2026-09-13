@@ -35,8 +35,8 @@ internal fun sessionServerBundle(serverId: String?): Bundle = Bundle().apply {
 
 internal fun Bundle.toSessionServerId(): String? = getString(VpnIpcProtocol.KEY_SESSION_SERVER_ID)
 
-// A Long can't represent "no session" as a value the way sessionServerBundle uses a null String,
-// so absence is the signal: the key is left out entirely rather than written as 0.
+// A Long has no spare "no session" value, so absence is the signal: the key is omitted rather
+// than written as 0.
 internal fun runningSinceBundle(runningSinceRealtime: Long?): Bundle = Bundle().apply {
     runningSinceRealtime?.let { putLong(VpnIpcProtocol.KEY_RUNNING_SINCE_REALTIME, it) }
 }

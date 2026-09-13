@@ -98,6 +98,11 @@ internal class RemoteXrayMonitoring @Inject constructor(
         .map { it.serverId }
         .stateIn(scope, SharingStarted.WhileSubscribed(UNBIND_GRACE_MS), null)
 
+    override val runningSinceRealtime: StateFlow<Long?> = events
+        .filterIsInstance<TelemetryEvent.RunningSince>()
+        .map { it.runningSinceRealtime }
+        .stateIn(scope, SharingStarted.WhileSubscribed(UNBIND_GRACE_MS), null)
+
     private fun Message.toTelemetryEvent(): TelemetryEvent? = when (what) {
         VpnIpcProtocol.MSG_STATE_CHANGED ->
             XrayEngineState.entries.getOrNull(arg1)?.let(TelemetryEvent::State)
@@ -106,6 +111,7 @@ internal class RemoteXrayMonitoring @Inject constructor(
         VpnIpcProtocol.MSG_LOG_LINE -> TelemetryEvent.Log(data.toLogMessage())
         VpnIpcProtocol.MSG_HEALTH_DEGRADED -> TelemetryEvent.HealthDegraded
         VpnIpcProtocol.MSG_SESSION_SERVER_CHANGED -> TelemetryEvent.SessionServer(data.toSessionServerId())
+        VpnIpcProtocol.MSG_RUNNING_SINCE_CHANGED -> TelemetryEvent.RunningSince(data.toRunningSinceRealtime())
         else -> null
     }
 

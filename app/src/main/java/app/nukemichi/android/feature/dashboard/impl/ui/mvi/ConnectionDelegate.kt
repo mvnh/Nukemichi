@@ -2,7 +2,6 @@ package app.nukemichi.android.feature.dashboard.impl.ui.mvi
 
 import android.content.Context
 import android.net.VpnService
-import android.os.SystemClock
 import app.nukemichi.android.R
 import app.nukemichi.android.core.vpn.XrayEngineState
 import app.nukemichi.android.core.vpn.XrayServiceProvider
@@ -46,21 +45,13 @@ internal class ConnectionDelegate @Inject constructor(
             .onEach { handleHealthDegraded() }
             .launchIn(scope)
         serviceProvider.monitoring.state
-            .onEach { engineState ->
-                reduce {
-                    copy(
-                        engineState = engineState,
-                        // Set once entering RUNNING and cleared on any exit. Recomputing it on
-                        // every stats tick would reset "connected for" to zero each time.
-                        connectedSinceRealtime = when {
-                            engineState == XrayEngineState.RUNNING && connectedSinceRealtime == null ->
-                                SystemClock.elapsedRealtime()
-                            engineState != XrayEngineState.RUNNING -> null
-                            else -> connectedSinceRealtime
-                        },
-                    )
-                }
-            }
+            .onEach { engineState -> reduce { copy(engineState = engineState) } }
+            .launchIn(scope)
+        // From :vpn rather than derived from `state` here: a UI process recreated underneath a
+        // live tunnel would otherwise see RUNNING for the first time on reconnect and mistake that
+        // moment for the start of the session, resetting "connected for" to zero.
+        serviceProvider.monitoring.runningSinceRealtime
+            .onEach { runningSinceRealtime -> reduce { copy(connectedSinceRealtime = runningSinceRealtime) } }
             .launchIn(scope)
         serviceProvider.monitoring.stats
             .onEach { stats -> reduce { copy(stats = stats) } }

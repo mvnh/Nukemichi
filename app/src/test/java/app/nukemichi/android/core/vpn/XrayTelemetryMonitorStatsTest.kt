@@ -29,7 +29,7 @@ class XrayTelemetryMonitorStatsTest {
         val statsSource = ScriptedStatsSource(
             "proxy>>>outbound>>>traffic>>>uplink,uplink,1000;proxy>>>outbound>>>traffic>>>downlink,downlink,2000"
         )
-        val monitor = XrayTelemetryMonitor(statsSource, Dispatchers.IO)
+        val monitor = FakeClockXrayTelemetryMonitor(statsSource, Dispatchers.IO)
 
         monitor.starting()
         monitor.running(POLL_INTERVAL_MS)
@@ -49,7 +49,7 @@ class XrayTelemetryMonitorStatsTest {
             "outbound,uplink,100;outbound,downlink,50",
             "outbound,uplink,40;outbound,downlink,10",
         )
-        val monitor = XrayTelemetryMonitor(statsSource, Dispatchers.IO)
+        val monitor = FakeClockXrayTelemetryMonitor(statsSource, Dispatchers.IO)
 
         val emitted = mutableListOf<XrayTrafficStats>()
         val collector = launch { monitor.stats.take(2).toList(emitted) }
@@ -74,7 +74,7 @@ class XrayTelemetryMonitorStatsTest {
             "outbound,uplink,500;outbound,downlink,700",
             "outbound,uplink,200;outbound,downlink,300",
         )
-        val monitor = XrayTelemetryMonitor(statsSource, Dispatchers.IO)
+        val monitor = FakeClockXrayTelemetryMonitor(statsSource, Dispatchers.IO)
 
         monitor.starting()
         monitor.running(POLL_INTERVAL_MS)
@@ -93,7 +93,7 @@ class XrayTelemetryMonitorStatsTest {
     @Test
     fun `an entry for an unrecognized direction is ignored rather than counted`() = runBlocking {
         val statsSource = ScriptedStatsSource("outbound,uplink,100;outbound,unknown,999")
-        val monitor = XrayTelemetryMonitor(statsSource, Dispatchers.IO)
+        val monitor = FakeClockXrayTelemetryMonitor(statsSource, Dispatchers.IO)
 
         monitor.starting()
         monitor.running(POLL_INTERVAL_MS)
@@ -107,7 +107,7 @@ class XrayTelemetryMonitorStatsTest {
     @Test
     fun `a null poll result is skipped rather than emitted as a zeroed reading`() = runBlocking {
         val statsSource = ScriptedStatsSource(null, "outbound,uplink,10;outbound,downlink,5")
-        val monitor = XrayTelemetryMonitor(statsSource, Dispatchers.IO)
+        val monitor = FakeClockXrayTelemetryMonitor(statsSource, Dispatchers.IO)
 
         monitor.starting()
         monitor.running(POLL_INTERVAL_MS)
@@ -121,7 +121,7 @@ class XrayTelemetryMonitorStatsTest {
 
     @Test
     fun `degraded signals healthDegraded without touching engine state`() = runBlocking {
-        val monitor = XrayTelemetryMonitor(NoStatsSource, Dispatchers.IO)
+        val monitor = FakeClockXrayTelemetryMonitor(NoStatsSource, Dispatchers.IO)
 
         monitor.starting()
         monitor.running(POLL_INTERVAL_MS)

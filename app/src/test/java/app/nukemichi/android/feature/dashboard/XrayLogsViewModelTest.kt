@@ -94,4 +94,5 @@ private class FakeMonitoring(override val logs: Flow<XrayLogMessage>) : XrayMoni
     override val stats: Flow<XrayTrafficStats> = MutableSharedFlow()
     override val healthDegraded: Flow<Unit> = MutableSharedFlow()
     override val sessionServerId: StateFlow<String?> = MutableStateFlow(null)
+    override val runningSinceRealtime: StateFlow<Long?> = MutableStateFlow(null)
 }

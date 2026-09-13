@@ -10,4 +10,5 @@ internal sealed interface TelemetryEvent {
     data class Log(val log: XrayLogMessage) : TelemetryEvent
     data object HealthDegraded : TelemetryEvent
     data class SessionServer(val serverId: String?) : TelemetryEvent
+    data class RunningSince(val runningSinceRealtime: Long?) : TelemetryEvent
 }

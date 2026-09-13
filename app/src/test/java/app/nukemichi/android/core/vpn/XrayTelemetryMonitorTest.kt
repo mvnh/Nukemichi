@@ -1,5 +1,6 @@
 package app.nukemichi.android.core.vpn
 
+import app.nukemichi.android.core.vpn.FakeClockXrayTelemetryMonitor.Companion.FAKE_ELAPSED_REALTIME_MS
 import app.nukemichi.android.core.vpn.XrayStatsSource
 import app.nukemichi.android.core.vpn.internal.XrayTelemetryMonitor
 import kotlinx.coroutines.Dispatchers
@@ -101,6 +102,34 @@ class XrayTelemetryMonitorTest {
     }
 
     @Test
+    fun `reports a running-since timestamp while running and clears it once stopped`() = runBlocking {
+        val monitor = monitor()
+        assertNull(monitor.runningSinceRealtime.value)
+
+        monitor.starting()
+        monitor.running(STATS_INTERVAL_MS)
+        assertEquals(
+            "the UI reads this instead of guessing its own start time on reconnect - see ConnectionDelegate",
+            FAKE_ELAPSED_REALTIME_MS,
+            monitor.runningSinceRealtime.value,
+        )
+
+        monitor.stopping()
+        assertNull("a stopped engine must not claim a running-since time", monitor.runningSinceRealtime.value)
+    }
+
+    @Test
+    fun `failing clears a running-since timestamp`() = runBlocking {
+        val monitor = monitor()
+
+        monitor.starting()
+        monitor.running(STATS_INTERVAL_MS)
+        monitor.failed(IllegalStateException("tunnel lost"))
+
+        assertNull(monitor.runningSinceRealtime.value)
+    }
+
+    @Test
     fun `failing clears a previously reported session server`() = runBlocking {
         val monitor = monitor()
 
@@ -112,7 +141,7 @@ class XrayTelemetryMonitorTest {
         monitor.stopping()
     }
 
-    private fun monitor() = XrayTelemetryMonitor(
+    private fun monitor() = FakeClockXrayTelemetryMonitor(
         statsSource = NoStatsSource,
         ioDispatcher = Dispatchers.IO,
     )

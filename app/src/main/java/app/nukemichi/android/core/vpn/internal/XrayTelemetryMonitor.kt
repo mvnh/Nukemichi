@@ -1,5 +1,6 @@
 package app.nukemichi.android.core.vpn.internal
 
+import android.os.SystemClock
 import app.nukemichi.android.core.vpn.XrayEngineState
 import app.nukemichi.android.core.vpn.XrayLogLevel
 import app.nukemichi.android.core.vpn.XrayLogMessage
@@ -34,7 +35,7 @@ import libv2ray.CoreCallbackHandler
 import timber.log.Timber
 
 @Singleton
-internal class XrayTelemetryMonitor @Inject constructor(
+internal open class XrayTelemetryMonitor @Inject constructor(
     private val statsSource: XrayStatsSource,
     @IoDispatcher ioDispatcher: CoroutineDispatcher,
 ) : XrayMonitoring, CoreCallbackHandler {
@@ -70,6 +71,9 @@ internal class XrayTelemetryMonitor @Inject constructor(
     private val _sessionServerId = MutableStateFlow<String?>(null)
     override val sessionServerId: StateFlow<String?> = _sessionServerId.asStateFlow()
 
+    private val _runningSinceRealtime = MutableStateFlow<Long?>(null)
+    override val runningSinceRealtime: StateFlow<Long?> = _runningSinceRealtime.asStateFlow()
+
     private val lifecycle = Mutex()
     private var statsJob: Job? = null
     private var logcatReader: GoLogcatReader? = null
@@ -93,6 +97,10 @@ internal class XrayTelemetryMonitor @Inject constructor(
         pollIntervalMillis = intervalMillis.coerceAtLeast(MIN_STATS_INTERVAL_MS)
         // Published before RUNNING, so a client reacting to RUNNING already knows which server it is on.
         _sessionServerId.value = serverId
+        // elapsedRealtime(), not epoch time: it's monotonic and shared across processes on this
+        // device, so a UI process recreated underneath a live tunnel can compare against it
+        // directly instead of re-guessing a start time from whenever it happened to reconnect.
+        _runningSinceRealtime.value = elapsedRealtimeMillis()
         _state.value = XrayEngineState.RUNNING
 
         logcatReader = GoLogcatReader(scope) { line -> _logs.tryEmit(line.toLogMessage()) }
@@ -120,8 +128,15 @@ internal class XrayTelemetryMonitor @Inject constructor(
         endingStats?.cancelAndJoin()
         endingLogcat?.stop()
         _sessionServerId.value = null
+        _runningSinceRealtime.value = null
         _state.value = XrayEngineState.STOPPED
     }
+
+    // Its own overridable seam rather than an injected constructor dependency: SystemClock.
+    // elapsedRealtime() isn't mocked on a plain JVM unit test (no Robolectric here), and a
+    // `() -> Long` constructor parameter would need its own unqualified Hilt binding for no
+    // real benefit over a test subclass overriding this one method.
+    internal open fun elapsedRealtimeMillis(): Long = SystemClock.elapsedRealtime()
 
     fun degraded() {
         _healthDegraded.tryEmit(Unit)
@@ -129,6 +144,7 @@ internal class XrayTelemetryMonitor @Inject constructor(
 
     fun failed(error: Throwable) {
         _sessionServerId.value = null
+        _runningSinceRealtime.value = null
         _state.value = XrayEngineState.ERROR
         _logs.tryEmit(
             XrayLogMessage(

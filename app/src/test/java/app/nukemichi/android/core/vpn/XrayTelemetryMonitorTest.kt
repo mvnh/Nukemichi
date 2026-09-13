@@ -1,7 +1,7 @@
 package app.nukemichi.android.core.vpn
 
-import app.nukemichi.android.core.vpn.FakeClockXrayTelemetryMonitor.Companion.FAKE_ELAPSED_REALTIME_MS
 import app.nukemichi.android.core.vpn.XrayStatsSource
+import app.nukemichi.android.core.vpn.internal.ElapsedRealtimeSource
 import app.nukemichi.android.core.vpn.internal.XrayTelemetryMonitor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
@@ -141,9 +141,10 @@ class XrayTelemetryMonitorTest {
         monitor.stopping()
     }
 
-    private fun monitor() = FakeClockXrayTelemetryMonitor(
+    private fun monitor() = XrayTelemetryMonitor(
         statsSource = NoStatsSource,
         ioDispatcher = Dispatchers.IO,
+        elapsedRealtimeSource = ElapsedRealtimeSource { FAKE_ELAPSED_REALTIME_MS },
     )
 
     private object NoStatsSource : XrayStatsSource {
@@ -152,5 +153,6 @@ class XrayTelemetryMonitorTest {
 
     private companion object {
         const val STATS_INTERVAL_MS = 60_000L
+        const val FAKE_ELAPSED_REALTIME_MS = 1_000_000L
     }
 }

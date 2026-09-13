@@ -1,6 +1,7 @@
 package app.nukemichi.android.core.vpn
 
 import app.nukemichi.android.core.vpn.XrayStatsSource
+import app.nukemichi.android.core.vpn.internal.ElapsedRealtimeSource
 import app.nukemichi.android.core.vpn.internal.XrayTelemetryMonitor
 import java.util.concurrent.atomic.AtomicInteger
 import kotlinx.coroutines.Dispatchers
@@ -29,7 +30,7 @@ class XrayTelemetryMonitorStatsTest {
         val statsSource = ScriptedStatsSource(
             "proxy>>>outbound>>>traffic>>>uplink,uplink,1000;proxy>>>outbound>>>traffic>>>downlink,downlink,2000"
         )
-        val monitor = FakeClockXrayTelemetryMonitor(statsSource, Dispatchers.IO)
+        val monitor = monitor(statsSource)
 
         monitor.starting()
         monitor.running(POLL_INTERVAL_MS)
@@ -49,7 +50,7 @@ class XrayTelemetryMonitorStatsTest {
             "outbound,uplink,100;outbound,downlink,50",
             "outbound,uplink,40;outbound,downlink,10",
         )
-        val monitor = FakeClockXrayTelemetryMonitor(statsSource, Dispatchers.IO)
+        val monitor = monitor(statsSource)
 
         val emitted = mutableListOf<XrayTrafficStats>()
         val collector = launch { monitor.stats.take(2).toList(emitted) }
@@ -74,7 +75,7 @@ class XrayTelemetryMonitorStatsTest {
             "outbound,uplink,500;outbound,downlink,700",
             "outbound,uplink,200;outbound,downlink,300",
         )
-        val monitor = FakeClockXrayTelemetryMonitor(statsSource, Dispatchers.IO)
+        val monitor = monitor(statsSource)
 
         monitor.starting()
         monitor.running(POLL_INTERVAL_MS)
@@ -93,7 +94,7 @@ class XrayTelemetryMonitorStatsTest {
     @Test
     fun `an entry for an unrecognized direction is ignored rather than counted`() = runBlocking {
         val statsSource = ScriptedStatsSource("outbound,uplink,100;outbound,unknown,999")
-        val monitor = FakeClockXrayTelemetryMonitor(statsSource, Dispatchers.IO)
+        val monitor = monitor(statsSource)
 
         monitor.starting()
         monitor.running(POLL_INTERVAL_MS)
@@ -107,7 +108,7 @@ class XrayTelemetryMonitorStatsTest {
     @Test
     fun `a null poll result is skipped rather than emitted as a zeroed reading`() = runBlocking {
         val statsSource = ScriptedStatsSource(null, "outbound,uplink,10;outbound,downlink,5")
-        val monitor = FakeClockXrayTelemetryMonitor(statsSource, Dispatchers.IO)
+        val monitor = monitor(statsSource)
 
         monitor.starting()
         monitor.running(POLL_INTERVAL_MS)
@@ -121,7 +122,7 @@ class XrayTelemetryMonitorStatsTest {
 
     @Test
     fun `degraded signals healthDegraded without touching engine state`() = runBlocking {
-        val monitor = FakeClockXrayTelemetryMonitor(NoStatsSource, Dispatchers.IO)
+        val monitor = monitor(NoStatsSource)
 
         monitor.starting()
         monitor.running(POLL_INTERVAL_MS)
@@ -134,6 +135,12 @@ class XrayTelemetryMonitorStatsTest {
         assertEquals(XrayEngineState.RUNNING, monitor.state.value)
         monitor.stopping()
     }
+
+    private fun monitor(statsSource: XrayStatsSource) = XrayTelemetryMonitor(
+        statsSource = statsSource,
+        ioDispatcher = Dispatchers.IO,
+        elapsedRealtimeSource = ElapsedRealtimeSource { 0L },
+    )
 
     /** Returns each payload in order on successive calls, then repeats the last one. */
     private class ScriptedStatsSource(private vararg val payloads: String?) : XrayStatsSource {

@@ -1,6 +1,5 @@
 package app.nukemichi.android.core.vpn.internal
 
-import android.os.SystemClock
 import app.nukemichi.android.core.vpn.XrayEngineState
 import app.nukemichi.android.core.vpn.XrayLogLevel
 import app.nukemichi.android.core.vpn.XrayLogMessage
@@ -35,9 +34,10 @@ import libv2ray.CoreCallbackHandler
 import timber.log.Timber
 
 @Singleton
-internal open class XrayTelemetryMonitor @Inject constructor(
+internal class XrayTelemetryMonitor @Inject constructor(
     private val statsSource: XrayStatsSource,
     @IoDispatcher ioDispatcher: CoroutineDispatcher,
+    private val elapsedRealtimeSource: ElapsedRealtimeSource,
 ) : XrayMonitoring, CoreCallbackHandler {
     // A SupervisorJob means a failing child (the stats poller, the logcat reader) never takes
     // down its sibling, but it also means neither has anywhere to propagate an unexpected
@@ -100,7 +100,7 @@ internal open class XrayTelemetryMonitor @Inject constructor(
         // elapsedRealtime(), not epoch time: it's monotonic and shared across processes on this
         // device, so a UI process recreated underneath a live tunnel can compare against it
         // directly instead of re-guessing a start time from whenever it happened to reconnect.
-        _runningSinceRealtime.value = elapsedRealtimeMillis()
+        _runningSinceRealtime.value = elapsedRealtimeSource.elapsedRealtimeMillis()
         _state.value = XrayEngineState.RUNNING
 
         logcatReader = GoLogcatReader(scope) { line -> _logs.tryEmit(line.toLogMessage()) }
@@ -131,12 +131,6 @@ internal open class XrayTelemetryMonitor @Inject constructor(
         _runningSinceRealtime.value = null
         _state.value = XrayEngineState.STOPPED
     }
-
-    // Its own overridable seam rather than an injected constructor dependency: SystemClock.
-    // elapsedRealtime() isn't mocked on a plain JVM unit test (no Robolectric here), and a
-    // `() -> Long` constructor parameter would need its own unqualified Hilt binding for no
-    // real benefit over a test subclass overriding this one method.
-    internal open fun elapsedRealtimeMillis(): Long = SystemClock.elapsedRealtime()
 
     fun degraded() {
         _healthDegraded.tryEmit(Unit)
